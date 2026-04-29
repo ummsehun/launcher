@@ -1,8 +1,10 @@
 import React from 'react';
 import { useTerminalSeriesStore } from '../stores/terminalSeriesStore';
 import { StatusBadge } from '../../../shared/components/StatusBadge';
+import { useTranslation } from 'react-i18next';
 
 export const SeriesAssetsPanel: React.FC = () => {
+  const { t } = useTranslation();
   const { series, selectedSeriesId } = useTerminalSeriesStore();
   const currentSeries = series.find(s => s.id === selectedSeriesId);
 
@@ -11,7 +13,7 @@ export const SeriesAssetsPanel: React.FC = () => {
   return (
     <div className="flex flex-col h-full text-white">
       {currentSeries.assets.length === 0 ? (
-        <div className="p-6 text-sm text-white/50">No additional assets required.</div>
+        <div className="p-6 text-sm text-white/50">{t('launcher.no_assets')}</div>
       ) : (
         currentSeries.assets.map((asset) => (
           <div key={asset.id} className="w-full flex items-center justify-between px-6 py-3 hover:bg-white/10 transition-colors border-b border-white/5 last:border-0">
@@ -19,7 +21,7 @@ export const SeriesAssetsPanel: React.FC = () => {
               <span className="text-sm font-medium text-white/80 truncate">
                 {asset.name}
               </span>
-              {asset.required && <span className="text-[9px] px-1.5 py-0.5 bg-white/20 rounded text-white/80 uppercase tracking-widest">Required</span>}
+              {asset.required && <span className="text-[9px] px-1.5 py-0.5 bg-white/20 rounded text-white/80 uppercase tracking-widest">{t('launcher.required')}</span>}
             </div>
             <div className="flex items-center gap-4 shrink-0">
               <span className="text-xs text-white/50 font-mono tracking-wider">{asset.sizeLabel}</span>

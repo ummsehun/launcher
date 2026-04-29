@@ -1,0 +1,24 @@
+{
+  "launcher": {
+    "title": "Terminal Edition",
+    "events": "Events",
+    "notices": "Notices",
+    "info": "Info",
+    "toolbox": "Toolbox",
+    "check_in": "Check-In",
+    "assets": "Assets",
+    "wiki": "Wiki",
+    "install": "INSTALL",
+    "play": "PLAY",
+    "running": "RUNNING",
+    "installing": "INSTALLING",
+    "updating": "UPDATING",
+    "update_available": "Update Available",
+    "no_assets": "No additional assets required.",
+    "required": "Required",
+    "no_logs": "No execution info available.",
+    "select_project": "Select a project from the sidebar",
+    "init_failed": "Initialization Failed",
+    "new_updates": "New Updates Available"
+  }
+}

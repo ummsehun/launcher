@@ -5,8 +5,10 @@ import { SeriesSidebar } from '../../features/terminal-series/components/SeriesS
 import { SeriesHero } from '../../features/terminal-series/components/SeriesHero';
 import { SeriesActionBar } from '../../features/terminal-series/components/SeriesActionBar';
 import { Loader2, Home, Globe, Link, Share2, Video, MessageSquare, Settings as SettingsIcon, Minus, X, Square } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export const LauncherPage: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const { initialize, isInitializing, error, series, selectedSeriesId } = useTerminalSeriesStore();
   const currentSeries = series.find(s => s.id === selectedSeriesId);
 
@@ -27,7 +29,7 @@ export const LauncherPage: React.FC = () => {
       <div className="flex h-screen w-full items-center justify-center bg-[#09090b] text-launcher-text">
         <div className="text-center">
           <div className="text-launcher-danger text-4xl mb-4">⚠</div>
-          <h2 className="text-xl font-bold">Initialization Failed</h2>
+          <h2 className="text-xl font-bold">{t('launcher.init_failed')}</h2>
           <p className="text-launcher-textMuted">{error}</p>
         </div>
       </div>
@@ -67,6 +69,16 @@ export const LauncherPage: React.FC = () => {
       {/* Top Window Controls (Mock) */}
       <div className="absolute top-0 right-0 left-0 h-10 flex justify-end items-center px-4 z-50 pointer-events-none">
         <div className="flex items-center gap-4 pointer-events-auto">
+          {/* Temporary language switcher for testing */}
+          <select 
+            className="bg-black/50 text-white text-xs px-2 py-1 rounded border border-white/20 outline-none"
+            value={i18n.language}
+            onChange={(e) => i18n.changeLanguage(e.target.value)}
+          >
+            <option value="ko">한국어</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+          </select>
           <button className="text-white/50 hover:text-white transition-colors"><SettingsIcon size={16} /></button>
           <div className="w-px h-4 bg-white/20 mx-2" />
           <button className="text-white/50 hover:text-white transition-colors"><Minus size={16} /></button>
@@ -97,7 +109,7 @@ export const LauncherPage: React.FC = () => {
         </div>
       ) : (
         <div className="relative z-10 flex-1 flex items-center justify-center text-launcher-textMuted">
-          Select a project from the sidebar
+          {t('launcher.select_project')}
         </div>
       )}
     </AppShell>

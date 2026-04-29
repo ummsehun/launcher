@@ -1,8 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { useTerminalSeriesStore } from '../stores/terminalSeriesStore';
 import { cn } from '../../../shared/lib/cn';
+import { useTranslation } from 'react-i18next';
 
 export const SeriesLogsPanel: React.FC = () => {
+  const { t } = useTranslation();
   const { series, selectedSeriesId } = useTerminalSeriesStore();
   const currentSeries = series.find(s => s.id === selectedSeriesId);
   const endRef = useRef<HTMLDivElement>(null);
@@ -26,7 +28,7 @@ export const SeriesLogsPanel: React.FC = () => {
   return (
     <div className="flex flex-col h-full text-white p-4 font-mono text-xs overflow-y-auto scrollbar-none">
       {currentSeries.logs.length === 0 ? (
-        <div className="text-white/50">No execution info available.</div>
+        <div className="text-white/50">{t('launcher.no_logs')}</div>
       ) : (
         currentSeries.logs.map((log) => {
           const date = new Date(log.timestamp);

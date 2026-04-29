@@ -1,0 +1,24 @@
+{
+  "launcher": {
+    "title": "ターミナルエディション",
+    "events": "イベント",
+    "notices": "お知らせ",
+    "info": "情報",
+    "toolbox": "ツールボックス",
+    "check_in": "ログインボーナス",
+    "assets": "アセット",
+    "wiki": "Wiki",
+    "install": "インストール",
+    "play": "プレイ",
+    "running": "起動中",
+    "installing": "インストール中",
+    "updating": "アップデート中",
+    "update_available": "アップデート可能",
+    "no_assets": "追加アセットは必要ありません。",
+    "required": "必須",
+    "no_logs": "実行情報がありません。",
+    "select_project": "サイドバーからプロジェクトを選択してください",
+    "init_failed": "初期化に失敗しました",
+    "new_updates": "新しいアップデートがあります"
+  }
+}

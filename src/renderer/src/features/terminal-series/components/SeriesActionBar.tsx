@@ -2,8 +2,10 @@ import React from 'react';
 import { useTerminalSeriesStore } from '../stores/terminalSeriesStore';
 import { CloudDownload, Loader2, Menu } from 'lucide-react';
 import { cn } from '../../../shared/lib/cn';
+import { useTranslation } from 'react-i18next';
 
 export const SeriesActionBar: React.FC = () => {
+  const { t } = useTranslation();
   const { 
     series, 
     selectedSeriesId, 
@@ -28,7 +30,7 @@ export const SeriesActionBar: React.FC = () => {
           className="w-64 h-[72px] bg-launcher-cta hover:bg-launcher-cta-hover text-launcher-cta-text font-black text-2xl tracking-widest rounded-l-xl transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(244,210,89,0.3)]"
         >
           {isActionPending ? <Loader2 className="animate-spin" size={28} /> : null}
-          INSTALL
+          {t('launcher.install')}
         </button>
       );
     }
@@ -41,7 +43,7 @@ export const SeriesActionBar: React.FC = () => {
           className="w-64 h-[72px] bg-launcher-cta hover:bg-launcher-cta-hover text-launcher-cta-text font-black text-2xl tracking-widest rounded-l-xl transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(244,210,89,0.3)]"
         >
           {status === 'running' ? <Loader2 className="animate-spin" size={28} /> : null}
-          {status === 'running' ? 'RUNNING' : 'PLAY'}
+          {status === 'running' ? t('launcher.running') : t('launcher.play')}
         </button>
       );
     }
@@ -53,7 +55,7 @@ export const SeriesActionBar: React.FC = () => {
           className="w-64 h-[72px] bg-white/10 backdrop-blur text-white font-black text-xl tracking-widest rounded-l-xl flex items-center justify-center gap-3 border border-white/20"
         >
           <Loader2 className="animate-spin" size={24} />
-          {status === 'installing' ? 'INSTALLING' : 'UPDATING'}
+          {status === 'installing' ? t('launcher.installing') : t('launcher.updating')}
         </button>
       );
     }
@@ -89,7 +91,7 @@ export const SeriesActionBar: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-white font-bold text-sm">
-              {status === 'update-available' ? 'Update Available' : '8.15 Mb/s'}
+              {status === 'update-available' ? t('launcher.update_available') : '8.15 Mb/s'}
             </span>
             <span className="text-white/50 text-xs font-mono">11.48 GB</span>
           </div>

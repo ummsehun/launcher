@@ -6,17 +6,19 @@ import { SeriesMetadata } from './SeriesMetadata';
 import { SeriesAssetsPanel } from './SeriesAssetsPanel';
 import { SeriesLogsPanel } from './SeriesLogsPanel';
 import { Package, Wrench, Calendar, BookOpen } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export const SeriesHero: React.FC = () => {
+  const { t } = useTranslation();
   const { series, selectedSeriesId, selectedTab, setSelectedTab } = useTerminalSeriesStore();
   const currentSeries = series.find(s => s.id === selectedSeriesId);
 
   if (!currentSeries) return null;
 
   const tabs: { id: TerminalSeriesTab; label: string }[] = [
-    { id: 'overview', label: 'Events' },
-    { id: 'assets', label: 'Notices' },
-    { id: 'logs', label: 'Info' },
+    { id: 'overview', label: t('launcher.events') },
+    { id: 'assets', label: t('launcher.notices') },
+    { id: 'logs', label: t('launcher.info') },
   ];
 
   return (
@@ -28,7 +30,7 @@ export const SeriesHero: React.FC = () => {
         </h1>
         <div className="flex items-center gap-2 mt-2">
           <span className="px-2 py-0.5 bg-launcher-accent/80 backdrop-blur text-white text-xs font-bold uppercase tracking-widest rounded-sm">
-            Terminal Edition
+            {t('launcher.title')}
           </span>
         </div>
       </div>
@@ -37,7 +39,7 @@ export const SeriesHero: React.FC = () => {
       <div className="w-full h-48 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl mb-4 overflow-hidden relative pointer-events-auto shadow-2xl">
         <div className="absolute inset-0 bg-gradient-to-tr from-launcher-accent/20 to-transparent mix-blend-overlay" />
         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
-          <h3 className="text-white font-bold text-xl drop-shadow-md">New Updates Available</h3>
+          <h3 className="text-white font-bold text-xl drop-shadow-md">{t('launcher.new_updates')}</h3>
           <div className="flex gap-1">
             <div className="w-2 h-2 rounded-full bg-white" />
             <div className="w-2 h-2 rounded-full bg-white/30" />
@@ -77,10 +79,10 @@ export const SeriesHero: React.FC = () => {
       {/* Quick Action Icons Panel */}
       <div className="w-full bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center pointer-events-auto shadow-2xl">
         {[
-          { icon: Wrench, label: 'Toolbox' },
-          { icon: Calendar, label: 'Check-In' },
-          { icon: Package, label: 'Assets' },
-          { icon: BookOpen, label: 'Wiki' }
+          { icon: Wrench, label: t('launcher.toolbox') },
+          { icon: Calendar, label: t('launcher.check_in') },
+          { icon: Package, label: t('launcher.assets') },
+          { icon: BookOpen, label: t('launcher.wiki') }
         ].map((item, idx) => (
           <button key={idx} className="flex flex-col items-center gap-2 group">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-b from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-white/80 group-hover:text-white group-hover:border-white/30 group-hover:from-white/20 transition-all">

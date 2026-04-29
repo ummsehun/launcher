@@ -1,0 +1,24 @@
+{
+  "launcher": {
+    "title": "터미널 에디션",
+    "events": "이벤트",
+    "notices": "공지사항",
+    "info": "정보",
+    "toolbox": "도구상자",
+    "check_in": "출석체크",
+    "assets": "에셋",
+    "wiki": "위키",
+    "install": "설치",
+    "play": "시작",
+    "running": "실행 중",
+    "installing": "설치 중",
+    "updating": "업데이트 중",
+    "update_available": "업데이트 가능",
+    "no_assets": "추가 에셋이 필요하지 않습니다.",
+    "required": "필수",
+    "no_logs": "실행 정보가 없습니다.",
+    "select_project": "사이드바에서 프로젝트를 선택하세요",
+    "init_failed": "초기화 실패",
+    "new_updates": "새로운 업데이트가 있습니다"
+  }
+}
