@@ -42,7 +42,7 @@ export const useLauncherStore = create<LauncherState>((set) => ({
     }));
 
     try {
-      const result = await window.launcher.launchGame(gameId);
+      const result = await window.launcher.game.launch(gameId);
 
       if (!result.ok) {
         set((state) => ({

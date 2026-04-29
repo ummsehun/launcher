@@ -1,25 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Settings2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { SettingsLayout } from './SettingsLayout';
 import { ToggleRow } from '../../../shared/components/ui/ToggleRow';
 import { useTerminalSeriesStore } from '../../terminal-series/stores/terminalSeriesStore';
-import { getSeriesFeatureConfig } from '../../terminal-series/constants/seriesFeatureConfig';
+import { getSeriesFeatureConfig, TerminalSeriesId } from '../../terminal-series/constants/seriesFeatureConfig';
+import { useLauncherConfigStore } from '../stores/launcherConfigStore';
 
 export const LauncherConfigPanel: React.FC = () => {
   const { t } = useTranslation();
-  const { selectedSeriesId, series } = useTerminalSeriesStore();
-  const currentSeries = series.find(s => s.id === selectedSeriesId);
+  const { selectedSeriesId } = useTerminalSeriesStore();
   const config = getSeriesFeatureConfig(selectedSeriesId);
-
-  // Example local state for toggles (will connect to a store/IPC later)
-  const [settingsValues, setSettingsValues] = useState<Record<string, boolean>>({
-    hwAccel: true, autoClean: true, highRes: true, physics: true
-  });
-
-  const updateSetting = (key: string, value: boolean) => {
-    setSettingsValues(prev => ({ ...prev, [key]: value }));
-  };
+  const { series, setSeriesOption } = useLauncherConfigStore();
 
   const navItems = [
     { id: 'game_settings', label: t('launcher.settings.game_settings'), icon: Settings2, isActive: true }
@@ -33,6 +25,19 @@ export const LauncherConfigPanel: React.FC = () => {
     );
   }
 
+  const currentSeriesState = series[selectedSeriesId as TerminalSeriesId];
+
+  const handleBrowse = async () => {
+    try {
+      const result = await window.launcher.settings.selectInstallPath();
+      if (result.ok) {
+        useLauncherConfigStore.getState().setInstallPath(selectedSeriesId as TerminalSeriesId, result.data.path);
+      }
+    } catch (e) {
+      console.error('Failed to select install path', e);
+    }
+  };
+
   return (
     <SettingsLayout title={t('launcher.feature_modal.launcher.title')} navItems={navItems}>
       <section className="space-y-3">
@@ -43,10 +48,13 @@ export const LauncherConfigPanel: React.FC = () => {
             <input 
               type="text" 
               readOnly 
-              value={`C:\\Program Files\\Lanchaer\\${currentSeries?.id}`}
+              value={currentSeriesState?.installPath || ''}
               className="flex-1 bg-[#111111] border border-white/5 rounded-lg px-4 py-2.5 text-[14px] text-white/90 font-mono outline-none"
             />
-            <button className="px-6 py-2.5 bg-[#2c2c2e] hover:bg-[#3c3c3e] text-white font-medium rounded-lg transition-colors text-[14px]">
+            <button 
+              onClick={handleBrowse}
+              className="px-6 py-2.5 bg-[#2c2c2e] hover:bg-[#3c3c3e] text-white font-medium rounded-lg transition-colors text-[14px]"
+            >
               {t('launcher.feature_modal.launcher.browse')}
             </button>
           </div>
@@ -65,8 +73,8 @@ export const LauncherConfigPanel: React.FC = () => {
                   key={settingKey}
                   label={t(labelKey)} 
                   description={t(descKey)} 
-                  checked={settingsValues[settingKey] || false} 
-                  onCheckedChange={(checked) => updateSetting(settingKey, checked)} 
+                  checked={currentSeriesState?.options[settingKey] || false} 
+                  onCheckedChange={(checked) => setSeriesOption(selectedSeriesId as TerminalSeriesId, settingKey, checked)} 
                 />
               );
             })}

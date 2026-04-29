@@ -1,24 +1,28 @@
-import { FileMusic, Video as VideoIcon, Box, FileVideo } from 'lucide-react';
-import { ElementType } from 'react';
+import { FileMusic, Video as VideoIcon, Box, FileVideo, ElementType } from 'lucide-react';
+
+export type TerminalSeriesId = 'gascii' | 'mienjine';
+export type AssetMode = 'youtube' | 'asset-list';
+export type LibraryDirKey = 'video' | 'audio' | 'music' | 'glb' | 'camera' | 'stage' | 'vmd' | 'pmx';
+export type LauncherSettingKey = 'hwAccel' | 'autoClean' | 'highRes' | 'physics';
 
 type LibraryDir = {
-  name: string;
+  key: LibraryDirKey;
   icon: ElementType;
 };
 
-type SeriesConfig = {
-  assetMode: 'youtube' | 'asset-list';
+export type SeriesFeatureConfig = {
+  assetMode: AssetMode;
   libraryDirs: LibraryDir[];
-  settings: string[];
-  guideKey: string;
+  settings: LauncherSettingKey[];
+  guideKey: TerminalSeriesId;
 };
 
-export const SERIES_FEATURE_CONFIG: Record<string, SeriesConfig> = {
+export const SERIES_FEATURE_CONFIG = {
   gascii: {
     assetMode: 'youtube',
     libraryDirs: [
-      { name: 'video', icon: VideoIcon },
-      { name: 'audio', icon: FileMusic }
+      { key: 'video', icon: VideoIcon },
+      { key: 'audio', icon: FileMusic }
     ],
     settings: ['hwAccel', 'autoClean'],
     guideKey: 'gascii',
@@ -26,19 +30,19 @@ export const SERIES_FEATURE_CONFIG: Record<string, SeriesConfig> = {
   mienjine: {
     assetMode: 'asset-list',
     libraryDirs: [
-      { name: 'music', icon: FileMusic },
-      { name: 'glb', icon: Box },
-      { name: 'camera', icon: VideoIcon },
-      { name: 'stage', icon: Box },
-      { name: 'vmd', icon: FileVideo },
-      { name: 'pmx', icon: Box }
+      { key: 'music', icon: FileMusic },
+      { key: 'glb', icon: Box },
+      { key: 'camera', icon: VideoIcon },
+      { key: 'stage', icon: Box },
+      { key: 'vmd', icon: FileVideo },
+      { key: 'pmx', icon: Box }
     ],
     settings: ['highRes', 'physics'],
     guideKey: 'mienjine',
   },
-} as const;
+} satisfies Record<TerminalSeriesId, SeriesFeatureConfig>;
 
-export const getSeriesFeatureConfig = (seriesId: string | null): SeriesConfig | null => {
+export const getSeriesFeatureConfig = (seriesId: string | null): SeriesFeatureConfig | null => {
   if (seriesId === 'gascii') return SERIES_FEATURE_CONFIG.gascii;
   if (seriesId === 'mienjine') return SERIES_FEATURE_CONFIG.mienjine;
   return null;

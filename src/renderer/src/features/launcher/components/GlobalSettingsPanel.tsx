@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Globe, HardDrive } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { SettingsLayout } from './SettingsLayout';
 import { ToggleRow } from '../../../shared/components/ui/ToggleRow';
 import { cn } from '../../../shared/lib/cn';
+import { useLauncherConfigStore, Language } from '../stores/launcherConfigStore';
 
 export const GlobalSettingsPanel: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const [autoUpdate, setAutoUpdate] = useState(true);
+  const { global, setAutoUpdate, setLanguage } = useLauncherConfigStore();
+
+  const handleLanguageChange = (lang: string) => {
+    const validLang = lang as Language;
+    i18n.changeLanguage(validLang);
+    setLanguage(validLang);
+  };
 
   const navItems = [
     { id: 'general', label: t('launcher.settings.general'), icon: Globe, isActive: true },
@@ -23,7 +30,7 @@ export const GlobalSettingsPanel: React.FC = () => {
             {['ko', 'en', 'ja'].map(lang => (
               <button
                 key={lang}
-                onClick={() => i18n.changeLanguage(lang)}
+                onClick={() => handleLanguageChange(lang)}
                 className={cn(
                   "px-6 py-3 rounded-lg border font-medium transition-all text-[14px]",
                   i18n.language === lang 
@@ -44,7 +51,7 @@ export const GlobalSettingsPanel: React.FC = () => {
           <ToggleRow 
             label={t('launcher.settings.auto_update')} 
             description={t('launcher.settings.auto_update_desc')} 
-            checked={autoUpdate} 
+            checked={global.autoUpdate} 
             onCheckedChange={setAutoUpdate} 
           />
         </div>

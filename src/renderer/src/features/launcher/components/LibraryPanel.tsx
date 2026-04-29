@@ -33,7 +33,7 @@ export const LibraryPanel: React.FC = () => {
                 <dir.icon size={24} />
               </div>
               <div className="flex flex-col items-start">
-                <h3 className="text-[15px] text-white font-bold">{dir.name.toUpperCase()}</h3>
+                <h3 className="text-[15px] text-white font-bold">{dir.key.toUpperCase()}</h3>
                 <span className="text-[13px] text-white/50 mt-0.5">0 {t('launcher.feature_modal.library.files')}</span>
               </div>
             </button>
