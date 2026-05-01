@@ -130,12 +130,17 @@ export class MediaDownloadService {
     const allowedRoot = request.seriesId === 'gascii'
       ? path.resolve(installPath, 'assets')
       : path.resolve(installPath);
+    await fs.mkdir(allowedRoot, { recursive: true });
 
     if (request.outputDir) {
-      return InputValidator.validateOutputDir(allowedRoot, request.outputDir);
+      const outputDir = InputValidator.validateOutputDir(allowedRoot, request.outputDir);
+      await InputValidator.assertRealOutputDir(allowedRoot, outputDir);
+      return outputDir;
     }
 
-    return InputValidator.validateOutputRoot(allowedRoot, request.format === 'mp4' ? 'video' : 'audio');
+    const outputDir = InputValidator.validateOutputRoot(allowedRoot, request.format === 'mp4' ? 'video' : 'audio');
+    await InputValidator.assertRealOutputDir(allowedRoot, outputDir);
+    return outputDir;
   }
 }
 

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { TerminalSeries, TerminalSeriesTab, TerminalSeriesLog } from '../types/terminalSeriesTypes';
 import { terminalSeriesApi } from '../api/terminalSeriesApi';
+import { createSeriesLog, getErrorMessage, withAssetStatus } from './terminalSeriesStoreHelpers';
 
 type TerminalSeriesState = {
   series: TerminalSeries[];
@@ -60,8 +61,8 @@ export const useTerminalSeriesStore = create<TerminalSeriesState>((set, get) => 
       } catch {
         // 초기 목록 렌더링은 Gascii 상태 조회 실패와 분리한다.
       }
-    } catch (err: any) {
-      set({ error: err.message || 'Failed to load series', isInitializing: false });
+    } catch (err) {
+      set({ error: getErrorMessage(err, 'Failed to load series'), isInitializing: false });
     }
   },
 
@@ -73,11 +74,7 @@ export const useTerminalSeriesStore = create<TerminalSeriesState>((set, get) => 
   })),
 
   addLog: (id, logProps) => set((state) => {
-    const newLog: TerminalSeriesLog = {
-      id: Math.random().toString(36).substring(7),
-      timestamp: new Date().toISOString(),
-      ...logProps
-    };
+    const newLog = createSeriesLog(logProps);
     return {
       series: state.series.map(s => s.id === id ? { ...s, logs: [...s.logs, newLog] } : s)
     };
@@ -118,7 +115,7 @@ export const useTerminalSeriesStore = create<TerminalSeriesState>((set, get) => 
           status: 'installed',
           installPath: result.data.installPath,
           installedVersion: result.data.installedVersion,
-          assets: get().series.find(s => s.id === selectedSeriesId)?.assets.map(a => ({ ...a, status: 'installed' })) || []
+          assets: withAssetStatus(get().series.find(s => s.id === selectedSeriesId), 'installed')
         });
         addLog(selectedSeriesId, { level: 'success', message: `Installed Gascii ${result.data.installedVersion}.` });
         return;
@@ -130,13 +127,14 @@ export const useTerminalSeriesStore = create<TerminalSeriesState>((set, get) => 
         status: 'installed',
         installPath: `C:\\Program Files\\Lanchaer\\${selectedSeriesId}`,
         installedVersion: 'v1.0.0', // mock value
-        assets: get().series.find(s => s.id === selectedSeriesId)?.assets.map(a => ({ ...a, status: 'installed' })) || []
+        assets: withAssetStatus(get().series.find(s => s.id === selectedSeriesId), 'installed')
       });
       addLog(selectedSeriesId, { level: 'success', message: 'Installation completed successfully.' });
-    } catch (err: any) {
+    } catch (err) {
+      const message = getErrorMessage(err, 'Installation failed');
       updateSeriesInStore(selectedSeriesId, { status: 'error' });
-      addLog(selectedSeriesId, { level: 'error', message: `Installation failed: ${err.message}` });
-      set({ error: err.message });
+      addLog(selectedSeriesId, { level: 'error', message: `Installation failed: ${message}` });
+      set({ error: message });
     } finally {
       set((state) => ({ isActionPending: false, actionProgressBySeries: { ...state.actionProgressBySeries, [selectedSeriesId]: 0 } }));
     }
@@ -172,10 +170,11 @@ export const useTerminalSeriesStore = create<TerminalSeriesState>((set, get) => 
       // Simulate it returning back to its previous status after launch ends (mocking short-lived process)
       updateSeriesInStore(selectedSeriesId, { status: previousStatus });
       addLog(selectedSeriesId, { level: 'success', message: 'Application process exited.' });
-    } catch (err: any) {
+    } catch (err) {
+      const message = getErrorMessage(err, 'Failed to launch');
       updateSeriesInStore(selectedSeriesId, { status: 'error' });
-      addLog(selectedSeriesId, { level: 'error', message: `Failed to launch: ${err.message}` });
-      set({ error: err.message });
+      addLog(selectedSeriesId, { level: 'error', message: `Failed to launch: ${message}` });
+      set({ error: message });
     } finally {
       set({ isActionPending: false });
     }
@@ -198,13 +197,14 @@ export const useTerminalSeriesStore = create<TerminalSeriesState>((set, get) => 
       updateSeriesInStore(selectedSeriesId, { 
         status: 'installed',
         installedVersion: currentSeries.latestVersion,
-        assets: currentSeries.assets.map(a => ({ ...a, status: 'installed' }))
+        assets: withAssetStatus(currentSeries, 'installed')
       });
       addLog(selectedSeriesId, { level: 'success', message: `Updated to ${currentSeries.latestVersion}.` });
-    } catch (err: any) {
+    } catch (err) {
+      const message = getErrorMessage(err, 'Update failed');
       updateSeriesInStore(selectedSeriesId, { status: 'error' });
-      addLog(selectedSeriesId, { level: 'error', message: `Update failed: ${err.message}` });
-      set({ error: err.message });
+      addLog(selectedSeriesId, { level: 'error', message: `Update failed: ${message}` });
+      set({ error: message });
     } finally {
       set({ isActionPending: false });
     }
@@ -228,7 +228,7 @@ export const useTerminalSeriesStore = create<TerminalSeriesState>((set, get) => 
           status: 'not-installed',
           installedVersion: null,
           installPath: null,
-          assets: get().series.find(s => s.id === selectedSeriesId)?.assets.map(a => ({ ...a, status: 'not-installed' })) || []
+          assets: withAssetStatus(get().series.find(s => s.id === selectedSeriesId), 'not-installed')
         });
         addLog(selectedSeriesId, { level: 'success', message: 'Gascii removed.' });
         return;
@@ -240,13 +240,14 @@ export const useTerminalSeriesStore = create<TerminalSeriesState>((set, get) => 
         status: 'not-installed',
         installedVersion: null,
         installPath: null,
-        assets: get().series.find(s => s.id === selectedSeriesId)?.assets.map(a => ({ ...a, status: 'not-installed' })) || []
+        assets: withAssetStatus(get().series.find(s => s.id === selectedSeriesId), 'not-installed')
       });
       addLog(selectedSeriesId, { level: 'success', message: 'Successfully removed.' });
-    } catch (err: any) {
+    } catch (err) {
+      const message = getErrorMessage(err, 'Removal failed');
       updateSeriesInStore(selectedSeriesId, { status: 'error' });
-      addLog(selectedSeriesId, { level: 'error', message: `Removal failed: ${err.message}` });
-      set({ error: err.message });
+      addLog(selectedSeriesId, { level: 'error', message: `Removal failed: ${message}` });
+      set({ error: message });
     } finally {
       set({ isActionPending: false });
     }
@@ -273,9 +274,10 @@ export const useTerminalSeriesStore = create<TerminalSeriesState>((set, get) => 
         level: result.data.ok ? 'success' : 'warning',
         message: result.data.ok ? result.data.message : `${result.data.message}: ${result.data.missing.join(', ')}`,
       });
-    } catch (err: any) {
-      addLog(selectedSeriesId, { level: 'error', message: `Integrity check failed: ${err.message}` });
-      set({ error: err.message });
+    } catch (err) {
+      const message = getErrorMessage(err, 'Integrity check failed');
+      addLog(selectedSeriesId, { level: 'error', message: `Integrity check failed: ${message}` });
+      set({ error: message });
     } finally {
       set({ isActionPending: false });
     }
@@ -297,9 +299,10 @@ export const useTerminalSeriesStore = create<TerminalSeriesState>((set, get) => 
       }
 
       addLog('gascii', { level: 'info', message: `Opened install folder: ${result.data.path}` });
-    } catch (err: any) {
-      addLog(selectedSeriesId, { level: 'error', message: `Failed to open install folder: ${err.message}` });
-      set({ error: err.message });
+    } catch (err) {
+      const message = getErrorMessage(err, 'Failed to open install folder');
+      addLog(selectedSeriesId, { level: 'error', message: `Failed to open install folder: ${message}` });
+      set({ error: message });
     }
   },
 }));

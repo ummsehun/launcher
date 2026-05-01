@@ -49,6 +49,8 @@ export const registerAssetHandlers = (): void => {
     const tmpFilePath = `${targetFilePath}.tmp`;
 
     await fs.mkdir(targetDirFullPath, { recursive: true }).catch(() => {});
+    await InputValidator.assertRealOutputDir(installPath, targetDirFullPath);
+    await InputValidator.assertRealOutputDir(targetDirFullPath, targetFilePath);
 
     const downloadId = `dl_${Date.now()}`;
     const controller = new AbortController();

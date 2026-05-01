@@ -1,10 +1,6 @@
 import path from 'path';
 import { type MediaDownloadFormat } from '@shared/launcherTypes';
-
-const isInsideDirectory = (baseDir: string, targetPath: string): boolean => {
-  const relative = path.relative(baseDir, targetPath);
-  return relative === '' || (!relative.startsWith('..') && !path.isAbsolute(relative));
-};
+import { assertRealPathInside, isPathInside, isRealPathInside } from '../utils/pathSecurity';
 
 export class InputValidator {
   static validateUrl(url: string): void {
@@ -41,7 +37,7 @@ export class InputValidator {
     const resolvedBase = path.resolve(baseDownloadDir);
     const resolved = path.resolve(resolvedBase, targetDir);
 
-    if (!isInsideDirectory(resolvedBase, resolved)) {
+    if (!isPathInside(resolvedBase, resolved)) {
       throw new Error('Invalid output directory: path traversal detected');
     }
 
@@ -52,7 +48,7 @@ export class InputValidator {
     const resolvedBase = path.resolve(baseDownloadDir);
     const resolved = path.resolve(outputDir);
 
-    if (!isInsideDirectory(resolvedBase, resolved)) {
+    if (!isPathInside(resolvedBase, resolved)) {
       throw new Error('Invalid output directory: outside allowed download root');
     }
 
@@ -60,6 +56,18 @@ export class InputValidator {
   }
 
   static isInsideDirectory(baseDir: string, targetPath: string): boolean {
-    return isInsideDirectory(path.resolve(baseDir), path.resolve(targetPath));
+    return isPathInside(path.resolve(baseDir), path.resolve(targetPath));
+  }
+
+  static async assertRealOutputDir(baseDownloadDir: string, outputDir: string): Promise<void> {
+    await assertRealPathInside(
+      path.resolve(baseDownloadDir),
+      path.resolve(outputDir),
+      'Invalid output directory: outside allowed download root',
+    );
+  }
+
+  static async isRealInsideDirectory(baseDir: string, targetPath: string): Promise<boolean> {
+    return isRealPathInside(path.resolve(baseDir), path.resolve(targetPath));
   }
 }
