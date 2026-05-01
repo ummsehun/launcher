@@ -6,6 +6,7 @@ export const IPC_CHANNELS = {
     getInstallPath: 'launcher:get-install-path',
     setInstallPath: 'launcher:set-install-path',
     getDirSummary: 'launcher:get-dir-summary',
+    readLibraryDir: 'launcher:read-library-dir',
     openLibraryDir: 'launcher:open-library-dir',
     getSettings: 'launcher:get-settings',
     setSeriesOption: 'launcher:set-series-option',

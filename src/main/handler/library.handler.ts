@@ -4,6 +4,8 @@ import { constants as fsConstants } from 'fs';
 import path from 'path';
 import { IPC_CHANNELS } from '@shared/ipc';
 import {
+  type FileInfo,
+  type ReadDirResponse,
   type DirSummary,
   type GetDirSummaryResponse,
   type LibraryDirKey,
@@ -93,6 +95,51 @@ export const registerLibraryHandlers = (): void => {
       return { ok: true, data: summaries };
     } catch (error: any) {
       logger.error('getDirSummary failed', error);
+      return { ok: false, error: error.message };
+    }
+  });
+
+  ipcMain.handle(IPC_CHANNELS.launcher.readLibraryDir, async (_event, payload: { seriesId: TerminalSeriesId; dir: string }): Promise<ReadDirResponse> => {
+    try {
+      const installPath = await getLibraryInstallPath(payload.seriesId);
+      if (!installPath) {
+        return { ok: false, error: 'Install path not set' };
+      }
+
+      const fullPath = getLibraryDirPath(payload.seriesId, installPath, payload.dir);
+      
+      try {
+        await fs.access(fullPath);
+      } catch {
+        return { ok: true, data: [] }; // Directory might not exist yet
+      }
+
+      const files = await fs.readdir(fullPath);
+      const fileInfos: FileInfo[] = [];
+
+      for (const file of files) {
+        const filePath = path.join(fullPath, file);
+        try {
+          const stats = await fs.stat(filePath);
+          fileInfos.push({
+            name: file,
+            sizeBytes: stats.size,
+            isDirectory: stats.isDirectory(),
+            lastModified: stats.mtimeMs,
+          });
+        } catch (e) {
+          // Skip if we can't read stats
+        }
+      }
+
+      return { ok: true, data: fileInfos.sort((a, b) => {
+        // Directories first
+        if (a.isDirectory && !b.isDirectory) return -1;
+        if (!a.isDirectory && b.isDirectory) return 1;
+        return a.name.localeCompare(b.name);
+      }) };
+    } catch (error: any) {
+      logger.error('readLibraryDir failed', error);
       return { ok: false, error: error.message };
     }
   });

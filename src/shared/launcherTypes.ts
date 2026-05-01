@@ -110,6 +110,15 @@ export type DirSummary = {
 
 export type GetDirSummaryResponse = Result<DirSummary[]>;
 
+export type FileInfo = {
+  name: string;
+  sizeBytes: number;
+  isDirectory: boolean;
+  lastModified: number;
+};
+
+export type ReadDirResponse = Result<FileInfo[]>;
+
 export type AssetInfo = {
   id: string;
   name: string;

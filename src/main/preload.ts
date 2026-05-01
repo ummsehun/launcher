@@ -26,6 +26,7 @@ contextBridge.exposeInMainWorld('launcher', {
   },
   library: {
     getDirSummary: (seriesId: TerminalSeriesId) => ipcRenderer.invoke(IPC_CHANNELS.launcher.getDirSummary, { seriesId }),
+    readDir: (seriesId: TerminalSeriesId, dir: string) => ipcRenderer.invoke(IPC_CHANNELS.launcher.readLibraryDir, { seriesId, dir }),
     openDir: (seriesId: string, dir: string) => ipcRenderer.invoke(IPC_CHANNELS.launcher.openLibraryDir, { seriesId, dir }),
   },
   assets: {
