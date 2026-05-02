@@ -6,6 +6,11 @@ const GAScii_REPO = 'Gascii';
 const GITHUB_REPO_URL = `https://github.com/${GAScii_OWNER}/${GAScii_REPO}`;
 const LATEST_RELEASE_API_URL = `https://api.github.com/repos/${GAScii_OWNER}/${GAScii_REPO}/releases/latest`;
 
+const getGithubToken = (): string | undefined => {
+  const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+  return token && token.trim().length > 0 ? token.trim() : undefined;
+};
+
 export type GithubReleaseAsset = {
   name: string;
   browser_download_url: string;
@@ -17,6 +22,18 @@ export type SelectedRelease = {
   tag: string;
   asset: GithubReleaseAsset;
 };
+
+export class GithubReleaseLookupError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly responseMessage?: string,
+    readonly rateLimitReset?: string,
+  ) {
+    super(message);
+    this.name = 'GithubReleaseLookupError';
+  }
+}
 
 export class GasciiReleaseResolver {
   async resolveLatestRelease(): Promise<SelectedRelease> {
@@ -65,15 +82,26 @@ export class GasciiReleaseResolver {
   }
 
   private async fetchLatestRelease(): Promise<{ tag_name: string; assets: GithubReleaseAsset[] }> {
+    const token = getGithubToken();
     const response = await fetch(LATEST_RELEASE_API_URL, {
       headers: {
         Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
         'User-Agent': 'TermPlay',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
     });
 
     if (!response.ok) {
-      throw new Error(`GitHub latest release lookup failed: HTTP ${response.status}`);
+      const responseMessage = await this.readGithubErrorMessage(response);
+      const rateLimitReset = response.headers.get('x-ratelimit-reset') ?? undefined;
+      const detail = responseMessage ? `: ${responseMessage}` : '';
+      throw new GithubReleaseLookupError(
+        `GitHub latest release lookup failed: HTTP ${response.status}${detail}`,
+        response.status,
+        responseMessage,
+        rateLimitReset,
+      );
     }
 
     const data = await response.json() as {
@@ -104,6 +132,15 @@ export class GasciiReleaseResolver {
           (typeof asset.size === 'number' || typeof asset.size === 'undefined'),
         ),
     };
+  }
+
+  private async readGithubErrorMessage(response: Response): Promise<string | undefined> {
+    try {
+      const data = await response.json() as { message?: unknown };
+      return typeof data.message === 'string' ? data.message : undefined;
+    } catch {
+      return undefined;
+    }
   }
 }
 

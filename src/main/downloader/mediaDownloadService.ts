@@ -8,6 +8,7 @@ import { BinaryResolver } from './binaryResolver';
 import { InputValidator } from './inputValidator';
 import { ArgumentBuilder, type NormalizedDownloadInput } from './argumentBuilder';
 import { ProcessRunner } from './processRunner';
+import { assertManagedInstallPath } from '../security/installPathPolicy';
 
 const logger = createLogger('media-download-service');
 
@@ -121,12 +122,13 @@ export class MediaDownloadService {
   private async resolveOutputDir(request: StartMediaDownloadRequest): Promise<string> {
     const config = await launcherConfigRepo.getConfig();
     const gasciiInfo = request.seriesId === 'gascii' ? await launcherConfigRepo.getGasciiInstallInfo() : null;
-    const installPath = gasciiInfo?.installPath ?? config.series[request.seriesId]?.installPath;
+    const configuredInstallPath = gasciiInfo?.installPath ?? config.series[request.seriesId]?.installPath;
 
-    if (!installPath) {
+    if (!configuredInstallPath) {
       throw new Error('Install path not set');
     }
 
+    const installPath = await assertManagedInstallPath(request.seriesId, configuredInstallPath);
     const allowedRoot = request.seriesId === 'gascii'
       ? path.resolve(installPath, 'assets')
       : path.resolve(installPath);

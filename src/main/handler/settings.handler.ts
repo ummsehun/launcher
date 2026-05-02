@@ -13,6 +13,7 @@ import {
 } from '@shared/launcherSchemas';
 import { createLogger } from '@shared/logger';
 import { launcherConfigRepo } from '../launcher/launcherConfigRepository';
+import { assertManagedInstallPath } from '../security/installPathPolicy';
 import { gasciiSeriesService } from '../services/gascii-series.service';
 
 const logger = createLogger('settings-handler');
@@ -59,21 +60,21 @@ export const registerSettingsHandlers = (): void => {
 
     try {
       const request = parsed.data;
+      let installPath = await assertManagedInstallPath(request.seriesId, request.path);
+
       if (request.seriesId === 'gascii') {
-        const gasciiInfo = await launcherConfigRepo.getGasciiInstallInfo();
         try {
-          await gasciiSeriesService.bindInstallPath(request.path);
+          const gasciiInfo = await gasciiSeriesService.bindInstallPath(request.path);
+          installPath = gasciiInfo.installPath;
         } catch {
-          if (gasciiInfo) {
-            throw new Error('선택한 폴더에서 Gascii 실행 파일을 찾을 수 없습니다.');
-          }
+          // Managed empty install destinations are allowed; existing installs are bound when valid.
         }
       }
 
       const config = await launcherConfigRepo.getConfig();
-      config.series[request.seriesId].installPath = request.path;
+      config.series[request.seriesId].installPath = installPath;
       await launcherConfigRepo.saveConfig(config);
-      return { ok: true, data: request };
+      return { ok: true, data: { ...request, path: installPath } };
     } catch (error: any) {
       logger.error('setInstallPath failed', error);
       return { ok: false, error: error.message };

@@ -10,16 +10,19 @@ import { createLogger } from '@shared/logger';
 import { launcherConfigRepo } from '../launcher/launcherConfigRepository';
 import { InputValidator } from '../downloader/inputValidator';
 import { compareTags } from './gascii-version';
-import { gasciiReleaseResolver, type SelectedRelease } from './gascii-release-resolver';
+import { GithubReleaseLookupError, gasciiReleaseResolver, type SelectedRelease } from './gascii-release-resolver';
 import { gasciiTerminalLauncher } from './gascii-terminal-launcher';
 import { gasciiInstaller } from './gascii-installer';
 import { gasciiIntegrityService } from './gascii-integrity';
 import { getGasciiBinaryPath, resolveGasciiInstallPath } from './gascii-paths';
+import { assertManagedInstallPath } from '../security/installPathPolicy';
 
 const logger = createLogger('gascii-series-service');
 
 type InstallProgressListener = (event: SeriesInstallProgress) => void;
 type LaunchProgressListener = (event: SeriesLaunchProgress) => void;
+
+const LATEST_RELEASE_FAILURE_LOG_INTERVAL_MS = 5 * 60 * 1000;
 
 const LAUNCH_STEPS: Array<{
   stage: SeriesLaunchProgress['stage'];
@@ -36,6 +39,8 @@ const LAUNCH_STEPS: Array<{
 ];
 
 export class GasciiSeriesService {
+  private lastLatestReleaseFailureLog: { key: string; loggedAt: number } | null = null;
+
   async getStatus(): Promise<SeriesStatusInfo> {
     const installed = await launcherConfigRepo.getGasciiInstallInfo();
     const latest = await this.tryResolveLatestRelease();
@@ -51,13 +56,25 @@ export class GasciiSeriesService {
       };
     }
 
+    const managedInstalled = await this.resolveManagedInstallInfo(installed);
+    if (!managedInstalled) {
+      return {
+        seriesId: 'gascii',
+        installedVersion: null,
+        latestVersion: latest?.tag ?? null,
+        installPath: null,
+        binaryPath: null,
+        status: 'not-installed',
+      };
+    }
+
     return {
       seriesId: 'gascii',
-      installedVersion: installed.installedVersion,
+      installedVersion: managedInstalled.installedVersion,
       latestVersion: latest?.tag ?? null,
-      installPath: installed.installPath,
-      binaryPath: installed.binaryPath,
-      status: latest && compareTags(latest.tag, installed.installedVersion) > 0 ? 'update-available' : 'installed',
+      installPath: managedInstalled.installPath,
+      binaryPath: managedInstalled.binaryPath,
+      status: latest && compareTags(latest.tag, managedInstalled.installedVersion) > 0 ? 'update-available' : 'installed',
     };
   }
 
@@ -101,13 +118,14 @@ export class GasciiSeriesService {
   }
 
   async bindInstallPath(installPath: string): Promise<GasciiInstallInfo> {
-    const binaryPath = getGasciiBinaryPath(installPath);
+    const managedInstallPath = await assertManagedInstallPath('gascii', installPath);
+    const binaryPath = getGasciiBinaryPath(managedInstallPath);
     await fs.access(binaryPath, fs.constants.X_OK);
 
     const installed = await launcherConfigRepo.getGasciiInstallInfo();
     const info: GasciiInstallInfo = {
       installedVersion: installed?.installedVersion ?? 'local',
-      installPath,
+      installPath: managedInstallPath,
       binaryPath,
       lastInstalledAt: installed?.lastInstalledAt ?? new Date().toISOString(),
     };
@@ -131,17 +149,19 @@ export class GasciiSeriesService {
     if (!installed) {
       throw new Error('Gascii is not installed');
     }
+    const installPath = await assertManagedInstallPath('gascii', installed.installPath);
+    const binaryPath = getGasciiBinaryPath(installPath);
 
     this.emitLaunch(onProgress, 2, `Installed version: ${installed.installedVersion}`);
     await this.pauseForSplashStep();
 
     this.emitLaunch(onProgress, 3, 'Verifying executable binary');
-    await fs.access(installed.binaryPath, fs.constants.X_OK);
-    await gasciiIntegrityService.ensureAssetsReady(installed.installPath);
+    await fs.access(binaryPath, fs.constants.X_OK);
+    await gasciiIntegrityService.ensureAssetsReady(installPath);
     await this.pauseForSplashStep();
 
     this.emitLaunch(onProgress, 4, 'Preparing executable permissions');
-    await gasciiInstaller.prepareBinaryPermissions(installed.installPath, installed.binaryPath);
+    await gasciiInstaller.prepareBinaryPermissions(installPath, binaryPath);
     await this.pauseForSplashStep();
 
     this.emitLaunch(onProgress, 5, 'Preparing external terminal');
@@ -158,11 +178,11 @@ export class GasciiSeriesService {
     });
     await this.pauseForSplashComplete();
 
-    const terminal = gasciiTerminalLauncher.launch(installed.installPath, installed.binaryPath);
+    const terminal = gasciiTerminalLauncher.launch(installPath, binaryPath);
 
     return {
       terminal,
-      binaryPath: installed.binaryPath,
+      binaryPath,
     };
   }
 
@@ -170,9 +190,54 @@ export class GasciiSeriesService {
     try {
       return await gasciiReleaseResolver.resolveLatestRelease();
     } catch (error) {
-      logger.warn('latest release lookup failed', error);
+      this.logLatestReleaseFailure(error);
       return null;
     }
+  }
+
+  private async resolveManagedInstallInfo(installed: GasciiInstallInfo): Promise<GasciiInstallInfo | null> {
+    try {
+      const installPath = await assertManagedInstallPath('gascii', installed.installPath);
+      return {
+        ...installed,
+        installPath,
+        binaryPath: getGasciiBinaryPath(installPath),
+      };
+    } catch (error) {
+      logger.warn('ignored unmanaged Gascii install path', {
+        installPath: installed.installPath,
+        message: error instanceof Error ? error.message : String(error),
+      });
+      return null;
+    }
+  }
+
+  private logLatestReleaseFailure(error: unknown): void {
+    const now = Date.now();
+    const message = error instanceof Error ? error.message : String(error);
+    const key = error instanceof GithubReleaseLookupError ? `${error.status}:${message}` : message;
+
+    if (
+      this.lastLatestReleaseFailureLog &&
+      this.lastLatestReleaseFailureLog.key === key &&
+      now - this.lastLatestReleaseFailureLog.loggedAt < LATEST_RELEASE_FAILURE_LOG_INTERVAL_MS
+    ) {
+      return;
+    }
+
+    this.lastLatestReleaseFailureLog = { key, loggedAt: now };
+
+    if (error instanceof GithubReleaseLookupError) {
+      logger.warn('latest release lookup failed', {
+        status: error.status,
+        message: error.message,
+        responseMessage: error.responseMessage,
+        rateLimitReset: error.rateLimitReset,
+      });
+      return;
+    }
+
+    logger.warn('latest release lookup failed', { message });
   }
 
   private emitInstall(

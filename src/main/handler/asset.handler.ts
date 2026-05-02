@@ -9,6 +9,7 @@ import { type AssetInfo, type GetAssetListResponse, type TerminalSeriesId } from
 import { assetRequestSchema, cancelDownloadRequestSchema, downloadAssetRequestSchema } from '@shared/launcherSchemas';
 import { launcherConfigRepo } from '../launcher/launcherConfigRepository';
 import { InputValidator } from '../downloader/inputValidator';
+import { assertManagedInstallPath } from '../security/installPathPolicy';
 
 const logger = createLogger('asset-handler');
 
@@ -55,8 +56,9 @@ export const registerAssetHandlers = (): void => {
     if (!asset || !asset.downloadUrl) return { ok: false, error: 'Asset not found or no URL' };
 
     const config = await launcherConfigRepo.getConfig();
-    const installPath = config.series[request.seriesId]?.installPath;
-    if (!installPath) return { ok: false, error: 'Install path not set' };
+    const configuredInstallPath = config.series[request.seriesId]?.installPath;
+    if (!configuredInstallPath) return { ok: false, error: 'Install path not set' };
+    const installPath = await assertManagedInstallPath(request.seriesId, configuredInstallPath);
 
     const targetDirFullPath = InputValidator.validateOutputRoot(installPath, asset.targetDir);
     const targetFilePath = InputValidator.validateOutputDir(targetDirFullPath, path.join(targetDirFullPath, asset.fileName));

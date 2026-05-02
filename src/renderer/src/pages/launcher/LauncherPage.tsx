@@ -8,6 +8,8 @@ import { useUIStore } from '../../shared/stores/uiStore';
 import { Loader2, Home, Globe, Link, MessageSquare, Settings as SettingsIcon, Minus, X, Square } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../shared/lib/cn';
+import gasciiBanner from '../../../assets/gascii/banner.png';
+import mienjineBanner from '../../../assets/mienjine/banner.png';
 
 export const LauncherPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -61,13 +63,13 @@ export const LauncherPage: React.FC = () => {
   const socialLinks = [
     { icon: Home, url: 'https://github.com/ummsehun/launcher' },
     { icon: Globe, url: '#' },
-    { 
-      icon: Link, 
-      url: currentSeries?.id === 'gascii' 
-        ? 'https://github.com/ummsehun/Gascii' 
-        : currentSeries?.id === 'mienjine' 
-          ? 'https://github.com/ummsehun/3D-enjine' 
-          : '#' 
+    {
+      icon: Link,
+      url: currentSeries?.id === 'gascii'
+        ? 'https://github.com/ummsehun/Gascii'
+        : currentSeries?.id === 'mienjine'
+          ? 'https://github.com/ummsehun/3D-enjine'
+          : '#'
     },
     { icon: MessageSquare, url: '#' }
   ];
@@ -83,24 +85,43 @@ export const LauncherPage: React.FC = () => {
   return (
     <AppShell sidebar={<SeriesSidebar />}>
       {/* Immersive Background */}
-      <div 
+      <div
         className="absolute inset-0 z-0 transition-colors duration-1000"
         style={getBackgroundStyle()}
       >
-        {/* Mock character / abstract art placeholder */}
-        <div className="absolute right-0 bottom-0 w-2/3 h-[90%] bg-gradient-to-t from-black/80 to-transparent z-0 pointer-events-none" />
+        {/* Series banner — full background */}
+        {currentSeries?.id === 'gascii' && (
+          <img
+            src={gasciiBanner}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+            aria-hidden="true"
+          />
+        )}
+        {currentSeries?.id === 'mienjine' && (
+          <img
+            src={mienjineBanner}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+            aria-hidden="true"
+          />
+        )}
+        {/* Overlay so left-side UI remains readable */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent pointer-events-none" />
+        {/* Bottom vignette */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
       </div>
 
       {/* Floating Right Social Toolbar */}
       <div className="absolute right-6 top-24 flex flex-col gap-3 z-40 bg-black/20 backdrop-blur-md p-2 rounded-2xl border border-white/10">
         {socialLinks.map((item, idx) => (
-          <button 
-            key={idx} 
+          <button
+            key={idx}
             onClick={() => void openExternalLink(item.url)}
             className={cn(
               "w-8 h-8 rounded-full flex items-center justify-center transition-all",
-              item.url !== '#' 
-                ? "bg-white/5 text-white/70 hover:text-white hover:bg-white/20 cursor-pointer" 
+              item.url !== '#'
+                ? "bg-white/5 text-white/70 hover:text-white hover:bg-white/20 cursor-pointer"
                 : "bg-white/5 text-white/20 cursor-not-allowed"
             )}
             title={item.url !== '#' ? item.url : 'Not Available'}
@@ -115,7 +136,7 @@ export const LauncherPage: React.FC = () => {
         <div className="relative z-10 w-full h-full flex">
           {/* Left Hero Area */}
           <SeriesHero />
-          
+
           {/* Bottom Right CTA Area */}
           <div className="absolute bottom-8 right-8 z-50">
             <SeriesActionBar />

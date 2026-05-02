@@ -9,6 +9,7 @@ import { Package, BookOpen, Rocket, Library } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUIStore, ModalType } from '../../../shared/stores/uiStore';
 
+
 export const SeriesHero: React.FC = () => {
   const { t } = useTranslation();
   const { openModal } = useUIStore();
@@ -37,7 +38,7 @@ export const SeriesHero: React.FC = () => {
         </div>
       </div>
 
-      {/* Mock Image Carousel */}
+      {/* Banner / Image Area */}
       <div className="w-full h-48 bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl mb-4 overflow-hidden relative pointer-events-auto shadow-2xl">
         <div className="absolute inset-0 bg-gradient-to-tr from-launcher-accent/20 to-transparent mix-blend-overlay" />
         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
@@ -69,7 +70,7 @@ export const SeriesHero: React.FC = () => {
             </button>
           ))}
         </div>
-        
+
         <div className="flex-1 relative overflow-y-auto scrollbar-none">
           {selectedTab === 'overview' && <SeriesMetadata />}
           {selectedTab === 'assets' && <SeriesAssetsPanel />}
@@ -86,8 +87,8 @@ export const SeriesHero: React.FC = () => {
           { id: 'assets', icon: Package, label: t('launcher.assets_action') },
           { id: 'guide', icon: BookOpen, label: t('launcher.guide_action') }
         ].map((item, idx) => (
-          <button 
-            key={idx} 
+          <button
+            key={idx}
             onClick={() => openModal(item.id as ModalType)}
             className="flex flex-col items-center gap-2 group"
           >

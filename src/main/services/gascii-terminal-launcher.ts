@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { platform } from 'node:os';
 import { createLogger } from '@shared/logger';
+import { createGasciiSandboxCommand } from '../security/processSandbox';
 
 const logger = createLogger('gascii-terminal-launcher');
 
@@ -10,7 +11,7 @@ type TerminalLauncher = {
   name: string;
   executable: string;
   executablePaths: string[];
-  args: (cwd: string, binaryPath: string) => string[];
+  args: (cwd: string, commandText: string) => string[];
 };
 
 const shellQuote = (value: string): string => `'${value.replace(/'/g, "'\\''")}'`;
@@ -23,7 +24,7 @@ const MAC_TERMINAL_PRIORITY: TerminalLauncher[] = [
       '/Applications/Ghostty.app/Contents/MacOS/ghostty',
       `${process.env.HOME ?? ''}/Applications/Ghostty.app/Contents/MacOS/ghostty`,
     ],
-    args: (cwd, binaryPath) => [`--working-directory=${cwd}`, '-e', 'sh', '-lc', `${shellQuote(binaryPath)}; exit_code=$?; printf "\\nGascii exited with code %s. Press Enter to close..." "$exit_code"; read _; exit "$exit_code"`],
+    args: (cwd, commandText) => [`--working-directory=${cwd}`, '-e', 'sh', '-lc', `${commandText}; exit_code=$?; printf "\\nGascii exited with code %s. Press Enter to close..." "$exit_code"; read _; exit "$exit_code"`],
   },
   {
     name: 'kitty',
@@ -32,20 +33,22 @@ const MAC_TERMINAL_PRIORITY: TerminalLauncher[] = [
       '/Applications/kitty.app/Contents/MacOS/kitty',
       `${process.env.HOME ?? ''}/Applications/kitty.app/Contents/MacOS/kitty`,
     ],
-    args: (cwd, binaryPath) => ['--directory', cwd, '--start-as', 'fullscreen', 'sh', '-lc', `${shellQuote(binaryPath)}; exit_code=$?; printf "\\nGascii exited with code %s. Press Enter to close..." "$exit_code"; read _; exit "$exit_code"`],
+    args: (cwd, commandText) => ['--directory', cwd, '--start-as', 'fullscreen', 'sh', '-lc', `${commandText}; exit_code=$?; printf "\\nGascii exited with code %s. Press Enter to close..." "$exit_code"; read _; exit "$exit_code"`],
   },
 ];
 
 export class GasciiTerminalLauncher {
   launch(cwd: string, binaryPath: string): string {
+    const sandbox = createGasciiSandboxCommand(cwd, binaryPath);
+
     if (platform() === 'darwin') {
-      return this.launchInMacTerminalPriority(cwd, binaryPath);
+      return this.launchInMacTerminalPriority(cwd, sandbox.commandText, sandbox.label);
     }
 
-    return this.launchInLinuxTerminal(cwd, binaryPath);
+    return this.launchInLinuxTerminal(cwd, sandbox.commandText, sandbox.label);
   }
 
-  private launchInMacTerminalPriority(cwd: string, binaryPath: string): string {
+  private launchInMacTerminalPriority(cwd: string, commandText: string, sandboxLabel: string): string {
     for (const launcher of MAC_TERMINAL_PRIORITY) {
       const executable = this.resolveExecutable(launcher.executable, launcher.executablePaths);
       if (!executable) {
@@ -55,11 +58,11 @@ export class GasciiTerminalLauncher {
 
       try {
         if (launcher.name === 'Ghostty') {
-          this.launchMacAppWithArgs('Ghostty.app', launcher.args(cwd, binaryPath));
+          this.launchMacAppWithArgs('Ghostty.app', launcher.args(cwd, commandText));
         } else {
-          this.launchTerminalProcess(executable, launcher.args(cwd, binaryPath));
+          this.launchTerminalProcess(executable, launcher.args(cwd, commandText));
         }
-        return launcher.name;
+        return `${launcher.name} (${sandboxLabel})`;
       } catch (error) {
         logger.warn('terminal launch failed, trying next option', {
           terminal: launcher.name,
@@ -72,7 +75,7 @@ export class GasciiTerminalLauncher {
     const script = [
       '#!/bin/sh',
       `cd ${shellQuote(cwd)}`,
-      shellQuote(binaryPath),
+      commandText,
       'exit_code=$?',
       'printf "\\nGascii exited with code %s. Press Enter to close..." "$exit_code"',
       'read _',
@@ -92,10 +95,10 @@ export class GasciiTerminalLauncher {
       const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
       throw new Error(`Terminal launch failed: ${detail}`);
     }
-    return 'Terminal';
+    return `Terminal (${sandboxLabel})`;
   }
 
-  private launchInLinuxTerminal(cwd: string, binaryPath: string): string {
+  private launchInLinuxTerminal(cwd: string, commandText: string, sandboxLabel: string): string {
     const candidates = [
       process.env.TERMINAL,
       'x-terminal-emulator',
@@ -111,8 +114,8 @@ export class GasciiTerminalLauncher {
       }
 
       try {
-        this.launchTerminalProcess(executable, ['-e', 'sh', '-lc', `cd ${shellQuote(cwd)} && ${shellQuote(binaryPath)}`]);
-        return terminal;
+        this.launchTerminalProcess(executable, ['-e', 'sh', '-lc', commandText]);
+        return `${terminal} (${sandboxLabel})`;
       } catch (error) {
         logger.warn('linux terminal launch failed, trying next option', {
           terminal,

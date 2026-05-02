@@ -15,6 +15,7 @@ import { libraryDirRequestSchema, seriesRequestSchema } from '@shared/launcherSc
 import { createLogger } from '@shared/logger';
 import { launcherConfigRepo } from '../launcher/launcherConfigRepository';
 import { InputValidator } from '../downloader/inputValidator';
+import { assertManagedInstallPath } from '../security/installPathPolicy';
 
 const logger = createLogger('library-handler');
 
@@ -40,15 +41,19 @@ const resolveUniqueFilePath = async (directoryPath: string, fileName: string): P
 };
 
 const getLibraryInstallPath = async (seriesId: TerminalSeriesId): Promise<string> => {
+  let installPath: string;
+
   if (seriesId === 'gascii') {
     const gasciiInfo = await launcherConfigRepo.getGasciiInstallInfo();
     if (gasciiInfo?.installPath) {
-      return gasciiInfo.installPath;
+      installPath = gasciiInfo.installPath;
+      return assertManagedInstallPath(seriesId, installPath);
     }
   }
 
   const config = await launcherConfigRepo.getConfig();
-  return config.series[seriesId].installPath;
+  installPath = config.series[seriesId].installPath;
+  return installPath ? assertManagedInstallPath(seriesId, installPath) : '';
 };
 
 const getLibraryDirPath = (seriesId: TerminalSeriesId, installPath: string, dir: string): string => {

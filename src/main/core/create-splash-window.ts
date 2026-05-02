@@ -1,20 +1,31 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BrowserWindow, nativeTheme, type Event } from 'electron';
+import { BrowserWindow, nativeTheme, screen, type Event } from 'electron';
 import { configureWindowSecurity, isAllowedDevRendererUrl } from './window-security';
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 
 export const createSplashWindow = (): BrowserWindow => {
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { x, y, width, height } = primaryDisplay.bounds;
+
   const splashWindow = new BrowserWindow({
-    width: 960,
-    height: 540,
+    x,
+    y,
+    width,
+    height,
+
+    // macOS native fullscreen이 아니라 borderless pseudo fullscreen
+    frame: false,
+    fullscreen: false,
+    fullscreenable: false,
+
     resizable: false,
     maximizable: false,
-    fullscreenable: false,
     title: 'TermPlay',
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#050505' : '#ffffff',
     show: false,
+
     webPreferences: {
       preload: join(currentDirectory, '../preload/preload.cjs'),
       contextIsolation: true,
@@ -45,6 +56,7 @@ export const createSplashWindow = (): BrowserWindow => {
 export const waitForSplashWindowReady = async (splashWindow: BrowserWindow): Promise<void> => {
   await new Promise<void>((resolve, reject) => {
     let didSettle = false;
+
     const settle = (callback: () => void) => {
       if (didSettle) {
         return;
@@ -69,6 +81,7 @@ export const waitForSplashWindowReady = async (splashWindow: BrowserWindow): Pro
         });
       }
     };
+
     const onReadyToShow = () => {
       if (!splashWindow.webContents.isLoading()) {
         settle(() => {
@@ -77,12 +90,14 @@ export const waitForSplashWindowReady = async (splashWindow: BrowserWindow): Pro
         });
       }
     };
+
     const onFail = (_event: Event, _errorCode: number, errorDescription: string) => {
       settle(() => {
         cleanup();
         reject(new Error(`Splash load failed: ${errorDescription}`));
       });
     };
+
     const onClosed = () => {
       settle(() => {
         cleanup();
