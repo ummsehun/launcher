@@ -11,7 +11,11 @@ export const getGasciiBinaryPath = (installPath: string): string => {
     return join(installPath, 'bin', 'gascii-bin');
   }
 
-  throw new Error('Windows support is not ready yet');
+  if (platform() === 'win32') {
+    return join(installPath, 'gascii.exe');
+  }
+
+  throw new Error(`Unsupported platform: ${platform()}`);
 };
 
 export const resolveGasciiInstallPath = async (): Promise<string> => {

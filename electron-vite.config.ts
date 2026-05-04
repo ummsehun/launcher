@@ -34,6 +34,10 @@ export default defineConfig({
   renderer: {
     root: resolve(__dirname, 'src/renderer'),
     plugins: [tailwindcss()],
+    server: {
+      host: '127.0.0.1',
+      port: 5173,
+    },
     resolve: {
       alias: {
         '@renderer': resolve(__dirname, 'src/renderer/src'),

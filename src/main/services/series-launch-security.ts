@@ -39,6 +39,10 @@ export const createSeriesLaunchCommand = (
     return createGasciiSandboxCommand(cwd, executablePath, definition.displayName);
   }
 
+  if (platform() === 'win32') {
+    return createWindowsCommand(cwd, executablePath, 'direct-windows');
+  }
+
   throw new Error(`Unsupported launch platform: ${platform()}`);
 };
 
@@ -47,3 +51,9 @@ const createDirectCommand = (cwd: string, executablePath: string, label: string)
   label,
 });
 
+const createWindowsCommand = (cwd: string, executablePath: string, label: string): SandboxedLaunchCommand => ({
+  commandText: `cd /d ${windowsQuote(cwd)} && ${windowsQuote(executablePath)}`,
+  label,
+});
+
+const windowsQuote = (value: string): string => `"${value.replace(/"/g, '\\"')}"`;

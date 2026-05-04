@@ -1,6 +1,7 @@
 import { type ChildProcess, spawn, spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { platform } from 'node:os';
 import { createLogger } from '@shared/logger';
 import { SERIES_DEFINITIONS } from './series-definitions';
 import { createSeriesLaunchCommand } from './series-launch-security';
@@ -50,6 +51,10 @@ const MAC_TERMINAL_PRIORITY: TerminalLauncher[] = [
 export class MienjineTerminalLauncher {
   launch(cwd: string, startScriptPath: string): string {
     const launchCommand = createSeriesLaunchCommand(SERIES_DEFINITIONS.mienjine, cwd, startScriptPath);
+    if (platform() === 'win32') {
+      return this.launchInWindowsTerminal(cwd, launchCommand.commandText, launchCommand.label);
+    }
+
     return this.launchInMacTerminalPriority(cwd, launchCommand.commandText, launchCommand.label);
   }
 
@@ -126,6 +131,27 @@ export class MienjineTerminalLauncher {
       const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
       throw new Error(`${appName} launch failed: ${detail}`);
     }
+  }
+
+  private launchInWindowsTerminal(cwd: string, commandText: string, sandboxLabel: string): string {
+    const title = 'TermPlay - Mienjine';
+    const result = spawnSync('cmd.exe', ['/c', 'start', title, 'cmd.exe', '/k', commandText], {
+      cwd,
+      encoding: 'utf8',
+      stdio: 'pipe',
+      windowsHide: true,
+    });
+
+    if (result.error) {
+      throw new Error(`Windows terminal launch failed: ${result.error.message}`);
+    }
+
+    if (result.status !== 0) {
+      const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
+      throw new Error(`Windows terminal launch failed: ${detail}`);
+    }
+
+    return `Windows Terminal (${sandboxLabel})`;
   }
 
   private requestMacFullscreen(appName: string): void {

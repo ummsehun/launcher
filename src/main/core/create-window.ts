@@ -1,7 +1,7 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { BrowserWindow, nativeTheme } from 'electron';
-import { configureWindowSecurity, isAllowedDevRendererUrl } from './window-security';
+import { configureWindowSecurity, isAllowedDevRendererUrl, normalizeDevRendererUrl } from './window-security';
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 
@@ -24,7 +24,7 @@ export const createMainWindow = (): BrowserWindow => {
   configureWindowSecurity(mainWindow);
 
   if (process.env.ELECTRON_RENDERER_URL && isAllowedDevRendererUrl(process.env.ELECTRON_RENDERER_URL)) {
-    void mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);
+    void mainWindow.loadURL(normalizeDevRendererUrl(process.env.ELECTRON_RENDERER_URL));
   } else {
     void mainWindow.loadFile(join(currentDirectory, '../renderer/index.html'));
   }

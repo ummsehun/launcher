@@ -1,6 +1,6 @@
 import { app, type BrowserWindow, shell } from 'electron';
 
-const ALLOWED_DEV_RENDERER_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
+const ALLOWED_DEV_RENDERER_HOSTS = new Set(['localhost', '127.0.0.1']);
 const ALLOWED_EXTERNAL_HOSTS = new Set(['github.com', 'www.github.com']);
 
 export const isAllowedDevRendererUrl = (value: string): boolean => {
@@ -14,6 +14,15 @@ export const isAllowedDevRendererUrl = (value: string): boolean => {
   } catch {
     return false;
   }
+};
+
+export const normalizeDevRendererUrl = (value: string): string => {
+  const url = new URL(value);
+  if (url.hostname === 'localhost') {
+    url.hostname = '127.0.0.1';
+  }
+
+  return url.toString();
 };
 
 export const isAllowedExternalUrl = (value: string): boolean => {

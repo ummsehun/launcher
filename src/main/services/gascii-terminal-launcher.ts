@@ -56,6 +56,10 @@ export class GasciiTerminalLauncher {
       return this.launchInMacTerminalPriority(cwd, launchCommand.commandText, launchCommand.label);
     }
 
+    if (platform() === 'win32') {
+      return this.launchInWindowsTerminal(cwd, launchCommand.commandText, launchCommand.label);
+    }
+
     return this.launchInLinuxTerminal(cwd, launchCommand.commandText, launchCommand.label);
   }
 
@@ -144,6 +148,27 @@ export class GasciiTerminalLauncher {
     }
 
     throw new Error('No supported Linux terminal was found');
+  }
+
+  private launchInWindowsTerminal(cwd: string, commandText: string, sandboxLabel: string): string {
+    const title = `TermPlay - Gascii`;
+    const result = spawnSync('cmd.exe', ['/c', 'start', title, 'cmd.exe', '/k', commandText], {
+      cwd,
+      encoding: 'utf8',
+      stdio: 'pipe',
+      windowsHide: true,
+    });
+
+    if (result.error) {
+      throw new Error(`Windows terminal launch failed: ${result.error.message}`);
+    }
+
+    if (result.status !== 0) {
+      const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
+      throw new Error(`Windows terminal launch failed: ${detail}`);
+    }
+
+    return `Windows Terminal (${sandboxLabel})`;
   }
 
   private launchMacAppWithArgs(appName: string, args: string[]): void {

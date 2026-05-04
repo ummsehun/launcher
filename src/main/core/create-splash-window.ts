@@ -1,7 +1,7 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { BrowserWindow, nativeTheme, screen, type Event } from 'electron';
-import { configureWindowSecurity, isAllowedDevRendererUrl } from './window-security';
+import { configureWindowSecurity, isAllowedDevRendererUrl, normalizeDevRendererUrl } from './window-security';
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 
@@ -46,7 +46,7 @@ export const createSplashWindow = (options?: SplashWindowOptions): BrowserWindow
   });
 
   if (process.env.ELECTRON_RENDERER_URL && isAllowedDevRendererUrl(process.env.ELECTRON_RENDERER_URL)) {
-    const url = new URL(process.env.ELECTRON_RENDERER_URL);
+    const url = new URL(normalizeDevRendererUrl(process.env.ELECTRON_RENDERER_URL));
     url.searchParams.set('view', 'splash');
     if (options) {
       url.searchParams.set('launchId', options.launchId);

@@ -70,14 +70,14 @@ export class GasciiReleaseResolver {
       return 'linux-x64.tar.gz';
     }
 
+    if (platform() === 'win32' && process.arch === 'x64') {
+      return 'windows-x64.zip';
+    }
+
     throw new Error(`Unsupported platform: ${platform()} ${process.arch}`);
   }
 
   assertSupportedPlatform(): void {
-    if (platform() === 'win32') {
-      throw new Error('Windows support is not ready yet');
-    }
-
     this.getAssetSuffix();
   }
 

@@ -33,6 +33,10 @@ type LaunchResult =
 declare global {
   interface Window {
     launcher: {
+      platform: {
+        current: NodeJS.Platform;
+        arch: string;
+      };
       game: {
         launch: (gameId: GameId) => Promise<LaunchResult>;
         onStatusChanged: (

@@ -1,7 +1,7 @@
 import { platform } from 'node:os';
 import { type AssetInfo, type LibraryDirKey, type TerminalSeriesId } from '@shared/launcherTypes';
 
-export type RuntimePlatformKey = 'darwin-arm64' | 'linux-x64';
+export type RuntimePlatformKey = 'darwin-arm64' | 'linux-x64' | 'win32-x64';
 
 export type ReleaseAssetDefinition = {
   name: string;
@@ -19,6 +19,7 @@ export type StaticReleaseDefinition = {
 export type LaunchSecurityPolicy = {
   macos: 'sandbox-required' | 'sandbox-if-enabled' | 'direct';
   linux: 'sandbox-required' | 'direct';
+  windows: 'direct';
 };
 
 export type SeriesDefinition = {
@@ -41,6 +42,10 @@ export const getRuntimePlatformKey = (): RuntimePlatformKey => {
     return 'linux-x64';
   }
 
+  if (platform() === 'win32' && process.arch === 'x64') {
+    return 'win32-x64';
+  }
+
   throw new Error(`Unsupported platform: ${platform()} ${process.arch}`);
 };
 
@@ -58,6 +63,7 @@ export const SERIES_DEFINITIONS = {
     launchSecurity: {
       macos: 'sandbox-if-enabled',
       linux: 'sandbox-required',
+      windows: 'direct',
     },
   },
   mienjine: {
@@ -70,6 +76,7 @@ export const SERIES_DEFINITIONS = {
     launchSecurity: {
       macos: 'sandbox-if-enabled',
       linux: 'sandbox-required',
+      windows: 'direct',
     },
     release: {
       owner: 'ummsehun',
@@ -85,6 +92,11 @@ export const SERIES_DEFINITIONS = {
           name: 'terminal-miku3d-linux-x64.tar.gz',
           size: 3_870_000,
           digest: 'sha256:e861e9e9a877ea8b67176296c3ef6ac3e373ac91269dfc67450abe8448f3377f',
+        },
+        'win32-x64': {
+          name: 'terminal-miku3d-windows-x64.zip',
+          size: 3_820_000,
+          digest: 'sha256:3939a23d373d1018beef894d8e93ed22e3610c62bbef303a2b2471ae2256db6f',
         },
       },
     },

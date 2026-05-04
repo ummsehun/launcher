@@ -30,18 +30,28 @@ export const assertSafeTarArchiveEntries = (archivePath: string): void => {
   }
 
   for (const entry of entries) {
-    const normalized = posix.normalize(entry);
-    if (
-      entry.includes('\0') ||
-      normalized === '.' ||
-      normalized.startsWith('../') ||
-      normalized.includes('/../') ||
-      normalized.startsWith('/') ||
-      isAbsolute(entry) ||
-      /^[A-Za-z]:/.test(entry)
-    ) {
-      throw new Error(`Archive contains unsafe entry: ${entry}`);
-    }
+    assertSafeArchiveEntry(entry);
+  }
+};
+
+export const assertSafeZipArchiveEntries = (archivePath: string): void => {
+  const result = spawnSync('unzip', ['-Z1', archivePath], {
+    encoding: 'utf8',
+    stdio: 'pipe',
+  });
+
+  if (result.status !== 0) {
+    const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
+    throw new Error(`Archive listing failed: ${detail}`);
+  }
+
+  const entries = result.stdout.split(/\r?\n/).filter(Boolean);
+  if (entries.length === 0) {
+    throw new Error('Archive is empty');
+  }
+
+  for (const entry of entries) {
+    assertSafeArchiveEntry(entry);
   }
 };
 
@@ -59,3 +69,44 @@ export const assertNoSymlinks = async (rootPath: string): Promise<void> => {
   }));
 };
 
+export const extractArchiveToDirectory = (archivePath: string, targetDirectory: string): void => {
+  if (archivePath.endsWith('.zip')) {
+    assertSafeZipArchiveEntries(archivePath);
+    const result = spawnSync('unzip', ['-q', archivePath, '-d', targetDirectory], {
+      encoding: 'utf8',
+      stdio: 'pipe',
+    });
+
+    if (result.status !== 0) {
+      const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
+      throw new Error(`Archive extraction failed: ${detail}`);
+    }
+    return;
+  }
+
+  assertSafeTarArchiveEntries(archivePath);
+  const result = spawnSync('tar', ['-xzf', archivePath, '-C', targetDirectory], {
+    encoding: 'utf8',
+    stdio: 'pipe',
+  });
+
+  if (result.status !== 0) {
+    const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
+    throw new Error(`Archive extraction failed: ${detail}`);
+  }
+};
+
+const assertSafeArchiveEntry = (entry: string): void => {
+  const normalized = posix.normalize(entry);
+  if (
+    entry.includes('\0') ||
+    normalized === '.' ||
+    normalized.startsWith('../') ||
+    normalized.includes('/../') ||
+    normalized.startsWith('/') ||
+    isAbsolute(entry) ||
+    /^[A-Za-z]:/.test(entry)
+  ) {
+    throw new Error(`Archive contains unsafe entry: ${entry}`);
+  }
+};

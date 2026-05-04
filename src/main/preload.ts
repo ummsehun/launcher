@@ -10,6 +10,10 @@ import type {
 } from '@shared/launcherTypes';
 
 contextBridge.exposeInMainWorld('launcher', {
+  platform: {
+    current: process.platform,
+    arch: process.arch,
+  },
   game: {
     launch: (gameId: GameId) => ipcRenderer.invoke(IPC_CHANNELS.launchGame, gameId),
     onStatusChanged: (callback: (event: unknown) => void) => {

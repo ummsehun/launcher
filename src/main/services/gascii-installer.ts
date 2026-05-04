@@ -11,7 +11,7 @@ import { createLogger } from '@shared/logger';
 import { launcherConfigRepo } from '../launcher/launcherConfigRepository';
 import { getGasciiBinaryPath, resolveGasciiInstallPath } from './gascii-paths';
 import { type SelectedRelease } from './gascii-release-resolver';
-import { assertNoSymlinks, assertSafeTarArchiveEntries, verifySha256Digest } from './archive-install-utils';
+import { assertNoSymlinks, extractArchiveToDirectory, verifySha256Digest } from './archive-install-utils';
 
 const logger = createLogger('gascii-installer');
 
@@ -125,17 +125,7 @@ export class GasciiInstaller {
     this.emitInstall(onProgress, 'extracting', INSTALL_STAGES.extracting, 'Extracting archive');
     await fs.rm(stagingPath, { recursive: true, force: true });
     await fs.mkdir(stagingPath, { recursive: true });
-    assertSafeTarArchiveEntries(archivePath);
-
-    const result = spawnSync('tar', ['-xzf', archivePath, '-C', stagingPath], {
-      encoding: 'utf8',
-      stdio: 'pipe',
-    });
-
-    if (result.status !== 0) {
-      const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
-      throw new Error(`Archive extraction failed: ${detail}`);
-    }
+    extractArchiveToDirectory(archivePath, stagingPath);
 
     await assertNoSymlinks(stagingPath);
     const extractedRoot = await this.resolveExtractedRoot(stagingPath);
