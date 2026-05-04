@@ -3,6 +3,7 @@ import { registerLibraryHandlers } from './library.handler';
 import { registerMediaDownloadHandlers } from './media-download.handler';
 import { registerNavigationHandlers } from './navigation.handler';
 import { registerSettingsHandlers } from './settings.handler';
+import { registerAutoUpdateHandlers } from '../services/auto-update.service';
 
 export const registerLauncherHandlers = (): void => {
   registerSettingsHandlers();
@@ -10,4 +11,5 @@ export const registerLauncherHandlers = (): void => {
   registerAssetHandlers();
   registerMediaDownloadHandlers();
   registerNavigationHandlers();
+  registerAutoUpdateHandlers();
 };

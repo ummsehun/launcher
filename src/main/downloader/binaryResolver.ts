@@ -7,6 +7,9 @@ import { promisify } from 'util';
 const execFileAsync = promisify(execFile);
 
 export class BinaryResolver {
+  private static ytDlpVersionPromise: Promise<string> | null = null;
+  private static ffmpegVersionPromise: Promise<string> | null = null;
+
   private static get resourcesPath() {
     return app.isPackaged
       ? process.resourcesPath
@@ -29,21 +32,44 @@ export class BinaryResolver {
 
   static async assertExecutable(filePath: string): Promise<void> {
     try {
-      await fs.access(filePath, fs.constants.X_OK);
+      const accessMode = process.platform === 'win32' ? fs.constants.F_OK : fs.constants.X_OK;
+      await fs.access(filePath, accessMode);
     } catch {
       throw new Error(`Binary not found or not executable at: ${filePath}`);
     }
   }
 
   static async checkYtDlpVersion(): Promise<string> {
-    await this.assertExecutable(this.ytDlpPath);
-    const { stdout } = await execFileAsync(this.ytDlpPath, ['--version']);
-    return stdout.trim();
+    if (!this.ytDlpVersionPromise) {
+      this.ytDlpVersionPromise = this.readYtDlpVersion().catch((error) => {
+        this.ytDlpVersionPromise = null;
+        throw error;
+      });
+    }
+
+    return this.ytDlpVersionPromise;
   }
 
   static async checkFfmpegAvailable(): Promise<string> {
+    if (!this.ffmpegVersionPromise) {
+      this.ffmpegVersionPromise = this.readFfmpegVersion().catch((error) => {
+        this.ffmpegVersionPromise = null;
+        throw error;
+      });
+    }
+
+    return this.ffmpegVersionPromise;
+  }
+
+  private static async readYtDlpVersion(): Promise<string> {
+    await this.assertExecutable(this.ytDlpPath);
+    const { stdout } = await execFileAsync(this.ytDlpPath, ['--version'], { timeout: 10000 });
+    return stdout.trim();
+  }
+
+  private static async readFfmpegVersion(): Promise<string> {
     await this.assertExecutable(this.ffmpegPath);
-    const { stdout } = await execFileAsync(this.ffmpegPath, ['-version']);
+    const { stdout } = await execFileAsync(this.ffmpegPath, ['-version'], { timeout: 10000 });
     return stdout.split('\n')[0].trim();
   }
 }

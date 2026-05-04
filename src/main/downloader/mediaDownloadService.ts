@@ -18,6 +18,8 @@ type StartMediaDownloadOptions = {
 
 export class MediaDownloadService {
   private readonly runningJobs = new Map<string, { runner: ProcessRunner; sendProgress: (progress: MediaDownloadProgress) => void }>();
+  private didLogYtDlpHealth = false;
+  private didLogFfmpegHealth = false;
 
   async start(request: StartMediaDownloadRequest, options: StartMediaDownloadOptions): Promise<{ jobId: string }> {
     const jobId = `media_${randomUUID()}`;
@@ -39,12 +41,16 @@ export class MediaDownloadService {
       await fs.mkdir(outputDir, { recursive: true });
 
       const ytDlpVersion = await BinaryResolver.checkYtDlpVersion();
-      logger.info('yt-dlp health check passed', { ytDlpVersion });
+      if (!this.didLogYtDlpHealth) {
+        logger.info('yt-dlp health check passed', { ytDlpVersion });
+        this.didLogYtDlpHealth = true;
+      }
 
       const ffmpegPath = BinaryResolver.ffmpegPath;
-      if (request.format === 'mp3') {
-        const ffmpegVersion = await BinaryResolver.checkFfmpegAvailable();
+      const ffmpegVersion = await BinaryResolver.checkFfmpegAvailable();
+      if (!this.didLogFfmpegHealth) {
         logger.info('ffmpeg health check passed', { ffmpegVersion });
+        this.didLogFfmpegHealth = true;
       }
 
       const normalizedInput: NormalizedDownloadInput = {

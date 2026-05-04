@@ -14,6 +14,7 @@ import type {
   SetSeriesOptionResponse,
   StartMediaDownloadRequest,
   MediaDownloadProgress,
+  LauncherUpdateState,
   TerminalSeriesId,
 } from '@shared/launcherTypes';
 
@@ -78,6 +79,13 @@ declare global {
       };
       navigation: {
         openExternal: (url: string) => Promise<Result<null>>;
+      };
+      updates: {
+        getStatus: () => Promise<Result<LauncherUpdateState>>;
+        check: () => Promise<Result<LauncherUpdateState>>;
+        download: () => Promise<Result<LauncherUpdateState>>;
+        install: () => Promise<Result<null>>;
+        onStatusChanged: (callback: (event: LauncherUpdateState) => void) => () => void;
       };
     };
   }

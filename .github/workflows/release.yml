@@ -22,6 +22,9 @@ jobs:
           - platform: windows
             runner: windows-latest
             script: release:win
+          - platform: macos
+            runner: macos-latest
+            script: release:mac
 
     steps:
       - name: Checkout
@@ -92,8 +95,20 @@ jobs:
 
           Copy-Item $ffmpeg.FullName resources/bin/win32-x64/ffmpeg.exe
 
+      - name: Prepare macOS bundled binaries
+        if: matrix.platform == 'macos'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -f resources/bin/darwin-arm64/yt-dlp
+          test -f resources/bin/darwin-arm64/ffmpeg
+          chmod 755 resources/bin/darwin-arm64/yt-dlp resources/bin/darwin-arm64/ffmpeg
+
       - name: Validate bundled binaries
         run: bun run validate:bundled-binaries
+        env:
+          TERMPLAY_VALIDATE_BINARY_PLATFORM: ${{ matrix.platform == 'macos' && 'darwin-arm64' || '' }}
 
       - name: Build and publish
         run: bun run ${{ matrix.script }}

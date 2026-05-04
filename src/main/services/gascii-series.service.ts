@@ -23,6 +23,8 @@ type InstallProgressListener = (event: SeriesInstallProgress) => void;
 
 const LATEST_RELEASE_FAILURE_LOG_INTERVAL_MS = 5 * 60 * 1000;
 
+const launchAccessMode = process.platform === 'win32' ? fs.constants.F_OK : fs.constants.X_OK;
+
 export class GasciiSeriesService {
   private lastLatestReleaseFailureLog: { key: string; loggedAt: number } | null = null;
 
@@ -105,7 +107,7 @@ export class GasciiSeriesService {
   async bindInstallPath(installPath: string): Promise<GasciiInstallInfo> {
     const managedInstallPath = await assertManagedInstallPath('gascii', installPath);
     const binaryPath = getGasciiBinaryPath(managedInstallPath);
-    await fs.access(binaryPath, fs.constants.X_OK);
+    await fs.access(binaryPath, launchAccessMode);
 
     const installed = await launcherConfigRepo.getGasciiInstallInfo();
     const info: GasciiInstallInfo = {
@@ -142,7 +144,7 @@ export class GasciiSeriesService {
     await progress.pauseStep();
 
     progress.emit(3, 'Verifying executable binary');
-    await fs.access(binaryPath, fs.constants.X_OK);
+    await fs.access(binaryPath, launchAccessMode);
     await gasciiIntegrityService.ensureAssetsReady(installPath);
     await progress.pauseStep();
 

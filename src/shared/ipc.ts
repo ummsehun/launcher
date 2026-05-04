@@ -15,6 +15,11 @@ export const IPC_CHANNELS = {
     downloadAsset: 'launcher:download-asset',
     cancelDownload: 'launcher:cancel-download',
     onDownloadProgress: 'launcher:on-download-progress',
+    updateGetStatus: 'launcher:update:get-status',
+    updateCheck: 'launcher:update:check',
+    updateDownload: 'launcher:update:download',
+    updateInstall: 'launcher:update:install',
+    updateStatusChanged: 'launcher:update:status-changed',
   },
   mediaDownload: {
     start: 'media-download:start',

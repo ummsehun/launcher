@@ -187,3 +187,31 @@ export type MediaDownloadProgress = {
   message?: string;
   error?: string;
 };
+
+export type LauncherUpdateStatus =
+  | 'idle'
+  | 'checking'
+  | 'available'
+  | 'not-available'
+  | 'downloading'
+  | 'downloaded'
+  | 'error';
+
+export type LauncherUpdateInfo = {
+  version?: string;
+  releaseDate?: string;
+  releaseName?: string;
+};
+
+export type LauncherUpdateState = {
+  status: LauncherUpdateStatus;
+  currentVersion: string;
+  update?: LauncherUpdateInfo;
+  percent?: number;
+  transferred?: number;
+  total?: number;
+  bytesPerSecond?: number;
+  message?: string;
+  error?: string;
+  detail?: string;
+};

@@ -56,6 +56,11 @@ export class MienjineInstaller {
   }
 
   async prepareStartScriptPermissions(installPath: string, startScriptPath: string): Promise<void> {
+    if (platform() === 'win32') {
+      await fs.access(startScriptPath, fs.constants.F_OK);
+      return;
+    }
+
     await fs.chmod(startScriptPath, 0o755);
 
     if (platform() === 'darwin') {

@@ -159,6 +159,13 @@
     color: var(--color-launcher-text);
     font-feature-settings: "rlig" 1, "calt" 1;
     overflow: hidden;
+    user-select: text;
+  }
+
+  button,
+  [role="button"],
+  input[type="checkbox"],
+  input[type="radio"] {
     user-select: none;
   }
   

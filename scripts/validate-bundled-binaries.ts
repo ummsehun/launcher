@@ -14,7 +14,7 @@ const binarySets: readonly PlatformBinarySet[] = [
   { dir: 'win32-x64', binaries: ['yt-dlp.exe', 'ffmpeg.exe'] },
 ];
 
-const currentPlatformDir = `${process.platform}-${process.arch}`;
+const currentPlatformDir = process.env.TERMPLAY_VALIDATE_BINARY_PLATFORM || `${process.platform}-${process.arch}`;
 const existingBinRoot = join(process.cwd(), 'resources', 'bin');
 const existingDirs = new Set(await readdir(existingBinRoot).catch(() => []));
 const currentBinarySet = binarySets.find(binarySet => binarySet.dir === currentPlatformDir);
@@ -42,7 +42,8 @@ async function assertExecutableFile(binaryPath: string): Promise<void> {
     throw new Error(`Bundled binary is missing: ${binaryPath}`);
   }
 
-  await access(binaryPath, constants.X_OK).catch(() => {
+  const accessMode = process.platform === 'win32' ? constants.F_OK : constants.X_OK;
+  await access(binaryPath, accessMode).catch(() => {
     throw new Error(`Bundled binary is not executable: ${binaryPath}`);
   });
 }

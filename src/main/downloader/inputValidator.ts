@@ -13,7 +13,11 @@ export class InputValidator {
       const allowedHosts = [
         'www.youtube.com',
         'youtube.com',
-        'youtu.be'
+        'm.youtube.com',
+        'music.youtube.com',
+        'youtube-nocookie.com',
+        'www.youtube-nocookie.com',
+        'youtu.be',
       ];
       if (!allowedHosts.includes(parsed.hostname)) {
         throw new Error('Invalid host');

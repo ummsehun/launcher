@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { platform } from 'node:os';
 import { createLogger } from '@shared/logger';
 import { SERIES_DEFINITIONS } from './series-definitions';
-import { createSeriesLaunchCommand, quoteWindowsCmdArg, quoteWindowsPowerShellArg } from './series-launch-security';
+import { createSeriesLaunchCommand, quoteWindowsCmdArg } from './series-launch-security';
 import { formatSpawnFailure, readSpawnOutput } from '../utils/spawnResult';
 
 const logger = createLogger('mienjine-terminal-launcher');
@@ -53,7 +53,7 @@ export class MienjineTerminalLauncher {
   launch(cwd: string, startScriptPath: string): string {
     const launchCommand = createSeriesLaunchCommand(SERIES_DEFINITIONS.mienjine, cwd, startScriptPath);
     if (platform() === 'win32') {
-      return this.launchInWindowsTerminal(cwd, launchCommand.commandText, launchCommand.label);
+      return this.launchInWindowsTerminal(cwd, startScriptPath, launchCommand.label);
     }
 
     return this.launchInMacTerminalPriority(cwd, launchCommand.commandText, launchCommand.label);
@@ -132,51 +132,28 @@ export class MienjineTerminalLauncher {
     }
   }
 
-  private launchInWindowsTerminal(cwd: string, commandText: string, sandboxLabel: string): string {
+  private launchInWindowsTerminal(cwd: string, startScriptPath: string, sandboxLabel: string): string {
     const scriptPath = join(cwd, 'run-mienjine.cmd');
     writeFileSync(scriptPath, [
       '@echo off',
       'cd /d "%~dp0"',
-      commandText,
+      `call ${quoteWindowsCmdArg(startScriptPath)}`,
       '',
     ].join('\r\n'), { mode: 0o600 });
 
-    const cmdStartCommand = `start "" /D ${quoteWindowsCmdArg(cwd)} cmd.exe /k ${quoteWindowsCmdArg(scriptPath)}`;
-    const cmdResult = spawnSync('cmd.exe', ['/d', '/s', '/c', cmdStartCommand], {
-      encoding: 'utf8',
-      stdio: 'pipe',
-      windowsHide: true,
+    const child = spawn('cmd.exe', ['/d', '/k', scriptPath], {
+      cwd,
+      detached: true,
+      stdio: 'ignore',
+      windowsHide: false,
     });
 
-    if (!cmdResult.error && cmdResult.status === 0) {
-      return `Windows CMD (${sandboxLabel})`;
-    }
-
-    logger.warn('cmd terminal launch failed, trying PowerShell', {
-      detail: cmdResult.error ? cmdResult.error.message : formatSpawnFailure(cmdResult),
+    child.once('error', (error) => {
+      logger.error('windows terminal process failed after launch', error);
     });
+    child.unref();
 
-    const powershellStartCommand = [
-      "Start-Process -FilePath 'cmd.exe'",
-      `-ArgumentList ${quoteWindowsPowerShellArg('/k')}, ${quoteWindowsPowerShellArg(scriptPath)}`,
-      `-WorkingDirectory ${quoteWindowsPowerShellArg(cwd)}`,
-      '-WindowStyle Normal',
-    ].join(' ');
-    const powershellResult = spawnSync('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', powershellStartCommand], {
-      encoding: 'utf8',
-      stdio: 'pipe',
-      windowsHide: true,
-    });
-
-    if (powershellResult.error) {
-      throw new Error(`Windows terminal launch failed: ${powershellResult.error.message}`);
-    }
-
-    if (powershellResult.status !== 0) {
-      throw new Error(`Windows terminal launch failed: ${formatSpawnFailure(powershellResult)}`);
-    }
-
-    return `Windows PowerShell (${sandboxLabel})`;
+    return `Windows CMD (${sandboxLabel})`;
   }
 
   private requestMacFullscreen(appName: string): void {

@@ -5,6 +5,8 @@ import { type MienjineInstallInfo, type SeriesVerifyResult } from '@shared/launc
 import { getMienjineStartScriptPath, MIENJINE_ASSET_DIRS } from './mienjine-paths';
 import { SERIES_DEFINITIONS } from './series-definitions';
 
+const launchAccessMode = process.platform === 'win32' ? fs.constants.F_OK : fs.constants.X_OK;
+
 export class MienjineIntegrityService {
   async verify(installed: MienjineInstallInfo | null | undefined): Promise<SeriesVerifyResult> {
     if (!installed) {
@@ -36,7 +38,7 @@ export class MienjineIntegrityService {
 
   async ensureReady(installPath: string): Promise<void> {
     const startScriptPath = getMienjineStartScriptPath(installPath);
-    await fs.access(startScriptPath, fs.constants.X_OK);
+    await fs.access(startScriptPath, launchAccessMode);
     await Promise.all(MIENJINE_ASSET_DIRS.map((dir) => fs.mkdir(join(installPath, 'assets', dir), { recursive: true })));
 
     const missingRequiredGroups = await this.getMissingRequiredAssetGroups(installPath);

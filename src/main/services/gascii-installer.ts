@@ -57,6 +57,11 @@ export class GasciiInstaller {
   }
 
   async prepareBinaryPermissions(installPath: string, binaryPath: string): Promise<void> {
+    if (platform() === 'win32') {
+      await fs.access(binaryPath, fs.constants.F_OK);
+      return;
+    }
+
     await fs.chmod(binaryPath, 0o755);
 
     if (platform() === 'darwin') {

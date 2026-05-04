@@ -66,6 +66,19 @@ contextBridge.exposeInMainWorld('launcher', {
   navigation: {
     openExternal: (url: string) => ipcRenderer.invoke(IPC_CHANNELS.navigation.openExternal, { url }),
   },
+  updates: {
+    getStatus: () => ipcRenderer.invoke(IPC_CHANNELS.launcher.updateGetStatus),
+    check: () => ipcRenderer.invoke(IPC_CHANNELS.launcher.updateCheck),
+    download: () => ipcRenderer.invoke(IPC_CHANNELS.launcher.updateDownload),
+    install: () => ipcRenderer.invoke(IPC_CHANNELS.launcher.updateInstall),
+    onStatusChanged: (callback: (event: import('@shared/launcherTypes').LauncherUpdateState) => void) => {
+      const listener = (_event: Electron.IpcRendererEvent, payload: import('@shared/launcherTypes').LauncherUpdateState) => callback(payload);
+      ipcRenderer.on(IPC_CHANNELS.launcher.updateStatusChanged, listener);
+      return () => {
+        ipcRenderer.off(IPC_CHANNELS.launcher.updateStatusChanged, listener);
+      };
+    },
+  },
   series: {
     getStatus: (seriesId: TerminalSeriesId) => ipcRenderer.invoke(IPC_CHANNELS.series.getStatus, { seriesId }),
     install: (seriesId: TerminalSeriesId) => ipcRenderer.invoke(IPC_CHANNELS.series.install, { seriesId }),

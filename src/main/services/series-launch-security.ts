@@ -57,5 +57,3 @@ const createWindowsCommand = (cwd: string, executablePath: string, label: string
 });
 
 export const quoteWindowsCmdArg = (value: string): string => `"${value.replace(/"/g, '""')}"`;
-
-export const quoteWindowsPowerShellArg = (value: string): string => `'${value.replace(/'/g, "''")}'`;

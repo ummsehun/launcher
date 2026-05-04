@@ -21,6 +21,7 @@ export class ProcessRunner {
   private outputDir: string;
   private stdoutBuffer = '';
   private stderrBuffer = '';
+  private recentLines: string[] = [];
 
   constructor(private options: ProcessRunnerOptions) {
     this.jobId = options.jobId;
@@ -41,6 +42,10 @@ export class ProcessRunner {
         if (!trimmed) return;
 
         lastErrorLine = trimmed;
+        this.recentLines.push(trimmed);
+        if (this.recentLines.length > 8) {
+          this.recentLines.shift();
+        }
 
         const parsed = ProgressParser.parseLine(trimmed, this.jobId);
         if (parsed && this.options.onProgress) {
@@ -81,7 +86,8 @@ export class ProcessRunner {
         if (code === 0) {
           resolve();
         } else {
-          reject(new Error(`yt-dlp failed with code ${code}, signal ${signal}. Last log: ${lastErrorLine}`));
+          const recentLog = this.recentLines.length > 0 ? this.recentLines.join('\n') : lastErrorLine;
+          reject(new Error(`yt-dlp failed with code ${code}, signal ${signal}. Recent log:\n${recentLog}`));
         }
       });
 

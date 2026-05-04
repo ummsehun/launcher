@@ -23,6 +23,7 @@ const logger = createLogger('mienjine-series-service');
 type InstallProgressListener = (event: SeriesInstallProgress) => void;
 
 const LATEST_RELEASE_FAILURE_LOG_INTERVAL_MS = 5 * 60 * 1000;
+const launchAccessMode = process.platform === 'win32' ? fs.constants.F_OK : fs.constants.X_OK;
 
 const MIENJINE_LAUNCH_STEPS: LaunchStepDefinition[] = [
   { stage: 'resolving', label: 'Resolving app', progress: 8 },
@@ -116,7 +117,7 @@ export class MienjineSeriesService {
   async bindInstallPath(installPath: string): Promise<MienjineInstallInfo> {
     const managedInstallPath = await assertManagedInstallPath('mienjine', installPath);
     const startScriptPath = getMienjineStartScriptPath(managedInstallPath);
-    await fs.access(startScriptPath, fs.constants.X_OK);
+    await fs.access(startScriptPath, launchAccessMode);
     await mienjineInstaller.ensureAssetDirs(managedInstallPath);
 
     const installed = await launcherConfigRepo.getMienjineInstallInfo();

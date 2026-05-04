@@ -132,6 +132,7 @@ try {
 
   await record('Gascii launch path uses platform sandbox wrapper', async () => {
     const launcherSource = await fs.readFile(path.join(process.cwd(), 'src/main/services/gascii-terminal-launcher.ts'), 'utf8');
+    const mienjineLauncherSource = await fs.readFile(path.join(process.cwd(), 'src/main/services/mienjine-terminal-launcher.ts'), 'utf8');
     const launchSecuritySource = await fs.readFile(path.join(process.cwd(), 'src/main/services/series-launch-security.ts'), 'utf8');
     const sandboxSource = await fs.readFile(path.join(process.cwd(), 'src/main/security/processSandbox.ts'), 'utf8');
 
@@ -147,6 +148,12 @@ try {
     expect(sandboxSource.includes('sandbox-exec'), 'macOS sandbox-exec policy is missing');
     expect(sandboxSource.includes('bubblewrap') && sandboxSource.includes('firejail'), 'Linux sandbox tools are missing');
     expect(sandboxSource.includes('Process sandbox cannot be disabled in production'), 'production sandbox bypass guard is missing');
+    for (const source of [launcherSource, mienjineLauncherSource]) {
+      expect(!source.includes("spawnSync('cmd.exe'"), 'Windows terminal launch must not block Electron main process with spawnSync(cmd.exe)');
+      expect(!source.includes("spawnSync('powershell.exe'"), 'Windows terminal launch must not use synchronous PowerShell fallback');
+      expect(!source.includes('windowsHide: true'), 'Windows terminal launch must not hide the console window');
+      expect(!source.includes("'/c', 'start'"), 'Windows terminal launch must not depend on cmd start command string parsing');
+    }
   });
 
   await record('renderer source has no high-risk DOM/code execution sinks', async () => {
