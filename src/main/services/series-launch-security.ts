@@ -52,7 +52,7 @@ const createDirectCommand = (cwd: string, executablePath: string, label: string)
 });
 
 const createWindowsCommand = (cwd: string, executablePath: string, label: string): SandboxedLaunchCommand => ({
-  commandText: `cd /d ${windowsQuote(cwd)} && ${windowsQuote(executablePath)}`,
+  commandText: windowsQuote(executablePath),
   label,
 });
 

@@ -151,9 +151,7 @@ export class GasciiTerminalLauncher {
   }
 
   private launchInWindowsTerminal(cwd: string, commandText: string, sandboxLabel: string): string {
-    const title = `TermPlay - Gascii`;
-    const result = spawnSync('cmd.exe', ['/c', 'start', title, 'cmd.exe', '/k', commandText], {
-      cwd,
+    const result = spawnSync('cmd.exe', ['/d', '/s', '/c', 'start', '""', '/D', cwd, 'cmd.exe', '/k', commandText], {
       encoding: 'utf8',
       stdio: 'pipe',
       windowsHide: true,
