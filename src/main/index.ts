@@ -1,5 +1,6 @@
 import { app, BrowserWindow, dialog } from 'electron';
 import { createMainWindow } from './core/create-window';
+import { initializeFileLogging } from './core/file-logging';
 import { registerGameHandlers } from './handler/game.handler';
 import { registerLauncherHandlers } from './handler/launcher.handler';
 import { registerSeriesHandlers } from './handler/series.handler';
@@ -8,6 +9,7 @@ import { toErrorMessage } from './utils/error';
 
 app.setName('TermPlay');
 app.setAppUserModelId('com.termplay.launcher');
+initializeFileLogging();
 
 const showFatalError = (title: string, error: unknown): void => {
   const message = toErrorMessage(error);

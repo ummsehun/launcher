@@ -12,6 +12,7 @@ import { launcherConfigRepo } from '../launcher/launcherConfigRepository';
 import { getMienjineStartScriptPath, MIENJINE_ASSET_DIRS, resolveMienjineInstallPath } from './mienjine-paths';
 import { type SelectedRelease } from './gascii-release-resolver';
 import { assertNoSymlinks, extractArchiveToDirectory, verifySha256Digest } from './archive-install-utils';
+import { formatSpawnFailure } from '../utils/spawnResult';
 
 const logger = createLogger('mienjine-installer');
 
@@ -64,7 +65,7 @@ export class MienjineInstaller {
       });
 
       if (result.status !== 0) {
-        logger.warn('xattr quarantine cleanup failed', result.stderr.trim() || result.stdout.trim());
+        logger.warn('xattr quarantine cleanup failed', formatSpawnFailure(result));
       }
     }
   }

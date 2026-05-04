@@ -5,6 +5,7 @@ import { platform } from 'node:os';
 import { createLogger } from '@shared/logger';
 import { SERIES_DEFINITIONS } from './series-definitions';
 import { createSeriesLaunchCommand } from './series-launch-security';
+import { formatSpawnFailure, readSpawnOutput } from '../utils/spawnResult';
 
 const logger = createLogger('gascii-terminal-launcher');
 
@@ -116,8 +117,7 @@ export class GasciiTerminalLauncher {
     });
 
     if (result.status !== 0) {
-      const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
-      throw new Error(`Terminal launch failed: ${detail}`);
+      throw new Error(`Terminal launch failed: ${formatSpawnFailure(result)}`);
     }
   }
 
@@ -164,8 +164,7 @@ export class GasciiTerminalLauncher {
     }
 
     if (result.status !== 0) {
-      const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
-      throw new Error(`Windows terminal launch failed: ${detail}`);
+      throw new Error(`Windows terminal launch failed: ${formatSpawnFailure(result)}`);
     }
 
     return `Windows Terminal (${sandboxLabel})`;
@@ -182,8 +181,7 @@ export class GasciiTerminalLauncher {
     }
 
     if (result.status !== 0) {
-      const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
-      throw new Error(`${appName} launch failed: ${detail}`);
+      throw new Error(`${appName} launch failed: ${formatSpawnFailure(result)}`);
     }
   }
 
@@ -200,8 +198,7 @@ export class GasciiTerminalLauncher {
     });
 
     if (result.status !== 0) {
-      const detail = result.stderr.trim() || result.stdout.trim();
-      logger.warn('fullscreen request failed', { terminal: appName, detail });
+      logger.warn('fullscreen request failed', { terminal: appName, detail: formatSpawnFailure(result) });
     }
   }
 
@@ -230,7 +227,7 @@ export class GasciiTerminalLauncher {
       encoding: 'utf8',
       stdio: 'pipe',
     });
-    const resolved = result.stdout.trim();
+    const resolved = readSpawnOutput(result.stdout);
 
     return result.status === 0 && resolved ? resolved : null;
   }

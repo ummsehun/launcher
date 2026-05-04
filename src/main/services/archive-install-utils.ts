@@ -1,6 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import { isAbsolute, join, posix } from 'node:path';
+import { formatSpawnFailure } from '../utils/spawnResult';
 
 export const verifySha256Digest = (expectedDigest: string, actualHexDigest: string): void => {
   const expected = /^sha256:([a-f0-9]{64})$/i.exec(expectedDigest);
@@ -20,8 +21,7 @@ export const assertSafeTarArchiveEntries = (archivePath: string): void => {
   });
 
   if (result.status !== 0) {
-    const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
-    throw new Error(`Archive listing failed: ${detail}`);
+    throw new Error(`Archive listing failed: ${formatSpawnFailure(result)}`);
   }
 
   const entries = result.stdout.split(/\r?\n/).filter(Boolean);
@@ -41,8 +41,7 @@ export const assertSafeZipArchiveEntries = (archivePath: string): void => {
   });
 
   if (result.status !== 0) {
-    const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
-    throw new Error(`Archive listing failed: ${detail}`);
+    throw new Error(`Archive listing failed: ${formatSpawnFailure(result)}`);
   }
 
   const entries = result.stdout.split(/\r?\n/).filter(Boolean);
@@ -78,8 +77,7 @@ export const extractArchiveToDirectory = (archivePath: string, targetDirectory: 
     });
 
     if (result.status !== 0) {
-      const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
-      throw new Error(`Archive extraction failed: ${detail}`);
+      throw new Error(`Archive extraction failed: ${formatSpawnFailure(result)}`);
     }
     return;
   }
@@ -91,8 +89,7 @@ export const extractArchiveToDirectory = (archivePath: string, targetDirectory: 
   });
 
   if (result.status !== 0) {
-    const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
-    throw new Error(`Archive extraction failed: ${detail}`);
+    throw new Error(`Archive extraction failed: ${formatSpawnFailure(result)}`);
   }
 };
 

@@ -12,6 +12,7 @@ import { launcherConfigRepo } from '../launcher/launcherConfigRepository';
 import { getGasciiBinaryPath, resolveGasciiInstallPath } from './gascii-paths';
 import { type SelectedRelease } from './gascii-release-resolver';
 import { assertNoSymlinks, extractArchiveToDirectory, verifySha256Digest } from './archive-install-utils';
+import { formatSpawnFailure } from '../utils/spawnResult';
 
 const logger = createLogger('gascii-installer');
 
@@ -65,7 +66,7 @@ export class GasciiInstaller {
       });
 
       if (result.status !== 0) {
-        logger.warn('xattr quarantine cleanup failed', result.stderr.trim() || result.stdout.trim());
+        logger.warn('xattr quarantine cleanup failed', formatSpawnFailure(result));
       }
     }
   }

@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { GAME_DEFINITIONS, type GameId } from '@shared/games';
 import { createLogger } from '@shared/logger';
+import { formatSpawnFailure, readSpawnOutput } from '../utils/spawnResult';
 
 const logger = createLogger('game-launch-service');
 
@@ -155,8 +156,7 @@ export class GameLaunchService {
     }
 
     if (result.status !== 0) {
-      const detail = result.stderr.trim() || result.stdout.trim() || `exit code ${result.status}`;
-      throw new Error(`Terminal 실행 실패: ${detail}`);
+      throw new Error(`Terminal 실행 실패: ${formatSpawnFailure(result)}`);
     }
   }
 
@@ -210,8 +210,7 @@ export class GameLaunchService {
     });
 
     if (result.status !== 0) {
-      const detail = result.stderr.trim() || result.stdout.trim();
-      logger.warn('fullscreen request failed', { terminal: appName, detail });
+      logger.warn('fullscreen request failed', { terminal: appName, detail: formatSpawnFailure(result) });
     }
   }
 
@@ -295,7 +294,7 @@ export class GameLaunchService {
       stdio: 'pipe',
     });
 
-    const executable = result.stdout.trim();
+    const executable = readSpawnOutput(result.stdout);
 
     return result.status === 0 && executable ? executable : null;
   }
