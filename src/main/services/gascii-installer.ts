@@ -126,7 +126,7 @@ export class GasciiInstaller {
     this.emitInstall(onProgress, 'extracting', INSTALL_STAGES.extracting, 'Extracting archive');
     await fs.rm(stagingPath, { recursive: true, force: true });
     await fs.mkdir(stagingPath, { recursive: true });
-    extractArchiveToDirectory(archivePath, stagingPath);
+    await extractArchiveToDirectory(archivePath, stagingPath);
 
     await assertNoSymlinks(stagingPath);
     const extractedRoot = await this.resolveExtractedRoot(stagingPath);

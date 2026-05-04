@@ -1,6 +1,9 @@
 import { spawnSync } from 'node:child_process';
+import { createWriteStream } from 'node:fs';
 import fs from 'node:fs/promises';
-import { isAbsolute, join, posix } from 'node:path';
+import { dirname, isAbsolute, join, posix } from 'node:path';
+import { pipeline } from 'node:stream/promises';
+import { type Entry, type ZipFile, open as openZip } from 'yauzl';
 import { formatSpawnFailure } from '../utils/spawnResult';
 
 export const verifySha256Digest = (expectedDigest: string, actualHexDigest: string): void => {
@@ -34,17 +37,8 @@ export const assertSafeTarArchiveEntries = (archivePath: string): void => {
   }
 };
 
-export const assertSafeZipArchiveEntries = (archivePath: string): void => {
-  const result = spawnSync('unzip', ['-Z1', archivePath], {
-    encoding: 'utf8',
-    stdio: 'pipe',
-  });
-
-  if (result.status !== 0) {
-    throw new Error(`Archive listing failed: ${formatSpawnFailure(result)}`);
-  }
-
-  const entries = result.stdout.split(/\r?\n/).filter(Boolean);
+export const assertSafeZipArchiveEntries = async (archivePath: string): Promise<void> => {
+  const entries = await listZipEntries(archivePath);
   if (entries.length === 0) {
     throw new Error('Archive is empty');
   }
@@ -68,17 +62,10 @@ export const assertNoSymlinks = async (rootPath: string): Promise<void> => {
   }));
 };
 
-export const extractArchiveToDirectory = (archivePath: string, targetDirectory: string): void => {
+export const extractArchiveToDirectory = async (archivePath: string, targetDirectory: string): Promise<void> => {
   if (archivePath.endsWith('.zip')) {
-    assertSafeZipArchiveEntries(archivePath);
-    const result = spawnSync('unzip', ['-q', archivePath, '-d', targetDirectory], {
-      encoding: 'utf8',
-      stdio: 'pipe',
-    });
-
-    if (result.status !== 0) {
-      throw new Error(`Archive extraction failed: ${formatSpawnFailure(result)}`);
-    }
+    await assertSafeZipArchiveEntries(archivePath);
+    await extractZipArchive(archivePath, targetDirectory);
     return;
   }
 
@@ -92,6 +79,84 @@ export const extractArchiveToDirectory = (archivePath: string, targetDirectory: 
     throw new Error(`Archive extraction failed: ${formatSpawnFailure(result)}`);
   }
 };
+
+const listZipEntries = async (archivePath: string): Promise<string[]> => {
+  const zipFile = await openZipFile(archivePath);
+  const entries: string[] = [];
+
+  try {
+    await forEachZipEntry(zipFile, async (entry) => {
+      entries.push(entry.fileName);
+    });
+  } finally {
+    zipFile.close();
+  }
+
+  return entries;
+};
+
+const extractZipArchive = async (archivePath: string, targetDirectory: string): Promise<void> => {
+  const zipFile = await openZipFile(archivePath);
+
+  try {
+    await forEachZipEntry(zipFile, async (entry) => {
+      assertSafeArchiveEntry(entry.fileName);
+
+      const targetPath = join(targetDirectory, ...entry.fileName.split('/').filter(Boolean));
+      if (entry.fileName.endsWith('/')) {
+        await fs.mkdir(targetPath, { recursive: true });
+        return;
+      }
+
+      await fs.mkdir(dirname(targetPath), { recursive: true });
+      const stream = await openZipEntryReadStream(zipFile, entry);
+      await pipeline(stream, createWriteStream(targetPath, { mode: 0o600 }));
+    });
+  } finally {
+    zipFile.close();
+  }
+};
+
+const openZipFile = async (archivePath: string): Promise<ZipFile> =>
+  new Promise((resolve, reject) => {
+    openZip(archivePath, { lazyEntries: true, validateEntrySizes: true, strictFileNames: true }, (error, zipFile) => {
+      if (error || !zipFile) {
+        reject(error ?? new Error('Failed to open zip archive'));
+        return;
+      }
+
+      resolve(zipFile);
+    });
+  });
+
+const forEachZipEntry = async (
+  zipFile: ZipFile,
+  callback: (entry: Entry) => Promise<void>,
+): Promise<void> =>
+  new Promise((resolve, reject) => {
+    const onEntry = (entry: Entry) => {
+      callback(entry)
+        .then(() => zipFile.readEntry())
+        .catch(reject);
+    };
+
+    zipFile.once('end', resolve);
+    zipFile.once('error', reject);
+    zipFile.on('entry', onEntry);
+    zipFile.readEntry();
+  });
+
+const openZipEntryReadStream = async (zipFile: ZipFile, entry: Entry): Promise<NodeJS.ReadableStream> =>
+  new Promise((resolve, reject) => {
+    zipFile.openReadStream(entry, (error, stream) => {
+      if (error || !stream) {
+        reject(error ?? new Error(`Failed to read zip entry: ${entry.fileName}`));
+        return;
+      }
+
+      resolve(stream);
+    });
+  });
 
 const assertSafeArchiveEntry = (entry: string): void => {
   const normalized = posix.normalize(entry);
