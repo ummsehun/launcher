@@ -84,6 +84,9 @@ jobs:
 
           Copy-Item $ffmpeg.FullName resources/bin/win32-x64/ffmpeg.exe
 
+      - name: Validate bundled binaries
+        run: bun run validate:bundled-binaries
+
       - name: Build and publish
         run: bun run ${{ matrix.script }}
         env:

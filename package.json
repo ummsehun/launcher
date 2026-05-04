@@ -8,7 +8,7 @@
   "main": "out/main/index.js",
   "scripts": {
     "dev": "electron-vite dev --config electron-vite.config.ts",
-    "ci": "bun run validate:series && bun run typecheck && bun run build",
+    "ci": "bun run validate:series && bun run validate:bundled-binaries && bun run typecheck && bun run build",
     "build": "tsc --noEmit && electron-vite build --config electron-vite.config.ts",
     "dist": "bun run build && electron-builder --config electron-builder.json --publish never",
     "dist:linux": "bun run build && electron-builder --config electron-builder.json --linux --publish never",
@@ -19,6 +19,7 @@
     "release:win": "bun run build && electron-builder --config electron-builder.json --win --publish always",
     "preview": "electron-vite preview --config electron-vite.config.ts",
     "typecheck": "tsc --noEmit",
+    "validate:bundled-binaries": "bun scripts/validate-bundled-binaries.ts",
     "validate:series": "bun -e \"import('./src/main/services/series-definitions.ts')\"",
     "security:attack": "bun scripts/security-attack-smoke.ts",
     "security:sandbox": "bun scripts/security-sandbox-probe.ts"
