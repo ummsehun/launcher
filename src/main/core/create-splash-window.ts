@@ -1,5 +1,6 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { platform } from 'node:os';
 import { BrowserWindow, nativeTheme, screen, type Event } from 'electron';
 import { configureWindowSecurity, isAllowedDevRendererUrl, normalizeDevRendererUrl } from './window-security';
 
@@ -12,7 +13,9 @@ type SplashWindowOptions = {
 
 export const createSplashWindow = (options?: SplashWindowOptions): BrowserWindow => {
   const primaryDisplay = screen.getPrimaryDisplay();
-  const { x, y, width, height } = primaryDisplay.bounds;
+  const isWindows = platform() === 'win32';
+  const initialBounds = isWindows ? primaryDisplay.workArea : primaryDisplay.bounds;
+  const { x, y, width, height } = initialBounds;
 
   const splashWindow = new BrowserWindow({
     x,
@@ -20,13 +23,14 @@ export const createSplashWindow = (options?: SplashWindowOptions): BrowserWindow
     width,
     height,
 
-    // macOS native fullscreen이 아니라 borderless pseudo fullscreen
-    frame: false,
+    // macOS native fullscreen이 아니라 borderless pseudo fullscreen.
+    // Windows는 title bar를 유지한 maximized window로 띄운다.
+    frame: isWindows,
     fullscreen: false,
-    fullscreenable: false,
+    fullscreenable: !isWindows,
 
-    resizable: false,
-    maximizable: false,
+    resizable: isWindows,
+    maximizable: isWindows,
     title: 'TermPlay',
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#050505' : '#ffffff',
     show: false,
@@ -42,6 +46,10 @@ export const createSplashWindow = (options?: SplashWindowOptions): BrowserWindow
   configureWindowSecurity(splashWindow);
 
   splashWindow.once('ready-to-show', () => {
+    if (isWindows) {
+      splashWindow.setBounds(primaryDisplay.workArea);
+      splashWindow.maximize();
+    }
     splashWindow.show();
   });
 

@@ -52,8 +52,10 @@ const createDirectCommand = (cwd: string, executablePath: string, label: string)
 });
 
 const createWindowsCommand = (cwd: string, executablePath: string, label: string): SandboxedLaunchCommand => ({
-  commandText: windowsQuote(executablePath),
+  commandText: quoteWindowsCmdArg(executablePath),
   label,
 });
 
-const windowsQuote = (value: string): string => `"${value.replace(/"/g, '\\"')}"`;
+export const quoteWindowsCmdArg = (value: string): string => `"${value.replace(/"/g, '""')}"`;
+
+export const quoteWindowsPowerShellArg = (value: string): string => `'${value.replace(/'/g, "''")}'`;

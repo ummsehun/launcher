@@ -1,10 +1,10 @@
 import { type ChildProcess, spawn, spawnSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { platform } from 'node:os';
 import { createLogger } from '@shared/logger';
 import { SERIES_DEFINITIONS } from './series-definitions';
-import { createSeriesLaunchCommand } from './series-launch-security';
+import { createSeriesLaunchCommand, quoteWindowsCmdArg, quoteWindowsPowerShellArg } from './series-launch-security';
 import { formatSpawnFailure, readSpawnOutput } from '../utils/spawnResult';
 
 const logger = createLogger('gascii-terminal-launcher');
@@ -151,21 +151,50 @@ export class GasciiTerminalLauncher {
   }
 
   private launchInWindowsTerminal(cwd: string, commandText: string, sandboxLabel: string): string {
-    const result = spawnSync('cmd.exe', ['/d', '/s', '/c', 'start', '""', '/D', cwd, 'cmd.exe', '/k', commandText], {
+    const scriptPath = join(cwd, 'run-gascii.cmd');
+    writeFileSync(scriptPath, [
+      '@echo off',
+      'cd /d "%~dp0"',
+      commandText,
+      '',
+    ].join('\r\n'), { mode: 0o600 });
+
+    const cmdStartCommand = `start "" /D ${quoteWindowsCmdArg(cwd)} cmd.exe /k ${quoteWindowsCmdArg(scriptPath)}`;
+    const cmdResult = spawnSync('cmd.exe', ['/d', '/s', '/c', cmdStartCommand], {
       encoding: 'utf8',
       stdio: 'pipe',
       windowsHide: true,
     });
 
-    if (result.error) {
-      throw new Error(`Windows terminal launch failed: ${result.error.message}`);
+    if (!cmdResult.error && cmdResult.status === 0) {
+      return `Windows CMD (${sandboxLabel})`;
     }
 
-    if (result.status !== 0) {
-      throw new Error(`Windows terminal launch failed: ${formatSpawnFailure(result)}`);
+    logger.warn('cmd terminal launch failed, trying PowerShell', {
+      detail: cmdResult.error ? cmdResult.error.message : formatSpawnFailure(cmdResult),
+    });
+
+    const powershellStartCommand = [
+      "Start-Process -FilePath 'cmd.exe'",
+      `-ArgumentList ${quoteWindowsPowerShellArg('/k')}, ${quoteWindowsPowerShellArg(scriptPath)}`,
+      `-WorkingDirectory ${quoteWindowsPowerShellArg(cwd)}`,
+      '-WindowStyle Normal',
+    ].join(' ');
+    const powershellResult = spawnSync('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', powershellStartCommand], {
+      encoding: 'utf8',
+      stdio: 'pipe',
+      windowsHide: true,
+    });
+
+    if (powershellResult.error) {
+      throw new Error(`Windows terminal launch failed: ${powershellResult.error.message}`);
     }
 
-    return `Windows Terminal (${sandboxLabel})`;
+    if (powershellResult.status !== 0) {
+      throw new Error(`Windows terminal launch failed: ${formatSpawnFailure(powershellResult)}`);
+    }
+
+    return `Windows PowerShell (${sandboxLabel})`;
   }
 
   private launchMacAppWithArgs(appName: string, args: string[]): void {
