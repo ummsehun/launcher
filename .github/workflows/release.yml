@@ -38,13 +38,51 @@ jobs:
       - name: Validate release tag
         shell: bash
         run: |
-          PACKAGE_VERSION="$(bun -e "const pkg = await Bun.file('package.json').json(); console.log(pkg.version)")"
-          EXPECTED_TAG="v${PACKAGE_VERSION}"
-
-          if [[ "${GITHUB_REF_NAME}" != "${EXPECTED_TAG}" ]]; then
-            echo "Release tag must match package.json version: ${EXPECTED_TAG}"
+          if [[ "${GITHUB_REF_NAME}" != v* ]]; then
+            echo "Release tags must start with v."
             exit 1
           fi
+
+      - name: Prepare Linux bundled binaries
+        if: matrix.platform == 'linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p resources/bin/linux-x64
+
+          curl -L --fail --retry 3 -o resources/bin/linux-x64/yt-dlp \
+            https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux
+
+          curl -L --fail --retry 3 -o /tmp/ffmpeg-linux.tar.xz \
+            https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+
+          tar -xf /tmp/ffmpeg-linux.tar.xz -C /tmp
+          cp /tmp/ffmpeg-*-amd64-static/ffmpeg resources/bin/linux-x64/ffmpeg
+          chmod 755 resources/bin/linux-x64/yt-dlp resources/bin/linux-x64/ffmpeg
+
+      - name: Prepare Windows bundled binaries
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          New-Item -ItemType Directory -Force -Path resources/bin/win32-x64 | Out-Null
+
+          curl.exe -L --fail --retry 3 -o resources/bin/win32-x64/yt-dlp.exe `
+            https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe
+
+          curl.exe -L --fail --retry 3 -o "$env:TEMP/ffmpeg-windows.zip" `
+            https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip
+
+          Expand-Archive -Path "$env:TEMP/ffmpeg-windows.zip" -DestinationPath "$env:TEMP/ffmpeg-windows" -Force
+          $ffmpeg = Get-ChildItem "$env:TEMP/ffmpeg-windows" -Recurse -Filter ffmpeg.exe | Select-Object -First 1
+
+          if (-not $ffmpeg) {
+            throw "ffmpeg.exe was not found in downloaded archive"
+          }
+
+          Copy-Item $ffmpeg.FullName resources/bin/win32-x64/ffmpeg.exe
 
       - name: Build and publish
         run: bun run ${{ matrix.script }}

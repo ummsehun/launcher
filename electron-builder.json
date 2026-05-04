@@ -2,6 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
   "appId": "com.termplay.launcher",
   "productName": "TermPlay",
+  "icon": "resources/icons/icon.png",
   "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
   "directories": {
     "output": "dist",
@@ -9,14 +10,16 @@
   },
   "files": [
     "out/**/*",
-    "package.json"
+    "package.json",
+    "!node_modules/**/*"
   ],
   "extraResources": [
     {
-      "from": "resources",
-      "to": "resources",
+      "from": "resources/bin",
+      "to": "bin",
       "filter": [
-        "**/*"
+        "**/*",
+        "!**/.DS_Store"
       ]
     }
   ],
