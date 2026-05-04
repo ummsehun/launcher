@@ -45,16 +45,12 @@ export const LauncherPage: React.FC = () => {
   const getBackgroundStyle = () => {
     if (currentSeries?.id === 'gascii') {
       return {
-        background: `radial-gradient(circle at 70% 30%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
-                     radial-gradient(circle at 30% 80%, rgba(14, 165, 233, 0.1) 0%, transparent 40%),
-                     var(--series-gascii-bg)`
+        background: 'var(--series-gascii-bg)'
       };
     }
     if (currentSeries?.id === 'mienjine') {
       return {
-        background: `radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
-                     radial-gradient(circle at 20% 70%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
-                     var(--series-mienjine-bg)`
+        background: 'var(--series-mienjine-bg)'
       };
     }
     return { background: 'var(--series-bg-base)' };
@@ -94,7 +90,7 @@ export const LauncherPage: React.FC = () => {
           <img
             src={gasciiBanner}
             alt=""
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+            className="theme-series-banner absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
             aria-hidden="true"
           />
         )}
@@ -102,7 +98,7 @@ export const LauncherPage: React.FC = () => {
           <img
             src={mienjineBanner}
             alt=""
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+            className="theme-series-banner absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
             aria-hidden="true"
           />
         )}

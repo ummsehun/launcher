@@ -27,7 +27,7 @@ export const SeriesHero: React.FC = () => {
     <div className="w-[480px] h-full pt-20 pl-16 pb-12 flex flex-col pointer-events-none">
       {/* Title / Logo Area */}
       <div className="mb-8 pointer-events-auto">
-        <h1 className="text-6xl font-black text-white italic tracking-tighter drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
+        <h1 className="text-6xl font-black text-launcher-text italic tracking-tight">
           {currentSeries.displayName.toUpperCase()}
         </h1>
         <div className="flex items-center gap-2 mt-2">
@@ -54,7 +54,7 @@ export const SeriesHero: React.FC = () => {
             >
               {tab.label}
               {selectedTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-launcher-accent shadow-glow" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-launcher-accent" />
               )}
             </button>
           ))}

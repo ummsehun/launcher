@@ -2,14 +2,14 @@
 @config "../../../../../tailwind.config.ts";
 
 @theme {
-  --color-launcher-bg: #09090b;
-  --color-launcher-surface: #18181b;
-  --color-launcher-surface-elevated: #27272a;
-  --color-launcher-panel: #111113;
-  --color-launcher-panel-elevated: #1c1c1e;
-  --color-launcher-control: #1c1c1e;
-  --color-launcher-control-hover: #2c2c2e;
-  --color-launcher-icon-surface: #222225;
+  --color-launcher-bg: #0f1115;
+  --color-launcher-surface: #171a20;
+  --color-launcher-surface-elevated: #20242c;
+  --color-launcher-panel: #151821;
+  --color-launcher-panel-elevated: #1c2028;
+  --color-launcher-control: #20242c;
+  --color-launcher-control-hover: #2a303a;
+  --color-launcher-icon-surface: #252b35;
   --color-launcher-divider: rgba(255, 255, 255, 0.08);
   --color-launcher-overlay: rgba(0, 0, 0, 0.6);
   --color-launcher-border: #3f3f46;
@@ -104,28 +104,28 @@
   @media (prefers-color-scheme: light) {
     :root {
       color-scheme: light;
-      --color-launcher-bg: #f7f7f8;
-      --color-launcher-surface: #ffffff;
-      --color-launcher-surface-elevated: #f0f1f3;
-      --color-launcher-panel: #ffffff;
-      --color-launcher-panel-elevated: #f4f5f7;
-      --color-launcher-control: #f0f1f3;
-      --color-launcher-control-hover: #e4e7eb;
-      --color-launcher-icon-surface: #eceff3;
+      --color-launcher-bg: #eceff3;
+      --color-launcher-surface: #f6f7f9;
+      --color-launcher-surface-elevated: #ffffff;
+      --color-launcher-panel: #f7f8fa;
+      --color-launcher-panel-elevated: #ffffff;
+      --color-launcher-control: #e7ebf0;
+      --color-launcher-control-hover: #dfe5ec;
+      --color-launcher-icon-surface: #e1e7ef;
       --color-launcher-divider: rgba(15, 23, 42, 0.12);
       --color-launcher-overlay: rgba(15, 23, 42, 0.32);
       --color-launcher-border: #d8dbe0;
       --color-launcher-muted: #767d89;
-      --color-launcher-text: #101114;
-      --color-launcher-text-muted: #5f6672;
+      --color-launcher-text: #1e2430;
+      --color-launcher-text-muted: #667184;
       --color-launcher-primary: #181a20;
       --color-launcher-primary-hover: #000000;
       --color-launcher-cta: #f1c84a;
       --color-launcher-cta-hover: #e5bb35;
       --color-launcher-cta-text: #171717;
-      --series-bg-base: #f7f7f8;
-      --series-gascii-bg: #f3f8f2;
-      --series-mienjine-bg: #f7f3fb;
+      --series-bg-base: #eceff3;
+      --series-gascii-bg: #eef2f0;
+      --series-mienjine-bg: #f0f1f5;
 
       --background: 240 20% 98%;
       --foreground: 240 10% 7%;
@@ -194,7 +194,7 @@
   }
 
   .theme-panel {
-    background: color-mix(in srgb, var(--color-launcher-surface) 62%, transparent);
+    background: color-mix(in srgb, var(--color-launcher-surface) 72%, transparent);
     border-color: color-mix(in srgb, var(--color-launcher-border) 72%, transparent);
     color: var(--color-launcher-text);
   }
@@ -210,20 +210,30 @@
   }
 
   .theme-hero-side-overlay {
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.54), rgba(0, 0, 0, 0.18), transparent);
+    background: linear-gradient(90deg, rgba(15, 17, 21, 0.46), rgba(15, 17, 21, 0.16), transparent);
   }
 
   .theme-hero-bottom-overlay {
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.38), transparent 55%, transparent);
+    background: linear-gradient(0deg, rgba(15, 17, 21, 0.3), transparent 55%, transparent);
+  }
+
+  .theme-series-banner {
+    filter: saturate(0.88) contrast(0.92) brightness(0.86);
+    opacity: 0.92;
   }
 
   @media (prefers-color-scheme: light) {
     .theme-hero-side-overlay {
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.22), transparent);
+      background: linear-gradient(90deg, rgba(236, 239, 243, 0.72), rgba(236, 239, 243, 0.32), transparent);
     }
 
     .theme-hero-bottom-overlay {
-      background: linear-gradient(0deg, rgba(255, 255, 255, 0.42), transparent 55%, transparent);
+      background: linear-gradient(0deg, rgba(236, 239, 243, 0.5), transparent 55%, transparent);
+    }
+
+    .theme-series-banner {
+      filter: saturate(0.68) contrast(0.86) brightness(0.96);
+      opacity: 0.82;
     }
   }
 }

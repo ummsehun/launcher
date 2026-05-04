@@ -3,9 +3,11 @@ import { createMainWindow } from './core/create-window';
 import { registerGameHandlers } from './handler/game.handler';
 import { registerLauncherHandlers } from './handler/launcher.handler';
 import { registerSeriesHandlers } from './handler/series.handler';
+import { initializeAutoUpdate } from './services/auto-update.service';
 import { toErrorMessage } from './utils/error';
 
 app.setName('TermPlay');
+app.setAppUserModelId('com.termplay.launcher');
 
 const showFatalError = (title: string, error: unknown): void => {
   const message = toErrorMessage(error);
@@ -60,6 +62,7 @@ if (!gotLock) {
     .whenReady()
     .then(() => {
       createMainWindow();
+      initializeAutoUpdate();
 
       app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
