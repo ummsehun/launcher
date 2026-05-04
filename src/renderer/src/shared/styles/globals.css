@@ -5,6 +5,13 @@
   --color-launcher-bg: #09090b;
   --color-launcher-surface: #18181b;
   --color-launcher-surface-elevated: #27272a;
+  --color-launcher-panel: #111113;
+  --color-launcher-panel-elevated: #1c1c1e;
+  --color-launcher-control: #1c1c1e;
+  --color-launcher-control-hover: #2c2c2e;
+  --color-launcher-icon-surface: #222225;
+  --color-launcher-divider: rgba(255, 255, 255, 0.08);
+  --color-launcher-overlay: rgba(0, 0, 0, 0.6);
   --color-launcher-border: #3f3f46;
   --color-launcher-muted: #52525b;
   --color-launcher-text: #fafafa;
@@ -58,6 +65,11 @@
 
 @layer base {
   :root {
+    color-scheme: dark;
+    --series-bg-base: #09090b;
+    --series-gascii-bg: #050505;
+    --series-mienjine-bg: #0a0510;
+
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
 
@@ -88,6 +100,54 @@
 
     --radius: 0.5rem;
   }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      color-scheme: light;
+      --color-launcher-bg: #f7f7f8;
+      --color-launcher-surface: #ffffff;
+      --color-launcher-surface-elevated: #f0f1f3;
+      --color-launcher-panel: #ffffff;
+      --color-launcher-panel-elevated: #f4f5f7;
+      --color-launcher-control: #f0f1f3;
+      --color-launcher-control-hover: #e4e7eb;
+      --color-launcher-icon-surface: #eceff3;
+      --color-launcher-divider: rgba(15, 23, 42, 0.12);
+      --color-launcher-overlay: rgba(15, 23, 42, 0.32);
+      --color-launcher-border: #d8dbe0;
+      --color-launcher-muted: #767d89;
+      --color-launcher-text: #101114;
+      --color-launcher-text-muted: #5f6672;
+      --color-launcher-primary: #181a20;
+      --color-launcher-primary-hover: #000000;
+      --color-launcher-cta: #f1c84a;
+      --color-launcher-cta-hover: #e5bb35;
+      --color-launcher-cta-text: #171717;
+      --series-bg-base: #f7f7f8;
+      --series-gascii-bg: #f3f8f2;
+      --series-mienjine-bg: #f7f3fb;
+
+      --background: 240 20% 98%;
+      --foreground: 240 10% 7%;
+      --card: 0 0% 100%;
+      --card-foreground: 240 10% 7%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 240 10% 7%;
+      --primary: 240 10% 7%;
+      --primary-foreground: 0 0% 98%;
+      --secondary: 240 12% 94%;
+      --secondary-foreground: 240 10% 12%;
+      --muted: 240 12% 94%;
+      --muted-foreground: 240 5% 42%;
+      --accent: 220 70% 96%;
+      --accent-foreground: 222 70% 35%;
+      --destructive: 0 72% 46%;
+      --destructive-foreground: 0 0% 98%;
+      --border: 225 12% 86%;
+      --input: 225 12% 86%;
+      --ring: 220 80% 50%;
+    }
+  }
 }
 
 @layer base {
@@ -115,5 +175,122 @@
   }
   ::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+@layer components {
+  .theme-app {
+    background: var(--color-launcher-bg);
+    color: var(--color-launcher-text);
+  }
+
+  .theme-sidebar {
+    background: color-mix(in srgb, var(--color-launcher-surface) 88%, transparent);
+    border-color: color-mix(in srgb, var(--color-launcher-border) 70%, transparent);
+  }
+
+  .theme-main {
+    background: var(--series-bg-base);
+  }
+
+  .theme-panel {
+    background: color-mix(in srgb, var(--color-launcher-surface) 62%, transparent);
+    border-color: color-mix(in srgb, var(--color-launcher-border) 72%, transparent);
+    color: var(--color-launcher-text);
+  }
+
+  .theme-panel-strong {
+    background: color-mix(in srgb, var(--color-launcher-surface) 92%, transparent);
+    border-color: color-mix(in srgb, var(--color-launcher-border) 82%, transparent);
+    color: var(--color-launcher-text);
+  }
+
+  .theme-muted-text {
+    color: var(--color-launcher-text-muted);
+  }
+
+  .theme-hero-side-overlay {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.54), rgba(0, 0, 0, 0.18), transparent);
+  }
+
+  .theme-hero-bottom-overlay {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.38), transparent 55%, transparent);
+  }
+
+  @media (prefers-color-scheme: light) {
+    .theme-hero-side-overlay {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.22), transparent);
+    }
+
+    .theme-hero-bottom-overlay {
+      background: linear-gradient(0deg, rgba(255, 255, 255, 0.42), transparent 55%, transparent);
+    }
+  }
+}
+
+@layer utilities {
+  @media (prefers-color-scheme: light) {
+    .theme-app .text-white {
+      color: var(--color-launcher-text);
+    }
+
+    .theme-app .text-white\/90,
+    .theme-app .text-white\/85,
+    .theme-app .text-white\/80,
+    .theme-app .text-white\/70 {
+      color: color-mix(in srgb, var(--color-launcher-text) 82%, transparent);
+    }
+
+    .theme-app .text-white\/60,
+    .theme-app .text-white\/50,
+    .theme-app .text-white\/40,
+    .theme-app .text-white\/30,
+    .theme-app .text-white\/20 {
+      color: var(--color-launcher-text-muted);
+    }
+
+    .theme-app .bg-black,
+    .theme-app .bg-\[\#050505\],
+    .theme-app .bg-\[\#0a0a0a\],
+    .theme-app .bg-\[\#111\],
+    .theme-app .bg-\[\#111111\],
+    .theme-app .bg-\[\#121212\],
+    .theme-app .bg-\[\#141414\],
+    .theme-app .bg-\[\#1a1a1a\],
+    .theme-app .bg-\[\#1c1c1e\],
+    .theme-app .bg-\[\#2c2c2e\] {
+      background-color: var(--color-launcher-surface);
+    }
+
+    .theme-app .bg-black\/85,
+    .theme-app .bg-black\/60,
+    .theme-app .bg-black\/40,
+    .theme-app .bg-black\/20,
+    .theme-app .bg-white\/\[0\.02\],
+    .theme-app .bg-white\/5,
+    .theme-app .bg-white\/10 {
+      background-color: color-mix(in srgb, var(--color-launcher-surface) 78%, transparent);
+    }
+
+    .theme-app .border-white\/5,
+    .theme-app .border-white\/10,
+    .theme-app .border-white\/20 {
+      border-color: color-mix(in srgb, var(--color-launcher-border) 82%, transparent);
+    }
+
+    .theme-app .hover\:bg-white\/5:hover,
+    .theme-app .hover\:bg-white\/10:hover,
+    .theme-app .hover\:bg-white\/20:hover,
+    .theme-app .hover\:bg-\[\#1a1a1c\]:hover,
+    .theme-app .hover\:bg-\[\#2c2c2e\]:hover,
+    .theme-app .hover\:bg-\[\#3c3c3e\]:hover {
+      background-color: var(--color-launcher-surface-elevated);
+    }
+
+    .theme-app .hover\:text-white:hover,
+    .theme-app .hover\:text-white\/80:hover,
+    .theme-app .hover\:text-white\/90:hover {
+      color: var(--color-launcher-text);
+    }
   }
 }

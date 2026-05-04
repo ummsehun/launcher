@@ -19,9 +19,9 @@ export type SettingsLayoutProps = {
 
 export const SettingsLayout: React.FC<SettingsLayoutProps> = ({ title, navItems, children }) => {
   return (
-    <div className="flex w-full h-full bg-[#111111]">
-      <div className="w-[240px] bg-[#0a0a0a] border-r border-white/5 flex flex-col p-4">
-        <h2 className="text-2xl font-bold text-white mb-8 pl-4 mt-6">{title}</h2>
+    <div className="flex w-full h-full bg-launcher-bg text-launcher-text">
+      <div className="w-[240px] bg-launcher-surface border-r border-launcher-border flex flex-col p-4">
+        <h2 className="text-2xl font-bold text-launcher-text mb-8 pl-4 mt-6">{title}</h2>
         <div className="flex flex-col gap-1">
           {navItems.map(item => (
             <button 
@@ -31,9 +31,9 @@ export const SettingsLayout: React.FC<SettingsLayoutProps> = ({ title, navItems,
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-medium text-[14px]",
                 item.isActive 
-                  ? "bg-blue-500/10 text-blue-400 font-bold border-l-4 border-blue-500" 
-                  : "border-l-4 border-transparent text-white/50",
-                !item.isActive && !item.disabled && "hover:bg-white/5 hover:text-white",
+                  ? "bg-launcher-accent/10 text-launcher-accent font-bold border-l-4 border-launcher-accent" 
+                  : "border-l-4 border-transparent text-launcher-textMuted",
+                !item.isActive && !item.disabled && "hover:bg-launcher-control hover:text-launcher-text",
                 item.disabled && "cursor-not-allowed opacity-50"
               )}
             >

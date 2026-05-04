@@ -12,7 +12,7 @@ export const AssetsPanel: React.FC = () => {
 
   if (!selectedSeriesId || !config) {
     return (
-      <div className="flex h-full w-full items-center justify-center bg-[#111111] text-white/50">
+      <div className="flex h-full w-full items-center justify-center bg-launcher-bg text-launcher-textMuted">
         {t('launcher.series_not_selected', 'Please select a series first')}
       </div>
     );
@@ -21,11 +21,11 @@ export const AssetsPanel: React.FC = () => {
   const typedSeriesId = selectedSeriesId as TerminalSeriesId;
 
   return (
-    <div className="flex flex-col h-full bg-[#111111]">
-      <div className="p-10 pb-6 border-b border-white/5 flex items-end justify-between">
+    <div className="flex flex-col h-full bg-launcher-bg text-launcher-text">
+      <div className="p-10 pb-6 border-b border-launcher-divider flex items-end justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-white">{t('launcher.feature_modal.assets.title')}</h2>
-          <p className="text-[14px] text-white/50 mt-2">
+          <h2 className="text-2xl font-bold text-launcher-text">{t('launcher.feature_modal.assets.title')}</h2>
+          <p className="text-[14px] text-launcher-textMuted mt-2">
             {t(`launcher.feature_modal.assets.desc_${selectedSeriesId}`)}
           </p>
         </div>

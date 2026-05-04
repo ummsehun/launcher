@@ -1,6 +1,6 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, nativeTheme } from 'electron';
 import { configureWindowSecurity, isAllowedDevRendererUrl } from './window-security';
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
@@ -12,7 +12,7 @@ export const createMainWindow = (): BrowserWindow => {
     minWidth: 900,
     minHeight: 620,
     title: 'TermPlay',
-    backgroundColor: '#09090b',
+    backgroundColor: nativeTheme.shouldUseDarkColors ? '#09090b' : '#f7f7f8',
     webPreferences: {
       preload: join(currentDirectory, '../preload/preload.cjs'),
       contextIsolation: true,

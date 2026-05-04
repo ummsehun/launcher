@@ -41,20 +41,20 @@ export const SeriesHero: React.FC = () => {
       <div className="w-full h-48 mb-4 shrink-0" />
 
       {/* Translucent Content Panel (Events/Notices/Info) */}
-      <div className="w-full flex-1 flex flex-col bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl mb-4 pointer-events-auto overflow-hidden shadow-2xl">
-        <div className="flex gap-6 px-6 pt-4 border-b border-white/10">
+      <div className="theme-panel w-full flex-1 flex flex-col backdrop-blur-xl border rounded-2xl mb-4 pointer-events-auto overflow-hidden shadow-2xl">
+        <div className="flex gap-6 px-6 pt-4 border-b border-launcher-divider">
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setSelectedTab(tab.id)}
               className={cn(
                 "pb-3 text-sm font-bold uppercase tracking-wider transition-colors relative",
-                selectedTab === tab.id ? "text-white" : "text-white/50 hover:text-white/80"
+                selectedTab === tab.id ? "text-launcher-text" : "text-launcher-textMuted hover:text-launcher-text"
               )}
             >
               {tab.label}
               {selectedTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white shadow-[0_-2px_10px_rgba(255,255,255,0.5)]" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-launcher-accent shadow-glow" />
               )}
             </button>
           ))}
@@ -69,7 +69,7 @@ export const SeriesHero: React.FC = () => {
       </div>
 
       {/* Quick Action Icons Panel */}
-      <div className="w-full bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center pointer-events-auto shadow-2xl">
+      <div className="theme-panel w-full backdrop-blur-xl border rounded-2xl p-4 flex justify-between items-center pointer-events-auto shadow-2xl">
         {[
           { id: 'launcher', icon: Rocket, label: t('launcher.launcher_action') },
           { id: 'library', icon: Library, label: t('launcher.library_action') },
@@ -81,10 +81,10 @@ export const SeriesHero: React.FC = () => {
             onClick={() => openModal(item.id as ModalType)}
             className="flex flex-col items-center gap-2 group"
           >
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-b from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-white/80 group-hover:text-white group-hover:border-white/30 group-hover:from-white/20 transition-all">
+            <div className="w-12 h-12 rounded-xl bg-launcher-control border border-launcher-divider flex items-center justify-center text-launcher-textMuted group-hover:text-launcher-text group-hover:border-launcher-border group-hover:bg-launcher-controlHover transition-all">
               <item.icon size={22} />
             </div>
-            <span className="text-[10px] uppercase tracking-wider font-bold text-white/60 group-hover:text-white/90">
+            <span className="text-[10px] uppercase tracking-wider font-bold text-launcher-textMuted group-hover:text-launcher-text">
               {item.label}
             </span>
           </button>

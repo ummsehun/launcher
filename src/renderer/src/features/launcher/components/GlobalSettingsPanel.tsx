@@ -24,8 +24,8 @@ export const GlobalSettingsPanel: React.FC = () => {
   return (
     <SettingsLayout title={t('launcher.settings.title')} navItems={navItems}>
       <section className="space-y-3">
-        <h3 className="text-[13px] font-bold text-white/50">{t('launcher.settings.language')}</h3>
-        <div className="p-6 rounded-xl border border-white/5 bg-[#1c1c1e]">
+        <h3 className="text-[13px] font-bold text-launcher-textMuted">{t('launcher.settings.language')}</h3>
+        <div className="p-6 rounded-xl border border-launcher-divider bg-launcher-panelElevated">
           <div className="flex gap-4">
             {['ko', 'en', 'ja'].map(lang => (
               <button
@@ -34,8 +34,8 @@ export const GlobalSettingsPanel: React.FC = () => {
                 className={cn(
                   "px-6 py-3 rounded-lg border font-medium transition-all text-[14px]",
                   i18n.language === lang 
-                    ? "bg-blue-500/20 border-blue-500 text-blue-400" 
-                    : "bg-[#111] border-white/10 text-white/50 hover:border-white/30 hover:text-white"
+                    ? "bg-launcher-accent/20 border-launcher-accent text-launcher-accent" 
+                    : "bg-launcher-control border-launcher-divider text-launcher-textMuted hover:border-launcher-border hover:text-launcher-text"
                 )}
               >
                 {lang === 'ko' ? '한국어' : lang === 'en' ? 'English' : '日本語'}
@@ -46,7 +46,7 @@ export const GlobalSettingsPanel: React.FC = () => {
       </section>
 
       <section className="space-y-3">
-        <h3 className="text-[13px] font-bold text-white/50">{t('launcher.settings.advanced')}</h3>
+        <h3 className="text-[13px] font-bold text-launcher-textMuted">{t('launcher.settings.advanced')}</h3>
         <div className="space-y-3">
           <ToggleRow 
             label={t('launcher.settings.auto_update')} 

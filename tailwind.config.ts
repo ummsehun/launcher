@@ -1,28 +1,46 @@
 import type { Config } from 'tailwindcss';
 
+const launcherColors = {
+  bg: 'var(--color-launcher-bg)',
+  surface: 'var(--color-launcher-surface)',
+  surfaceElevated: 'var(--color-launcher-surface-elevated)',
+  panel: 'var(--color-launcher-panel)',
+  panelElevated: 'var(--color-launcher-panel-elevated)',
+  control: 'var(--color-launcher-control)',
+  controlHover: 'var(--color-launcher-control-hover)',
+  iconSurface: 'var(--color-launcher-icon-surface)',
+  divider: 'var(--color-launcher-divider)',
+  overlay: 'var(--color-launcher-overlay)',
+  border: 'var(--color-launcher-border)',
+  muted: 'var(--color-launcher-muted)',
+  text: 'var(--color-launcher-text)',
+  textMuted: 'var(--color-launcher-text-muted)',
+  primary: 'var(--color-launcher-primary)',
+  primaryHover: 'var(--color-launcher-primary-hover)',
+  accent: 'var(--color-launcher-accent)',
+  accentHover: 'var(--color-launcher-accent-hover)',
+  cta: 'var(--color-launcher-cta)',
+  ctaHover: 'var(--color-launcher-cta-hover)',
+  ctaText: 'var(--color-launcher-cta-text)',
+  success: 'var(--color-launcher-success)',
+  warning: 'var(--color-launcher-warning)',
+  danger: 'var(--color-launcher-danger)',
+  terminal: 'var(--color-launcher-terminal)',
+} as const;
+
+const launcherShadows = {
+  launcher: 'var(--shadow-launcher)',
+  panel: 'var(--shadow-panel)',
+  glow: 'var(--shadow-glow)',
+} as const;
+
 export default {
   darkMode: ['class'],
   content: ['./src/renderer/index.html', './src/renderer/src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        launcher: {
-          bg: '#09090b',
-          surface: '#18181b',
-          surfaceElevated: '#27272a',
-          border: '#3f3f46',
-          muted: '#52525b',
-          text: '#fafafa',
-          textMuted: '#a1a1aa',
-          primary: '#e4e4e7',
-          primaryHover: '#ffffff',
-          accent: '#3b82f6',
-          accentHover: '#2563eb',
-          success: '#22c55e',
-          warning: '#eab308',
-          danger: '#ef4444',
-          terminal: '#0ea5e9',
-        },
+        launcher: launcherColors,
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -71,9 +89,7 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       boxShadow: {
-        launcher: '0 4px 24px -4px rgba(0, 0, 0, 0.5)',
-        panel: '0 2px 12px -2px rgba(0, 0, 0, 0.3)',
-        glow: '0 0 20px 0px rgba(59, 130, 246, 0.3)',
+        ...launcherShadows,
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],

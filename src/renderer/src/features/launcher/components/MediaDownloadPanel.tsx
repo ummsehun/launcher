@@ -75,8 +75,8 @@ export const MediaDownloadPanel: React.FC<MediaDownloadPanelProps> = ({ seriesId
 
   return (
     <div className="flex-1 flex flex-col justify-center max-w-xl mx-auto w-full space-y-6">
-      <div className="relative flex items-center bg-[#1c1c1e] rounded-xl border border-white/5 overflow-hidden">
-        <div className="pl-5 text-white/40">
+      <div className="relative flex items-center bg-launcher-control rounded-xl border border-launcher-divider overflow-hidden">
+        <div className="pl-5 text-launcher-textMuted">
           <Search size={20} />
         </div>
         <input
@@ -84,14 +84,14 @@ export const MediaDownloadPanel: React.FC<MediaDownloadPanelProps> = ({ seriesId
           placeholder={t('launcher.feature_modal.assets.yt_placeholder')}
           value={url}
           onChange={(event) => setUrl(event.target.value)}
-          className="w-full bg-transparent px-4 py-4 text-[15px] text-white font-medium outline-none placeholder:text-white/30"
+          className="w-full bg-transparent px-4 py-4 text-[15px] text-launcher-text font-medium outline-none placeholder:text-launcher-textMuted"
         />
       </div>
 
       {isActive ? (
-        <div className="w-full bg-[#1c1c1e] p-5 rounded-xl border border-white/5 flex flex-col gap-3">
+        <div className="w-full bg-launcher-panelElevated p-5 rounded-xl border border-launcher-divider flex flex-col gap-3">
           <div className="flex justify-between items-center">
-            <span className="text-white text-sm font-bold">
+            <span className="text-launcher-text text-sm font-bold">
               {progress.status === 'postprocessing'
                 ? t('launcher.feature_modal.assets.postprocessing', 'Post-processing...')
                 : progress.status === 'validating'
@@ -106,13 +106,13 @@ export const MediaDownloadPanel: React.FC<MediaDownloadPanelProps> = ({ seriesId
               {t('launcher.feature_modal.assets.cancel', 'Cancel')}
             </button>
           </div>
-          <div className="w-full bg-[#111] h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-launcher-control h-1.5 rounded-full overflow-hidden">
             <div
-              className="bg-blue-500 h-full transition-all duration-300"
+              className="bg-launcher-accent h-full transition-all duration-300"
               style={{ width: `${progress.percent ?? 0}%` }}
             />
           </div>
-          <div className="flex justify-between text-[12px] text-white/40">
+          <div className="flex justify-between text-[12px] text-launcher-textMuted">
             <span>{progress.message}</span>
             <span>{progress.speedText || progress.etaText ? `${progress.speedText ?? ''} ${progress.etaText ? `ETA ${progress.etaText}` : ''}` : `${progress.percent ?? 0}%`}</span>
           </div>
@@ -127,9 +127,9 @@ export const MediaDownloadPanel: React.FC<MediaDownloadPanelProps> = ({ seriesId
                 : t('launcher.feature_modal.assets.completed', 'Completed')}
           </span>
           {(error || progress?.message || jobUrl) && (
-            <p className="mt-2 text-center text-[13px] text-white/50">{error ?? progress?.message ?? jobUrl}</p>
+            <p className="mt-2 text-center text-[13px] text-launcher-textMuted">{error ?? progress?.message ?? jobUrl}</p>
           )}
-          <button onClick={reset} className="mt-2 text-white/50 text-sm hover:text-white">
+          <button onClick={reset} className="mt-2 text-launcher-textMuted text-sm hover:text-launcher-text">
             {t('launcher.feature_modal.assets.download_another', 'Download another')}
           </button>
         </div>
@@ -138,14 +138,14 @@ export const MediaDownloadPanel: React.FC<MediaDownloadPanelProps> = ({ seriesId
           <button
             onClick={() => handleDownload('mp4')}
             disabled={!url}
-            className="flex-1 py-4 bg-[#2c2c2e] hover:bg-[#3c3c3e] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors flex items-center justify-center gap-2 text-[14px] font-bold"
+            className="flex-1 py-4 bg-launcher-control hover:bg-launcher-controlHover disabled:opacity-50 disabled:cursor-not-allowed text-launcher-text rounded-xl transition-colors flex items-center justify-center gap-2 text-[14px] font-bold"
           >
             <Download size={18} /> {t('launcher.feature_modal.assets.download_mp4')}
           </button>
           <button
             onClick={() => handleDownload('mp3')}
             disabled={!url}
-            className="flex-1 py-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors flex items-center justify-center gap-2 text-[14px] font-bold"
+            className="flex-1 py-4 bg-launcher-accent hover:bg-launcher-accentHover disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors flex items-center justify-center gap-2 text-[14px] font-bold"
           >
             <Download size={18} /> {t('launcher.feature_modal.assets.download_mp3')}
           </button>

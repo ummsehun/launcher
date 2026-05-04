@@ -77,7 +77,7 @@ export const LibraryPanel: React.FC = () => {
 
   if (!selectedSeriesId || !config) {
     return (
-      <div className="flex h-full w-full items-center justify-center bg-[#111111] text-white/50">
+      <div className="flex h-full w-full items-center justify-center bg-launcher-bg text-launcher-textMuted">
         {t('launcher.series_not_selected', 'Please select a series first')}
       </div>
     );
@@ -99,12 +99,12 @@ export const LibraryPanel: React.FC = () => {
   const hasEmptyGasciiAssetDir = isGascii && summaries.some((summary) => !summary.exists || summary.fileCount === 0);
 
   return (
-    <div className="flex h-full bg-[#111111] overflow-hidden">
+    <div className="flex h-full bg-launcher-bg text-launcher-text overflow-hidden">
       {/* Sidebar */}
-      <div className="w-64 border-r border-white/5 flex flex-col bg-[#141414]">
+      <div className="w-64 border-r border-launcher-divider flex flex-col bg-launcher-surface">
         <div className="p-6 pb-4">
-          <h2 className="text-xl font-bold text-white">{t('launcher.feature_modal.library.title', 'Library')}</h2>
-          <p className="text-[13px] text-white/50 mt-1">{t('launcher.feature_modal.library.desc', 'Manage your media files')}</p>
+          <h2 className="text-xl font-bold text-launcher-text">{t('launcher.feature_modal.library.title', 'Library')}</h2>
+          <p className="text-[13px] text-launcher-textMuted mt-1">{t('launcher.feature_modal.library.desc', 'Manage your media files')}</p>
         </div>
         <div className="flex-1 overflow-y-auto p-3 space-y-1 scrollbar-none">
           {config.libraryDirs.map((dir, idx) => {
@@ -115,11 +115,11 @@ export const LibraryPanel: React.FC = () => {
                 key={idx} 
                 onClick={() => setSelectedDir(dir.key)}
                 className={`w-full flex items-center p-3 rounded-xl transition-all duration-200 group cursor-pointer ${
-                  isSelected ? 'bg-blue-500/10 text-blue-400' : 'text-white/60 hover:bg-[#1c1c1e] hover:text-white'
+                  isSelected ? 'bg-launcher-accent/10 text-launcher-accent' : 'text-launcher-textMuted hover:bg-launcher-control hover:text-launcher-text'
                 }`}
               >
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center mr-3 transition-colors ${
-                  isSelected ? 'bg-blue-500/20 text-blue-400' : 'bg-[#1a1a1a] text-white/40 group-hover:text-blue-300 group-hover:bg-[#2c2c2e]'
+                  isSelected ? 'bg-launcher-accent/20 text-launcher-accent' : 'bg-launcher-iconSurface text-launcher-textMuted group-hover:text-launcher-accent group-hover:bg-launcher-controlHover'
                 }`}>
                   <dir.icon size={18} />
                 </div>
@@ -127,7 +127,7 @@ export const LibraryPanel: React.FC = () => {
                   <span className="text-[14px] font-medium uppercase tracking-wider">{dir.key}</span>
                 </div>
                 {summary && summary.fileCount > 0 && (
-                  <span className={`text-[11px] px-2 py-0.5 rounded-full ${isSelected ? 'bg-blue-500/20 text-blue-300' : 'bg-white/5 text-white/40 group-hover:bg-white/10 group-hover:text-white/60'}`}>
+                  <span className={`text-[11px] px-2 py-0.5 rounded-full ${isSelected ? 'bg-launcher-accent/20 text-launcher-accent' : 'bg-launcher-control text-launcher-textMuted group-hover:bg-launcher-controlHover'}`}>
                     {summary.fileCount}
                   </span>
                 )}
@@ -138,29 +138,29 @@ export const LibraryPanel: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 bg-[#0a0a0a]">
+      <div className="flex-1 flex flex-col min-w-0 bg-launcher-bg">
         {/* Top bar */}
-        <div className="h-[76px] border-b border-white/5 flex items-center justify-between pl-8 pr-20 bg-[#111111]/80 backdrop-blur-md z-10 shrink-0">
+        <div className="h-[76px] border-b border-launcher-divider flex items-center justify-between pl-8 pr-20 bg-launcher-panel/80 backdrop-blur-md z-10 shrink-0">
           <div className="flex items-center gap-4">
-            <h3 className="text-xl font-bold text-white uppercase tracking-widest flex items-center gap-3">
+            <h3 className="text-xl font-bold text-launcher-text uppercase tracking-widest flex items-center gap-3">
               {selectedDir || 'Directory'}
             </h3>
-            <div className="h-4 w-[1px] bg-white/10"></div>
-            <span className="text-[13px] text-white/40">
+            <div className="h-4 w-[1px] bg-launcher-divider"></div>
+            <span className="text-[13px] text-launcher-textMuted">
               {files.length} {t('launcher.feature_modal.library.items', 'items')}
             </span>
           </div>
           <div className="flex gap-3">
             <button 
               onClick={() => selectedDir && loadFiles(selectedDir)}
-              className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#1c1c1e] border border-white/5 hover:bg-[#2c2c2e] hover:border-white/10 text-white/60 hover:text-white transition-all"
+              className="flex items-center justify-center w-10 h-10 rounded-xl bg-launcher-control border border-launcher-divider hover:bg-launcher-controlHover hover:border-launcher-border text-launcher-textMuted hover:text-launcher-text transition-all"
               title={t('launcher.feature_modal.library.refresh', 'Refresh')}
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             </button>
             <button 
               onClick={handleOpenNativeDir}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-b from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 border border-blue-400/20 text-white transition-all shadow-lg shadow-blue-500/20 text-[13px] font-bold tracking-wide"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-launcher-accent hover:bg-launcher-accentHover border border-launcher-accent/20 text-white transition-all shadow-lg shadow-launcher text-[13px] font-bold tracking-wide"
             >
               <FolderOpen size={16} />
               {t('launcher.feature_modal.library.open_dir', 'Open / Add Files')}
@@ -194,56 +194,56 @@ export const LibraryPanel: React.FC = () => {
           )}
           
           {loading ? (
-            <div className="absolute inset-0 flex items-center justify-center bg-[#0a0a0a]/50 backdrop-blur-sm z-10">
+            <div className="absolute inset-0 flex items-center justify-center bg-launcher-bg/50 backdrop-blur-sm z-10">
               <div className="flex flex-col items-center gap-4">
-                <RefreshCw size={32} className="animate-spin text-blue-500" />
-                <span className="text-[14px] text-white/50 tracking-widest uppercase text-xs font-bold">Loading...</span>
+                <RefreshCw size={32} className="animate-spin text-launcher-accent" />
+                <span className="text-[14px] text-launcher-textMuted tracking-widest uppercase text-xs font-bold">Loading...</span>
               </div>
             </div>
           ) : files.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-white/30">
-              <div className="flex flex-col items-center text-center gap-6 max-w-[320px] p-10 rounded-3xl border border-dashed border-white/10 bg-[#111]/50">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-b from-[#222] to-[#111] flex items-center justify-center text-white/20 shadow-inner border border-white/5">
+            <div className="h-full flex items-center justify-center text-launcher-textMuted">
+              <div className="flex flex-col items-center text-center gap-6 max-w-[320px] p-10 rounded-3xl border border-dashed border-launcher-divider bg-launcher-panel/50">
+                <div className="w-20 h-20 rounded-2xl bg-launcher-iconSurface flex items-center justify-center text-launcher-textMuted shadow-inner border border-launcher-divider">
                   <FolderOpen size={40} strokeWidth={1.5} />
                 </div>
                 <div>
-                  <h4 className="text-[16px] font-bold text-white/70 tracking-wide mb-2">{t('launcher.feature_modal.library.empty_dir', 'Folder is empty')}</h4>
-                  <p className="text-[14px] leading-relaxed text-white/40">
+                  <h4 className="text-[16px] font-bold text-launcher-text tracking-wide mb-2">{t('launcher.feature_modal.library.empty_dir', 'Folder is empty')}</h4>
+                  <p className="text-[14px] leading-relaxed text-launcher-textMuted">
                     {t('launcher.feature_modal.library.empty_dir_desc', 'Click the Open / Add Files button to add content to this directory.')}
                   </p>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="bg-[#111111] rounded-2xl border border-white/5 shadow-xl overflow-hidden">
+            <div className="bg-launcher-panel rounded-2xl border border-launcher-divider shadow-xl overflow-hidden">
               <table className="w-full text-left border-collapse table-fixed">
                 <thead>
-                  <tr className="border-b border-white/5 bg-white/[0.02]">
-                    <th className="py-4 px-6 text-[11px] font-bold text-white/40 uppercase tracking-widest w-[50%]">{t('launcher.feature_modal.library.name', 'Name')}</th>
-                    <th className="py-4 px-6 text-[11px] font-bold text-white/40 uppercase tracking-widest w-[25%]">{t('launcher.feature_modal.library.date_modified', 'Date Modified')}</th>
-                    <th className="py-4 px-6 text-[11px] font-bold text-white/40 uppercase tracking-widest text-right w-[25%]">{t('launcher.feature_modal.library.size', 'Size')}</th>
+                  <tr className="border-b border-launcher-divider bg-launcher-control">
+                    <th className="py-4 px-6 text-[11px] font-bold text-launcher-textMuted uppercase tracking-widest w-[50%]">{t('launcher.feature_modal.library.name', 'Name')}</th>
+                    <th className="py-4 px-6 text-[11px] font-bold text-launcher-textMuted uppercase tracking-widest w-[25%]">{t('launcher.feature_modal.library.date_modified', 'Date Modified')}</th>
+                    <th className="py-4 px-6 text-[11px] font-bold text-launcher-textMuted uppercase tracking-widest text-right w-[25%]">{t('launcher.feature_modal.library.size', 'Size')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {files.map((file, idx) => (
-                    <tr key={idx} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors group">
+                    <tr key={idx} className="border-b border-launcher-divider hover:bg-launcher-control transition-colors group">
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-4 min-w-0">
                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors shadow-sm ${
-                            file.isDirectory ? 'bg-blue-500/10 text-blue-400 group-hover:bg-blue-500/20' : 'bg-[#222] text-white/50 group-hover:bg-[#333]'
+                            file.isDirectory ? 'bg-launcher-accent/10 text-launcher-accent group-hover:bg-launcher-accent/20' : 'bg-launcher-iconSurface text-launcher-textMuted group-hover:bg-launcher-controlHover'
                           }`}>
                             {file.isDirectory ? <Folder size={20} /> : <File size={20} />}
                           </div>
-                          <span className="text-[14px] text-white/90 truncate font-medium group-hover:text-white transition-colors block">{file.name}</span>
+                          <span className="text-[14px] text-launcher-text truncate font-medium transition-colors block">{file.name}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-6 text-[13px] text-white/50 whitespace-nowrap">
+                      <td className="py-4 px-6 text-[13px] text-launcher-textMuted whitespace-nowrap">
                         <div className="flex items-center gap-2.5">
-                          <Clock size={14} className="text-white/20" />
+                          <Clock size={14} className="text-launcher-muted" />
                           {formatDate(file.lastModified)}
                         </div>
                       </td>
-                      <td className="py-4 px-6 text-[13px] text-white/50 text-right whitespace-nowrap font-mono bg-white/[0.01]">
+                      <td className="py-4 px-6 text-[13px] text-launcher-textMuted text-right whitespace-nowrap font-mono bg-launcher-control">
                         {file.isDirectory ? '--' : formatBytes(file.sizeBytes)}
                       </td>
                     </tr>

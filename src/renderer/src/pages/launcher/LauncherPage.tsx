@@ -23,7 +23,7 @@ export const LauncherPage: React.FC = () => {
 
   if (isInitializing) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-[#09090b] text-launcher-text">
+      <div className="theme-app flex h-screen w-full items-center justify-center">
         <Loader2 className="animate-spin text-launcher-accent" size={48} />
       </div>
     );
@@ -31,7 +31,7 @@ export const LauncherPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-[#09090b] text-launcher-text">
+      <div className="theme-app flex h-screen w-full items-center justify-center">
         <div className="text-center">
           <div className="text-launcher-danger text-4xl mb-4">⚠</div>
           <h2 className="text-xl font-bold">{t('launcher.init_failed')}</h2>
@@ -47,17 +47,17 @@ export const LauncherPage: React.FC = () => {
       return {
         background: `radial-gradient(circle at 70% 30%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
                      radial-gradient(circle at 30% 80%, rgba(14, 165, 233, 0.1) 0%, transparent 40%),
-                     #050505`
+                     var(--series-gascii-bg)`
       };
     }
     if (currentSeries?.id === 'mienjine') {
       return {
         background: `radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
                      radial-gradient(circle at 20% 70%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
-                     #0a0510`
+                     var(--series-mienjine-bg)`
       };
     }
-    return { background: '#09090b' };
+    return { background: 'var(--series-bg-base)' };
   };
 
   const socialLinks = [
@@ -107,13 +107,13 @@ export const LauncherPage: React.FC = () => {
           />
         )}
         {/* Overlay so left-side UI remains readable */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent pointer-events-none" />
+        <div className="theme-hero-side-overlay absolute inset-0 pointer-events-none" />
         {/* Bottom vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+        <div className="theme-hero-bottom-overlay absolute inset-0 pointer-events-none" />
       </div>
 
       {/* Floating Right Social Toolbar */}
-      <div className="absolute right-6 top-24 flex flex-col gap-3 z-40 bg-black/20 backdrop-blur-md p-2 rounded-2xl border border-white/10">
+      <div className="theme-panel absolute right-6 top-24 flex flex-col gap-3 z-40 backdrop-blur-md p-2 rounded-2xl border">
         {socialLinks.map((item, idx) => (
           <button
             key={idx}

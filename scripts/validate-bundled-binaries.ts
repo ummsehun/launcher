@@ -17,23 +17,22 @@ const binarySets: readonly PlatformBinarySet[] = [
 const currentPlatformDir = `${process.platform}-${process.arch}`;
 const existingBinRoot = join(process.cwd(), 'resources', 'bin');
 const existingDirs = new Set(await readdir(existingBinRoot).catch(() => []));
+const currentBinarySet = binarySets.find(binarySet => binarySet.dir === currentPlatformDir);
 
-for (const binarySet of binarySets) {
-  if (!existingDirs.has(binarySet.dir) && binarySet.dir !== currentPlatformDir) {
-    continue;
-  }
+if (!currentBinarySet) {
+  throw new Error(`Unsupported bundled binary platform: ${currentPlatformDir}`);
+}
 
-  if (!existingDirs.has(binarySet.dir)) {
-    throw new Error(`Bundled binary directory is missing: resources/bin/${binarySet.dir}`);
-  }
+if (!existingDirs.has(currentBinarySet.dir)) {
+  throw new Error(`Bundled binary directory is missing: resources/bin/${currentBinarySet.dir}`);
+}
 
-  for (const binary of binarySet.binaries) {
-    const binaryPath = join(existingBinRoot, binarySet.dir, binary);
-    await assertExecutableFile(binaryPath);
+for (const binary of currentBinarySet.binaries) {
+  const binaryPath = join(existingBinRoot, currentBinarySet.dir, binary);
+  await assertExecutableFile(binaryPath);
 
-    if (binarySet.dir.startsWith('darwin-')) {
-      assertDarwinStandaloneBinary(binaryPath);
-    }
+  if (currentBinarySet.dir.startsWith('darwin-')) {
+    assertDarwinStandaloneBinary(binaryPath);
   }
 }
 
@@ -49,9 +48,13 @@ async function assertExecutableFile(binaryPath: string): Promise<void> {
 }
 
 function assertDarwinStandaloneBinary(binaryPath: string): void {
+  if (process.platform !== 'darwin') {
+    throw new Error(`macOS bundled binary validation requires a macOS runner: ${binaryPath}`);
+  }
+
   const fileResult = spawnSync('file', [binaryPath], { encoding: 'utf8' });
   if (fileResult.status !== 0) {
-    throw new Error(`file failed for ${binaryPath}: ${fileResult.stderr.trim()}`);
+    throw new Error(`file failed for ${binaryPath}: ${formatSpawnError(fileResult)}`);
   }
 
   if (!fileResult.stdout.includes('Mach-O')) {
@@ -60,7 +63,7 @@ function assertDarwinStandaloneBinary(binaryPath: string): void {
 
   const otoolResult = spawnSync('otool', ['-L', binaryPath], { encoding: 'utf8' });
   if (otoolResult.status !== 0) {
-    throw new Error(`otool failed for ${binaryPath}: ${otoolResult.stderr.trim()}`);
+    throw new Error(`otool failed for ${binaryPath}: ${formatSpawnError(otoolResult)}`);
   }
 
   const linkedLibraries = otoolResult.stdout;
@@ -69,4 +72,16 @@ function assertDarwinStandaloneBinary(binaryPath: string): void {
   if (forbiddenPrefix) {
     throw new Error(`macOS bundled binary depends on local package manager path ${forbiddenPrefix}: ${binaryPath}`);
   }
+}
+
+function formatSpawnError(result: ReturnType<typeof spawnSync>): string {
+  if (result.error) {
+    return result.error.message;
+  }
+
+  if (typeof result.stderr === 'string' && result.stderr.trim()) {
+    return result.stderr.trim();
+  }
+
+  return `exit status ${result.status ?? 'unknown'}`;
 }
