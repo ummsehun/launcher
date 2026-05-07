@@ -34,6 +34,8 @@
     }
   ],
   "mac": {
+    "forceCodeSigning": true,
+    "notarize": true,
     "target": [
       {
         "target": "dmg",

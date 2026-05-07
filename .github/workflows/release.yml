@@ -105,6 +105,20 @@ jobs:
           test -f resources/bin/darwin-arm64/ffmpeg
           chmod 755 resources/bin/darwin-arm64/yt-dlp resources/bin/darwin-arm64/ffmpeg
 
+      - name: Prepare macOS signing certificate
+        if: matrix.platform == 'macos'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          certificate_path="${RUNNER_TEMP}/termplay-macos-certificate.p12"
+          printf '%s' "$MACOS_CERTIFICATE_BASE64" | base64 --decode > "$certificate_path"
+          chmod 600 "$certificate_path"
+
+          echo "CSC_LINK=$certificate_path" >> "$GITHUB_ENV"
+        env:
+          MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
+
       - name: Validate bundled binaries
         run: bun run validate:bundled-binaries
         env:
@@ -114,6 +128,10 @@ jobs:
         run: bun run ${{ matrix.script }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_KEY_PASSWORD: ${{ matrix.platform == 'macos' && secrets.MACOS_CERTIFICATE_PASSWORD || '' }}
+          APPLE_ID: ${{ matrix.platform == 'macos' && secrets.APPLE_ID || '' }}
+          APPLE_TEAM_ID: ${{ matrix.platform == 'macos' && secrets.APPLE_TEAM_ID || '' }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ matrix.platform == 'macos' && secrets.APPLE_APP_SPECIFIC_PASSWORD || '' }}
 
   finalize-release:
     name: Mark GitHub release as latest
