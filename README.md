@@ -1,4 +1,5 @@
 # TermPlay
+![TermPlay Logo](docs/image/banner.png)
 터미널 기반 프로그램의 **다운로드 → 검증 → 설치 → 실행 경계**를 통합 관리하는 Electron 크로스플랫폼 런처입니다.
 
 ## 1. 프로젝트 개요
