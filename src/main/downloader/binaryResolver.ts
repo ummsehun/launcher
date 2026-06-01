@@ -22,9 +22,12 @@ export class BinaryResolver {
 
   static get ytDlpPath() {
     const ext = process.platform === 'win32' ? '.exe' : '';
-    // In dev mode on macOS, prefer a system/pip-installed yt-dlp from PATH to
-    // avoid a PyInstaller bootloader hang (macOS 26 Tahoe + Python 3.14).
-    if (!app.isPackaged && process.platform === 'darwin') {
+    // On macOS, prefer a system/pip/homebrew-installed yt-dlp over the bundled
+    // PyInstaller binary. PyInstaller's double-fork bootloader hangs when spawned
+    // from Electron's child_process on macOS 26 Tahoe. A system yt-dlp (installed
+    // via pip or Homebrew) is a plain Python script wrapper that does not have
+    // this issue. Falls back to the bundled binary if no system install is found.
+    if (process.platform === 'darwin') {
       const systemPaths = [
         `${process.env.HOME}/.local/bin/yt-dlp`,
         '/opt/homebrew/bin/yt-dlp',
