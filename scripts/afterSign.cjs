@@ -34,17 +34,35 @@ exports.default = async function afterSign(context) {
     return;
   }
 
-  // Signing identity is provided by electron-builder via CSC_LINK / CSC_NAME.
-  // Fall back to '-' (ad-hoc) for local development builds.
-  const identity = process.env.CSC_NAME || process.env.APPLE_SIGNING_IDENTITY || '-';
+  let identity = process.env.CSC_NAME || process.env.APPLE_SIGNING_IDENTITY;
+
+  if (!identity || identity === '-') {
+    console.log('afterSign: attempting to auto-resolve Developer ID certificate from keychain');
+    try {
+      const output = execFileSync('security', ['find-identity', '-v', '-p', 'codesigning']).toString();
+      const matches = [...output.matchAll(/"(Developer ID Application: [^"]+)"/g)];
+      if (matches.length > 0) {
+        identity = matches[0][1];
+        console.log(`afterSign: dynamically found Developer ID identity: "${identity}"`);
+      }
+    } catch (err) {
+      console.warn('afterSign: failed to run security find-identity:', err.message);
+    }
+  }
+
+  if (!identity) {
+    console.log('afterSign: falling back to ad-hoc signing ("-")');
+    identity = '-';
+  }
 
   for (const binaryPath of binaries) {
     console.log(`afterSign: signing ${binaryPath} with identity "${identity}"`);
-    execFileSync('codesign', [
-      '--force',
-      '--sign', identity,
-      binaryPath,
-    ]);
+    const args = ['--force'];
+    if (identity !== '-') {
+      args.push('--options', 'runtime', '--timestamp');
+    }
+    args.push('--sign', identity, binaryPath);
+    execFileSync('codesign', args);
   }
 
   console.log('afterSign: all binaries signed successfully');
