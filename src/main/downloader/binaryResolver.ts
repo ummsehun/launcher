@@ -22,6 +22,19 @@ export class BinaryResolver {
 
   static get ytDlpPath() {
     const ext = process.platform === 'win32' ? '.exe' : '';
+    // In dev mode on macOS, prefer a system/pip-installed yt-dlp from PATH to
+    // avoid a PyInstaller bootloader hang (macOS 26 Tahoe + Python 3.14).
+    if (!app.isPackaged && process.platform === 'darwin') {
+      const systemPaths = [
+        `${process.env.HOME}/.local/bin/yt-dlp`,
+        '/opt/homebrew/bin/yt-dlp',
+        '/usr/local/bin/yt-dlp',
+      ];
+      const found = systemPaths.find((p) => {
+        try { require('fs').accessSync(p, require('fs').constants.X_OK); return true; } catch { return false; }
+      });
+      if (found) return found;
+    }
     return path.join(this.resourcesPath, 'bin', this.platformDir, `yt-dlp${ext}`);
   }
 
@@ -74,7 +87,7 @@ export class BinaryResolver {
 
   private static async readYtDlpVersion(): Promise<string> {
     await this.assertExecutable(this.ytDlpPath);
-    const { stdout } = await execFileAsync(this.ytDlpPath, ['--version'], { 
+    const { stdout } = await execFileAsync(this.ytDlpPath, ['--version'], {
       timeout: 10000,
       env: this.getSecuredEnv(),
     });
@@ -83,10 +96,11 @@ export class BinaryResolver {
 
   private static async readFfmpegVersion(): Promise<string> {
     await this.assertExecutable(this.ffmpegPath);
-    const { stdout } = await execFileAsync(this.ffmpegPath, ['-version'], { 
+    const { stdout } = await execFileAsync(this.ffmpegPath, ['-version'], {
       timeout: 10000,
       env: this.getSecuredEnv(),
     });
     return stdout.split('\n')[0].trim();
   }
 }
+

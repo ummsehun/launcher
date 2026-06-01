@@ -9,6 +9,13 @@ import yauzl from 'yauzl';
 
 const execAsync = promisify(exec);
 
+async function adHocSignBinary(binaryPath: string): Promise<void> {
+  if (process.platform !== 'darwin') return;
+  console.log(`Ad-hoc signing: ${binaryPath}`);
+  await execAsync(`codesign --force --sign - ${JSON.stringify(binaryPath)}`);
+}
+
+
 const PLATFORM = process.env.TERMPLAY_DOWNLOAD_PLATFORM || `${process.platform}-${process.arch}`;
 const BIN_ROOT = path.join(process.cwd(), 'resources', 'bin');
 const DEST_DIR = path.join(BIN_ROOT, PLATFORM);
@@ -151,6 +158,7 @@ async function main() {
     if (process.platform !== 'win32') {
       await fs.chmod(ytDlpDest, 0o755);
     }
+    await adHocSignBinary(ytDlpDest);
     console.log('yt-dlp binary setup complete.');
 
     // 2. Download and extract ffmpeg
@@ -170,6 +178,7 @@ async function main() {
     if (process.platform !== 'win32') {
       await fs.chmod(ffmpegDest, 0o755);
     }
+    await adHocSignBinary(ffmpegDest);
     console.log('ffmpeg binary setup complete.');
 
   } catch (error) {

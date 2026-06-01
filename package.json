@@ -16,7 +16,7 @@
     "dist:win": "pnpm run build && electron-builder --config electron-builder.json --win --publish never",
     "release:linux": "pnpm run build && electron-builder --config electron-builder.json --linux --publish always",
     "release:mac": "pnpm run build && electron-builder --config electron-builder.json --mac --arm64 --publish always",
-    "release:win": "pnpm run build --config electron-builder.json --win --publish always",
+    "release:win": "pnpm run build && electron-builder --config electron-builder.json --win --publish always",
     "preview": "electron-vite preview --config electron-vite.config.ts",
     "typecheck": "tsc --noEmit",
     "validate:bundled-binaries": "tsx scripts/validate-bundled-binaries.ts",
@@ -24,7 +24,7 @@
     "security:attack": "tsx scripts/security-attack-smoke.ts",
     "security:sandbox": "tsx scripts/security-sandbox-probe.ts",
     "download-binaries": "tsx scripts/download-binaries.ts",
-    "postinstall": "npx electron --version && pnpm run download-binaries"
+    "postinstall": "pnpm run download-binaries"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",

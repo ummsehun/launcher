@@ -25,6 +25,7 @@
   ],
   "asar": true,
   "compression": "maximum",
+  "afterSign": "scripts/afterSign.cjs",
   "publish": [
     {
       "provider": "github",
@@ -36,6 +37,7 @@
   "mac": {
     "forceCodeSigning": true,
     "notarize": true,
+    "entitlementsInherit": "entitlements.mac.plist",
     "target": [
       {
         "target": "dmg",
