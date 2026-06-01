@@ -43,7 +43,7 @@ export const SeriesHero: React.FC = () => {
       <div className="w-full h-48 mb-4 shrink-0" />
 
       {/* Translucent Content Panel (Events/Notices/Info) */}
-      <div className="theme-panel w-full flex-1 flex flex-col backdrop-blur-xl border rounded-2xl mb-4 pointer-events-auto overflow-hidden shadow-2xl">
+      <div className="bg-launcher-panelBg border-launcher-panelBorder text-launcher-text w-full flex-1 flex flex-col backdrop-blur-xl border rounded-2xl mb-4 pointer-events-auto overflow-hidden shadow-2xl">
         <div className="flex gap-6 px-6 pt-4 border-b border-launcher-divider">
           {tabs.map(tab => (
             <button
@@ -71,7 +71,7 @@ export const SeriesHero: React.FC = () => {
       </div>
 
       {/* Quick Action Icons Panel */}
-      <div id="quick-actions-panel" className="theme-panel w-full backdrop-blur-xl border rounded-2xl p-4 flex justify-between items-center pointer-events-auto shadow-2xl">
+      <div id="quick-actions-panel" className="bg-launcher-panelBg border-launcher-panelBorder text-launcher-text w-full backdrop-blur-xl border rounded-2xl p-4 flex justify-between items-center pointer-events-auto shadow-2xl">
         {[
           { id: 'launcher', icon: Rocket, label: t('launcher.launcher_action') },
           { id: 'library', icon: Library, label: t('launcher.library_action') },

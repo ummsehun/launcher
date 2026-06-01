@@ -23,7 +23,7 @@ export const LauncherPage: React.FC = () => {
 
   if (isInitializing) {
     return (
-      <div className="theme-app flex h-screen w-full items-center justify-center">
+      <div className="bg-launcher-bg text-launcher-text flex h-screen w-full items-center justify-center">
         <Loader2 className="animate-spin text-launcher-accent" size={48} />
       </div>
     );
@@ -31,7 +31,7 @@ export const LauncherPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="theme-app flex h-screen w-full items-center justify-center">
+      <div className="bg-launcher-bg text-launcher-text flex h-screen w-full items-center justify-center">
         <div className="text-center">
           <div className="text-launcher-danger text-4xl mb-4">⚠</div>
           <h2 className="text-xl font-bold">{t('launcher.init_failed')}</h2>
@@ -90,7 +90,7 @@ export const LauncherPage: React.FC = () => {
           <img
             src={gasciiBanner}
             alt=""
-            className="theme-series-banner absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+            className="[filter:var(--series-banner-filter)] opacity-[var(--series-banner-opacity)] absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
             aria-hidden="true"
           />
         )}
@@ -98,18 +98,18 @@ export const LauncherPage: React.FC = () => {
           <img
             src={mienjineBanner}
             alt=""
-            className="theme-series-banner absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+            className="[filter:var(--series-banner-filter)] opacity-[var(--series-banner-opacity)] absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
             aria-hidden="true"
           />
         )}
         {/* Overlay so left-side UI remains readable */}
-        <div className="theme-hero-side-overlay absolute inset-0 pointer-events-none" />
+        <div className="bg-[var(--hero-side-overlay)] absolute inset-0 pointer-events-none" />
         {/* Bottom vignette */}
-        <div className="theme-hero-bottom-overlay absolute inset-0 pointer-events-none" />
+        <div className="bg-[var(--hero-bottom-overlay)] absolute inset-0 pointer-events-none" />
       </div>
 
       {/* Floating Right Social Toolbar */}
-      <div id="social-links-toolbar" className="theme-panel absolute right-6 top-24 flex flex-col gap-3 z-40 backdrop-blur-md p-2 rounded-2xl border">
+      <div id="social-links-toolbar" className="bg-launcher-panelBg border-launcher-panelBorder text-launcher-text absolute right-6 top-24 flex flex-col gap-3 z-40 backdrop-blur-md p-2 rounded-2xl border">
         {socialLinks.map((item, idx) => (
           <button
             key={idx}

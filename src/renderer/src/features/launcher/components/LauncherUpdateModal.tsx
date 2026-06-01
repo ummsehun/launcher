@@ -146,8 +146,8 @@ export const LauncherUpdateModal: React.FC = () => {
   };
 
   return (
-    <div className="theme-app fixed inset-0 z-[120] flex items-center justify-center bg-launcher-overlay px-6">
-      <div className="theme-panel-strong relative w-full max-w-[440px] overflow-hidden rounded-2xl border shadow-2xl">
+    <div className="bg-launcher-bg text-launcher-text fixed inset-0 z-[120] flex items-center justify-center bg-launcher-overlay px-6">
+      <div className="bg-launcher-panelStrongBg border-launcher-panelStrongBorder text-launcher-text relative w-full max-w-[440px] overflow-hidden rounded-2xl border shadow-2xl">
         {canClose && (
           <button
             type="button"

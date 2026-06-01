@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 const launcherColors = {
   bg: 'var(--color-launcher-bg)',
@@ -26,6 +27,14 @@ const launcherColors = {
   warning: 'var(--color-launcher-warning)',
   danger: 'var(--color-launcher-danger)',
   terminal: 'var(--color-launcher-terminal)',
+  
+  // Custom theme alpha-blended values mapped via secure raw CSS variables
+  sidebarBg: 'var(--launcher-sidebar-bg)',
+  sidebarBorder: 'var(--launcher-sidebar-border)',
+  panelBg: 'var(--launcher-panel-bg)',
+  panelBorder: 'var(--launcher-panel-border)',
+  panelStrongBg: 'var(--launcher-panel-strong-bg)',
+  panelStrongBorder: 'var(--launcher-panel-strong-border)',
 } as const;
 
 const launcherShadows = {
@@ -92,9 +101,48 @@ export default {
         ...launcherShadows,
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Pretendard', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function({ addBase }) {
+      // 1. Global Base Styles (Moved from globals.css to fulfill complete Tailwind alignment)
+      addBase({
+        'html, body, #root': {
+          height: '100%',
+          width: '100%',
+          margin: '0',
+          padding: '0',
+        },
+        '*': {
+          borderColor: 'hsl(var(--border))',
+        },
+        'body': {
+          backgroundColor: 'var(--color-launcher-bg)',
+          color: 'var(--color-launcher-text)',
+          fontFeatureSettings: '"rlig" 1, "calt" 1',
+          overflow: 'hidden',
+          userSelect: 'text',
+        },
+        'button, [role="button"], input[type="checkbox"], input[type="radio"]': {
+          userSelect: 'none',
+        },
+        '::-webkit-scrollbar': {
+          width: '6px',
+          height: '6px',
+        },
+        '::-webkit-scrollbar-track': {
+          background: 'transparent',
+        },
+        '::-webkit-scrollbar-thumb': {
+          backgroundColor: 'rgba(255, 255, 255, 0.2)',
+          borderRadius: '9999px',
+        },
+        '::-webkit-scrollbar-thumb:hover': {
+          backgroundColor: 'rgba(255, 255, 255, 0.4)',
+        },
+      });
+    }),
+  ],
 } satisfies Config;

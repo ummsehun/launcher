@@ -1,7 +1,43 @@
 @import "tailwindcss";
 @config "../../../../../tailwind.config.ts";
 
-@theme {
+:root {
+  color-scheme: dark;
+  --series-bg-base: #09090b;
+  --series-gascii-bg: #050505;
+  --series-mienjine-bg: #0a0510;
+
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+
+  --radius: 0.5rem;
+
+  /* Launcher Custom Theme Colors (Dark Mode Default) */
   --color-launcher-bg: #0f1115;
   --color-launcher-surface: #171a20;
   --color-launcher-surface-elevated: #20242c;
@@ -28,30 +64,7 @@
   --color-launcher-danger: #ef4444;
   --color-launcher-terminal: #0ea5e9;
 
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-
-  --spacing-shell: 1.5rem;
-  --spacing-sidebar: 68px;
-  --spacing-topbar: 4rem;
-
+  --font-sans: 'Pretendard', 'Inter', ui-sans-serif, system-ui, sans-serif;
   --radius-launcher: 1.25rem;
   --radius-panel: 1rem;
   --radius-control: 0.75rem;
@@ -60,380 +73,102 @@
   --shadow-panel: 0 2px 12px -2px rgba(0, 0, 0, 0.3);
   --shadow-glow: 0 0 20px 0px rgba(59, 130, 246, 0.3);
 
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  /* Immersive Visual Overlays */
+  --hero-side-overlay: linear-gradient(90deg, rgba(15, 17, 21, 0.46), rgba(15, 17, 21, 0.16), transparent);
+  --hero-bottom-overlay: linear-gradient(0deg, rgba(15, 17, 21, 0.3), transparent 55%, transparent);
+  --series-banner-filter: saturate(0.88) contrast(0.92) brightness(0.86);
+  --series-banner-opacity: 0.92;
+
+  /* Custom alpha blended colors (Moved from components layer to secure compiler integrity) */
+  --launcher-sidebar-bg: color-mix(in srgb, var(--color-launcher-surface) 88%, transparent);
+  --launcher-sidebar-border: color-mix(in srgb, var(--color-launcher-border) 70%, transparent);
+  --launcher-panel-bg: color-mix(in srgb, var(--color-launcher-surface) 72%, transparent);
+  --launcher-panel-border: color-mix(in srgb, var(--color-launcher-border) 72%, transparent);
+  --launcher-panel-strong-bg: color-mix(in srgb, var(--color-launcher-surface) 92%, transparent);
+  --launcher-panel-strong-border: color-mix(in srgb, var(--color-launcher-border) 82%, transparent);
 }
 
-@layer base {
+@media (prefers-color-scheme: light) {
   :root {
-    color-scheme: dark;
-    --series-bg-base: #09090b;
-    --series-gascii-bg: #050505;
-    --series-mienjine-bg: #0a0510;
+    color-scheme: light;
+    --color-launcher-bg: #eceff3;
+    --color-launcher-surface: #f6f7f9;
+    --color-launcher-surface-elevated: #ffffff;
+    --color-launcher-panel: #f7f8fa;
+    --color-launcher-panel-elevated: #ffffff;
+    --color-launcher-control: #e7ebf0;
+    --color-launcher-control-hover: #dfe5ec;
+    --color-launcher-icon-surface: #e1e7ef;
+    --color-launcher-divider: rgba(15, 23, 42, 0.12);
+    --color-launcher-overlay: rgba(15, 23, 42, 0.32);
+    --color-launcher-border: #d8dbe0;
+    --color-launcher-muted: #767d89;
+    --color-launcher-text: #1e2430;
+    --color-launcher-text-muted: #667184;
+    --color-launcher-primary: #181a20;
+    --color-launcher-primary-hover: #000000;
+    --color-launcher-cta: #f1c84a;
+    --color-launcher-cta-hover: #e5bb35;
+    --color-launcher-cta-text: #171717;
+    --series-bg-base: #eceff3;
+    --series-gascii-bg: #eef2f0;
+    --series-mienjine-bg: #f0f1f5;
 
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
+    --background: 240 20% 98%;
+    --foreground: 240 10% 7%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 7%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 7%;
+    --primary: 240 10% 7%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 12% 94%;
+    --secondary-foreground: 240 10% 12%;
+    --muted: 240 12% 94%;
+    --muted-foreground: 240 5% 42%;
+    --accent: 220 70% 96%;
+    --accent-foreground: 222 70% 35%;
+    --destructive: 0 72% 46%;
     --destructive-foreground: 0 0% 98%;
+    --border: 225 12% 86%;
+    --input: 225 12% 86%;
+    --ring: 220 80% 50%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    /* Light Mode Overlays */
+    --hero-side-overlay: linear-gradient(90deg, rgba(236, 239, 243, 0.72), rgba(236, 239, 243, 0.32), transparent);
+    --hero-bottom-overlay: linear-gradient(0deg, rgba(236, 239, 243, 0.5), transparent 55%, transparent);
+    --series-banner-filter: saturate(0.68) contrast(0.86) brightness(0.96);
+    --series-banner-opacity: 0.82;
 
-    --radius: 0.5rem;
-  }
-
-  @media (prefers-color-scheme: light) {
-    :root {
-      color-scheme: light;
-      --color-launcher-bg: #eceff3;
-      --color-launcher-surface: #f6f7f9;
-      --color-launcher-surface-elevated: #ffffff;
-      --color-launcher-panel: #f7f8fa;
-      --color-launcher-panel-elevated: #ffffff;
-      --color-launcher-control: #e7ebf0;
-      --color-launcher-control-hover: #dfe5ec;
-      --color-launcher-icon-surface: #e1e7ef;
-      --color-launcher-divider: rgba(15, 23, 42, 0.12);
-      --color-launcher-overlay: rgba(15, 23, 42, 0.32);
-      --color-launcher-border: #d8dbe0;
-      --color-launcher-muted: #767d89;
-      --color-launcher-text: #1e2430;
-      --color-launcher-text-muted: #667184;
-      --color-launcher-primary: #181a20;
-      --color-launcher-primary-hover: #000000;
-      --color-launcher-cta: #f1c84a;
-      --color-launcher-cta-hover: #e5bb35;
-      --color-launcher-cta-text: #171717;
-      --series-bg-base: #eceff3;
-      --series-gascii-bg: #eef2f0;
-      --series-mienjine-bg: #f0f1f5;
-
-      --background: 240 20% 98%;
-      --foreground: 240 10% 7%;
-      --card: 0 0% 100%;
-      --card-foreground: 240 10% 7%;
-      --popover: 0 0% 100%;
-      --popover-foreground: 240 10% 7%;
-      --primary: 240 10% 7%;
-      --primary-foreground: 0 0% 98%;
-      --secondary: 240 12% 94%;
-      --secondary-foreground: 240 10% 12%;
-      --muted: 240 12% 94%;
-      --muted-foreground: 240 5% 42%;
-      --accent: 220 70% 96%;
-      --accent-foreground: 222 70% 35%;
-      --destructive: 0 72% 46%;
-      --destructive-foreground: 0 0% 98%;
-      --border: 225 12% 86%;
-      --input: 225 12% 86%;
-      --ring: 220 80% 50%;
-    }
+    /* Light Mode 투명도 혼합 변수 */
+    --launcher-sidebar-bg: color-mix(in srgb, var(--color-launcher-surface) 88%, transparent);
+    --launcher-sidebar-border: color-mix(in srgb, var(--color-launcher-border) 70%, transparent);
+    --launcher-panel-bg: color-mix(in srgb, var(--color-launcher-surface) 72%, transparent);
+    --launcher-panel-border: color-mix(in srgb, var(--color-launcher-border) 72%, transparent);
+    --launcher-panel-strong-bg: color-mix(in srgb, var(--color-launcher-surface) 92%, transparent);
+    --launcher-panel-strong-border: color-mix(in srgb, var(--color-launcher-border) 82%, transparent);
   }
 }
 
-@layer base {
-  * {
-    border-color: hsl(var(--border));
-  }
-  body {
-    background-color: var(--color-launcher-bg);
-    color: var(--color-launcher-text);
-    font-feature-settings: "rlig" 1, "calt" 1;
-    overflow: hidden;
-    user-select: text;
-  }
+/* ====================================================================
+   Pure Specificity 서드파티 driver.js 오버라이드 (important 100% 완전 제거)
+   ==================================================================== */
 
-  button,
-  [role="button"],
-  input[type="checkbox"],
-  input[type="radio"] {
-    user-select: none;
-  }
-  
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 9999px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-  }
+html body .driver-stage {
+  border-radius: 8px;
+  outline: 2px solid var(--color-launcher-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
 }
 
-@layer components {
-  .theme-app {
-    background: var(--color-launcher-bg);
-    color: var(--color-launcher-text);
-  }
-
-  .theme-sidebar {
-    background: color-mix(in srgb, var(--color-launcher-surface) 88%, transparent);
-    border-color: color-mix(in srgb, var(--color-launcher-border) 70%, transparent);
-  }
-
-  .theme-main {
-    background: var(--series-bg-base);
-  }
-
-  .theme-panel {
-    background: color-mix(in srgb, var(--color-launcher-surface) 72%, transparent);
-    border-color: color-mix(in srgb, var(--color-launcher-border) 72%, transparent);
-    color: var(--color-launcher-text);
-  }
-
-  .theme-panel-strong {
-    background: color-mix(in srgb, var(--color-launcher-surface) 92%, transparent);
-    border-color: color-mix(in srgb, var(--color-launcher-border) 82%, transparent);
-    color: var(--color-launcher-text);
-  }
-
-  .theme-muted-text {
-    color: var(--color-launcher-text-muted);
-  }
-
-  .theme-hero-side-overlay {
-    background: linear-gradient(90deg, rgba(15, 17, 21, 0.46), rgba(15, 17, 21, 0.16), transparent);
-  }
-
-  .theme-hero-bottom-overlay {
-    background: linear-gradient(0deg, rgba(15, 17, 21, 0.3), transparent 55%, transparent);
-  }
-
-  .theme-series-banner {
-    filter: saturate(0.88) contrast(0.92) brightness(0.86);
-    opacity: 0.92;
-  }
-
-  @media (prefers-color-scheme: light) {
-    .theme-hero-side-overlay {
-      background: linear-gradient(90deg, rgba(236, 239, 243, 0.72), rgba(236, 239, 243, 0.32), transparent);
-    }
-
-    .theme-hero-bottom-overlay {
-      background: linear-gradient(0deg, rgba(236, 239, 243, 0.5), transparent 55%, transparent);
-    }
-
-    .theme-series-banner {
-      filter: saturate(0.68) contrast(0.86) brightness(0.96);
-      opacity: 0.82;
-    }
-  }
+html body .driver-popover {
+  display: none !important;
 }
 
-@layer utilities {
-  @media (prefers-color-scheme: light) {
-    .theme-app .text-white {
-      color: var(--color-launcher-text);
-    }
-
-    .theme-app .text-white\/90,
-    .theme-app .text-white\/85,
-    .theme-app .text-white\/80,
-    .theme-app .text-white\/70 {
-      color: color-mix(in srgb, var(--color-launcher-text) 82%, transparent);
-    }
-
-    .theme-app .text-white\/60,
-    .theme-app .text-white\/50,
-    .theme-app .text-white\/40,
-    .theme-app .text-white\/30,
-    .theme-app .text-white\/20 {
-      color: var(--color-launcher-text-muted);
-    }
-
-    .theme-app .bg-black,
-    .theme-app .bg-\[\#050505\],
-    .theme-app .bg-\[\#0a0a0a\],
-    .theme-app .bg-\[\#111\],
-    .theme-app .bg-\[\#111111\],
-    .theme-app .bg-\[\#121212\],
-    .theme-app .bg-\[\#141414\],
-    .theme-app .bg-\[\#1a1a1a\],
-    .theme-app .bg-\[\#1c1c1e\],
-    .theme-app .bg-\[\#2c2c2e\] {
-      background-color: var(--color-launcher-surface);
-    }
-
-    .theme-app .bg-black\/85,
-    .theme-app .bg-black\/60,
-    .theme-app .bg-black\/40,
-    .theme-app .bg-black\/20,
-    .theme-app .bg-white\/\[0\.02\],
-    .theme-app .bg-white\/5,
-    .theme-app .bg-white\/10 {
-      background-color: color-mix(in srgb, var(--color-launcher-surface) 78%, transparent);
-    }
-
-    .theme-app .border-white\/5,
-    .theme-app .border-white\/10,
-    .theme-app .border-white\/20 {
-      border-color: color-mix(in srgb, var(--color-launcher-border) 82%, transparent);
-    }
-
-    .theme-app .hover\:bg-white\/5:hover,
-    .theme-app .hover\:bg-white\/10:hover,
-    .theme-app .hover\:bg-white\/20:hover,
-    .theme-app .hover\:bg-\[\#1a1a1c\]:hover,
-    .theme-app .hover\:bg-\[\#2c2c2e\]:hover,
-    .theme-app .hover\:bg-\[\#3c3c3e\]:hover {
-      background-color: var(--color-launcher-surface-elevated);
-    }
-
-    .theme-app .hover\:text-white:hover,
-    .theme-app .hover\:text-white\/80:hover,
-    .theme-app .hover\:text-white\/90:hover {
-      color: var(--color-launcher-text);
-    }
-  }
+/* Ensure our custom TourPopover is fully interactive and bypasses driver.js's broad pointer-events block */
+html body .custom-tour-popover,
+html body .custom-tour-popover * {
+  pointer-events: auto !important;
 }
 
-/* ==========================================
-   Premium Driver.js Popover Custom Theme
-   ========================================== */
-.driver-popover {
-  background-color: var(--color-launcher-panel) !important;
-  border: 1px solid var(--color-launcher-divider) !important;
-  border-radius: var(--radius-panel) !important;
-  padding: 24px !important;
-  max-width: 420px !important;
-  width: 420px !important;
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
-  font-family: var(--font-sans) !important;
-}
-
-/* Arrow customization to match the panel color */
-.driver-popover-arrow {
-  border-color: var(--color-launcher-panel) !important;
-}
-.driver-popover-arrow-side-left {
-  border-left-color: var(--color-launcher-panel) !important;
-}
-.driver-popover-arrow-side-right {
-  border-right-color: var(--color-launcher-panel) !important;
-}
-.driver-popover-arrow-side-top {
-  border-top-color: var(--color-launcher-panel) !important;
-}
-.driver-popover-arrow-side-bottom {
-  border-bottom-color: var(--color-launcher-panel) !important;
-}
-
-/* Title Styling */
-.driver-popover-title {
-  font-family: var(--font-sans) !important;
-  font-size: 16px !important;
-  font-weight: 700 !important;
-  color: var(--color-launcher-text) !important;
-  margin-bottom: 8px !important;
-  letter-spacing: -0.01em !important;
-  line-height: 1.4 !important;
-}
-
-/* Description Styling (With white-space: pre-line for translations \n) */
-.driver-popover-description {
-  font-family: var(--font-sans) !important;
-  font-size: 13.5px !important;
-  font-weight: 400 !important;
-  color: var(--color-launcher-text-muted) !important;
-  line-height: 1.6 !important;
-  white-space: pre-line !important;
-}
-
-/* Footer & Progress Text */
-.driver-popover-footer {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  gap: 8px !important;
-  margin-top: 20px !important;
-  border-top: 1px solid var(--color-launcher-divider) !important;
-  padding-top: 16px !important;
-}
-
-.driver-popover-progress-text {
-  flex: 1 !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  color: var(--color-launcher-text-muted) !important;
-}
-
-/* Base Button Overrides */
-.driver-popover-btn {
-  font-family: var(--font-sans) !important;
-  font-size: 13.5px !important;
-  font-weight: 600 !important;
-  padding: 8px 18px !important;
-  border-radius: 8px !important;
-  transition: all 0.2s ease !important;
-  cursor: pointer !important;
-  text-shadow: none !important;
-  box-shadow: none !important;
-  border: 1px solid var(--color-launcher-divider) !important;
-  background-image: none !important;
-}
-
-/* Next / Done Button (Accent / Primary Action) */
-.driver-popover-next-btn {
-  background-color: var(--color-launcher-accent) !important;
-  border-color: var(--color-launcher-accent) !important;
-  color: #ffffff !important;
-  padding: 8px 22px !important;
-}
-.driver-popover-next-btn:hover {
-  background-color: var(--color-launcher-accent-hover) !important;
-  border-color: var(--color-launcher-accent-hover) !important;
-}
-
-/* Prev Button (Secondary Action) */
-.driver-popover-prev-btn {
-  background-color: var(--color-launcher-surface) !important;
-  border-color: var(--color-launcher-divider) !important;
-  color: var(--color-launcher-text) !important;
-}
-.driver-popover-prev-btn:hover {
-  background-color: var(--color-launcher-control-hover) !important;
-  border-color: var(--color-launcher-border) !important;
-}
-
-/* Close Button Override */
-.driver-popover-close-btn {
-  color: var(--color-launcher-text-muted) !important;
-  transition: color 0.15s ease !important;
-}
-.driver-popover-close-btn:hover {
-  color: var(--color-launcher-text) !important;
-}
-
-/* Spotlight Highlight Stage Overrides */
-.driver-stage {
-  border-radius: 8px !important;
-  outline: 2px solid var(--color-launcher-accent) !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4) !important;
-}
 

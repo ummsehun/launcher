@@ -3,6 +3,7 @@ import 'driver.js/dist/driver.css';
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '../../../shared/stores/uiStore';
 import { useTerminalSeriesStore } from '../../terminal-series/stores/terminalSeriesStore';
+import { useTourStore, TourStepMetadata } from '../stores/tourStore';
 
 export const useLauncherTour = () => {
   const { t } = useTranslation();
@@ -81,235 +82,220 @@ export const useLauncherTour = () => {
   };
 
   const startTour = () => {
-    // 18-step onboarding tour using driver.js
+    // 18-step onboarding tour configuration
     const steps: DriveStep[] = [
       {
-        popover: {
-          title: t('launcher.tour.s1_title'),
-          description: t('launcher.tour.s1_desc'),
-          side: 'over',
-          align: 'center',
-        },
+        // s1: Welcome
       },
       {
-        popover: {
-          title: t('launcher.tour.s2_title'),
-          description: t('launcher.tour.s2_desc'),
-          side: 'over',
-          align: 'center',
-        },
+        // s2: Quick overview
       },
       {
-        element: '#launcher-sidebar-panel',
-        popover: {
-          title: t('launcher.tour.s3_title'),
-          description: t('launcher.tour.s3_desc'),
-          side: 'right',
-          align: 'start',
-        },
+        element: '#launcher-sidebar-panel', // s3
       },
       {
-        element: '#sidebar-series-gascii',
-        popover: {
-          title: t('launcher.tour.s4_title'),
-          description: t('launcher.tour.s4_desc'),
-          side: 'right',
-          align: 'center',
-        },
+        element: '#sidebar-series-gascii', // s4
       },
       {
-        element: '#sidebar-series-mienjine',
-        popover: {
-          title: t('launcher.tour.s5_title'),
-          description: t('launcher.tour.s5_desc'),
-          side: 'right',
-          align: 'center',
-        },
+        element: '#sidebar-series-mienjine', // s5
       },
       {
-        element: '#sidebar-series-gascii',
-        popover: {
-          title: t('launcher.tour.s6_title'),
-          description: t('launcher.tour.s6_desc'),
-          side: 'right',
-          align: 'center',
-        },
+        element: '#sidebar-series-gascii', // s6
       },
       {
-        element: '#quick-actions-panel',
-        popover: {
-          title: t('launcher.tour.s7_title'),
-          description: t('launcher.tour.s7_desc'),
-          side: 'top',
-          align: 'center',
-        },
+        element: '#quick-actions-panel', // s7
       },
       {
-        element: '#hero-tab-launcher',
-        popover: {
-          title: t('launcher.tour.s8_title'),
-          description: t('launcher.tour.s8_desc'),
-          side: 'top',
-          align: 'center',
-          onNextClick: () => {
-            useUIStore.getState().openModal('launcher');
-            setTimeout(() => {
-              driverObj?.moveNext();
-            }, 150);
-          }
-        },
+        element: '#hero-tab-launcher', // s8
       },
       {
-        element: '#settings-install-path-card',
-        popover: {
-          title: t('launcher.tour.s9_title'),
-          description: t('launcher.tour.s9_desc'),
-          side: 'bottom',
-          align: 'center',
-          onPrevClick: () => {
-            useUIStore.getState().closeModal();
-            setTimeout(() => {
-              driverObj?.movePrevious();
-            }, 150);
-          }
-        },
+        element: '#settings-install-path-card', // s9
       },
       {
-        element: '#hero-tab-library',
-        popover: {
-          title: t('launcher.tour.s10_title'),
-          description: t('launcher.tour.s10_desc'),
-          side: 'top',
-          align: 'center',
-          onNextClick: () => {
-            useUIStore.getState().openModal('library');
-            setTimeout(() => {
-              driverObj?.moveNext();
-            }, 150);
-          },
-          onPrevClick: () => {
-            useUIStore.getState().closeModal();
-            setTimeout(() => {
-              driverObj?.movePrevious();
-            }, 150);
-          }
-        },
+        element: '#hero-tab-library', // s10
       },
       {
-        element: '#library-table-container, #library-empty-state',
-        popover: {
-          title: t('launcher.tour.s11_title'),
-          description: t('launcher.tour.s11_desc'),
-          side: 'bottom',
-          align: 'center',
-          onPrevClick: () => {
-            useUIStore.getState().closeModal();
-            setTimeout(() => {
-              driverObj?.movePrevious();
-            }, 150);
-          }
-        },
+        element: '#library-table-container, #library-empty-state', // s11
       },
       {
-        element: '#hero-tab-assets',
-        popover: {
-          title: t('launcher.tour.s12_title'),
-          description: t('launcher.tour.s12_desc'),
-          side: 'top',
-          align: 'center',
-          onNextClick: () => {
-            useUIStore.getState().openModal('assets');
-            setTimeout(() => {
-              driverObj?.moveNext();
-            }, 150);
-          },
-          onPrevClick: () => {
-            useUIStore.getState().closeModal();
-            setTimeout(() => {
-              driverObj?.movePrevious();
-            }, 150);
-          }
-        },
+        element: '#hero-tab-assets', // s12
       },
       {
-        element: '#media-download-panel',
-        popover: {
-          title: t('launcher.tour.s13_title'),
-          description: t('launcher.tour.s13_desc'),
-          side: 'bottom',
-          align: 'center',
-          onPrevClick: () => {
-            useUIStore.getState().closeModal();
-            setTimeout(() => {
-              driverObj?.movePrevious();
-            }, 150);
-          }
-        },
+        element: '#media-download-panel', // s13
       },
       {
-        element: '#action-bar-play-btn',
-        popover: {
-          title: t('launcher.tour.s14_title'),
-          description: t('launcher.tour.s14_desc'),
-          side: 'top',
-          align: 'center',
-        },
+        element: '#action-bar-play-btn', // s14
       },
       {
-        element: '#action-bar-menu-btn',
-        popover: {
-          title: t('launcher.tour.s15_title'),
-          description: t('launcher.tour.s15_desc'),
-          side: 'top',
-          align: 'center',
-        },
+        element: '#action-bar-menu-btn', // s15
       },
       {
-        element: '#social-links-toolbar',
-        popover: {
-          title: t('launcher.tour.s16_title'),
-          description: t('launcher.tour.s16_desc'),
-          side: 'left',
-          align: 'center',
-        },
+        element: '#social-links-toolbar', // s16
       },
       {
-        element: '#social-links-toolbar',
-        popover: {
-          title: t('launcher.tour.s17_title'),
-          description: t('launcher.tour.s17_desc'),
-          side: 'left',
-          align: 'center',
-        },
+        element: '#social-links-toolbar', // s17
       },
       {
-        popover: {
-          title: t('launcher.tour.s18_title'),
-          description: t('launcher.tour.s18_desc'),
-          side: 'over',
-          align: 'center',
-        },
+        // s18: Complete
+      },
+    ];
+
+    const stepsMetadata: TourStepMetadata[] = [
+      {
+        title: t('launcher.tour.s1_title'),
+        description: t('launcher.tour.s1_desc'),
+        side: 'over',
+      },
+      {
+        title: t('launcher.tour.s2_title'),
+        description: t('launcher.tour.s2_desc'),
+        side: 'over',
+      },
+      {
+        title: t('launcher.tour.s3_title'),
+        description: t('launcher.tour.s3_desc'),
+        side: 'right',
+        align: 'start',
+      },
+      {
+        title: t('launcher.tour.s4_title'),
+        description: t('launcher.tour.s4_desc'),
+        side: 'right',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s5_title'),
+        description: t('launcher.tour.s5_desc'),
+        side: 'right',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s6_title'),
+        description: t('launcher.tour.s6_desc'),
+        side: 'right',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s7_title'),
+        description: t('launcher.tour.s7_desc'),
+        side: 'top',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s8_title'),
+        description: t('launcher.tour.s8_desc'),
+        side: 'top',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s9_title'),
+        description: t('launcher.tour.s9_desc'),
+        side: 'bottom',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s10_title'),
+        description: t('launcher.tour.s10_desc'),
+        side: 'top',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s11_title'),
+        description: t('launcher.tour.s11_desc'),
+        side: 'bottom',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s12_title'),
+        description: t('launcher.tour.s12_desc'),
+        side: 'top',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s13_title'),
+        description: t('launcher.tour.s13_desc'),
+        side: 'bottom',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s14_title'),
+        description: t('launcher.tour.s14_desc'),
+        side: 'top',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s15_title'),
+        description: t('launcher.tour.s15_desc'),
+        side: 'top',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s16_title'),
+        description: t('launcher.tour.s16_desc'),
+        side: 'left',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s17_title'),
+        description: t('launcher.tour.s17_desc'),
+        side: 'left',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s18_title'),
+        description: t('launcher.tour.s18_desc'),
+        side: 'over',
+        align: 'center',
       },
     ];
 
     let driverObj: any;
 
     driverObj = driver({
-      showProgress: true,
-      allowClose: true,
+      showProgress: false, // Turn off legacy UI elements
+      allowClose: false, // Disallow closing on outside overlay clicks to prevent premature guide ending
       stagePadding: 2, // Extremely tight focus padding
-      nextBtnText: t('launcher.tour.next'),
-      prevBtnText: t('launcher.tour.prev'),
-      doneBtnText: t('launcher.tour.done'),
       onHighlightStarted: (element, step, { state }) => {
         const index = state.activeIndex ?? 0;
         syncTourState(index);
 
+        const updateRect = () => {
+          let rect = null;
+          if (element) {
+            const domRect = element.getBoundingClientRect();
+            rect = {
+              top: domRect.top,
+              left: domRect.left,
+              width: domRect.width,
+              height: domRect.height,
+              bottom: domRect.bottom,
+              right: domRect.right,
+            };
+          }
+          useTourStore.getState().updateStep(index, rect, stepsMetadata[index]);
+        };
+
         // When focusing dynamically-opened panels, wait for mount and refresh overlay position
         if ([8, 10, 12].includes(index)) {
           setTimeout(() => {
+            const currentElement = document.querySelector(step.element as string);
+            let rect = null;
+            if (currentElement) {
+              const domRect = currentElement.getBoundingClientRect();
+              rect = {
+                top: domRect.top,
+                left: domRect.left,
+                width: domRect.width,
+                height: domRect.height,
+                bottom: domRect.bottom,
+                right: domRect.right,
+              };
+            }
+            useTourStore.getState().updateStep(index, rect, stepsMetadata[index]);
             driverObj?.refresh();
           }, 150);
+        } else {
+          updateRect();
         }
       },
       onHighlighted: (element, step, { state }) => {
@@ -339,10 +325,13 @@ export const useLauncherTour = () => {
       onDestroyed: () => {
         // Enforce modal closed state on tour end/close
         useUIStore.getState().closeModal();
+        useTourStore.getState().close();
       },
       steps,
     });
 
+    // Start tour in Zustand store as well
+    useTourStore.getState().startTour(driverObj, steps.length);
     driverObj.drive();
   };
 
