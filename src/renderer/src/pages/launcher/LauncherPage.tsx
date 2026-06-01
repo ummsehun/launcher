@@ -117,8 +117,8 @@ export const LauncherPage: React.FC = () => {
             className={cn(
               "w-8 h-8 rounded-full flex items-center justify-center transition-all",
               item.url !== '#'
-                ? "bg-white/5 text-white/70 hover:text-white hover:bg-white/20 cursor-pointer"
-                : "bg-white/5 text-white/20 cursor-not-allowed"
+                ? "bg-launcher-control text-launcher-textMuted hover:text-launcher-text hover:bg-launcher-controlHover cursor-pointer"
+                : "bg-launcher-control/40 text-launcher-textMuted/30 cursor-not-allowed"
             )}
             title={item.url !== '#' ? item.url : 'Not Available'}
           >

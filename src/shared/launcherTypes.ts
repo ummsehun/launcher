@@ -12,6 +12,7 @@ export type LauncherConfig = {
   global: {
     language: 'ko' | 'en' | 'ja';
     autoUpdate: boolean;
+    theme?: 'light' | 'dark' | 'system';
   };
   series: Record<TerminalSeriesId, {
     installPath: string;

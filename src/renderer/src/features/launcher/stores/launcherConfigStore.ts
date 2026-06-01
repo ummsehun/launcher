@@ -2,11 +2,29 @@ import { create } from 'zustand';
 import { TerminalSeriesId, LauncherSettingKey } from '../../terminal-series/constants/seriesFeatureConfig';
 
 export type Language = 'ko' | 'en' | 'ja';
+export type Theme = 'light' | 'dark' | 'system';
+
+export const applyTheme = (theme: Theme) => {
+  const root = window.document.documentElement;
+  root.classList.remove('light', 'dark');
+
+  let activeTheme = theme;
+  if (theme === 'system') {
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    activeTheme = systemTheme;
+  }
+
+  root.classList.add(activeTheme);
+  root.style.colorScheme = activeTheme;
+};
+
+let systemThemeListener: ((e: MediaQueryListEvent) => void) | null = null;
 
 type LauncherConfigState = {
   global: {
     language: Language;
     autoUpdate: boolean;
+    theme: Theme;
   };
   series: Record<TerminalSeriesId, {
     installPath: string;
@@ -14,6 +32,7 @@ type LauncherConfigState = {
   }>;
   setLanguage: (language: Language) => Promise<void>;
   setAutoUpdate: (enabled: boolean) => Promise<void>;
+  setTheme: (theme: Theme) => Promise<void>;
   setSeriesOption: (seriesId: TerminalSeriesId, key: LauncherSettingKey, value: boolean) => Promise<void>;
   setInstallPath: (seriesId: TerminalSeriesId, path: string) => Promise<void>;
 };
@@ -22,6 +41,7 @@ const initialState = {
   global: {
     language: 'ko' as Language,
     autoUpdate: true,
+    theme: 'system' as Theme,
   },
   series: {
     gascii: {
@@ -55,6 +75,22 @@ export const useLauncherConfigStore = create<LauncherConfigState & { load: () =>
             mienjine: { ...state.series.mienjine, ...(result.data.series.mienjine || {}) }
           }
         }));
+
+        // Apply theme loaded from settings
+        const loadedTheme = result.data.global.theme || 'system';
+        applyTheme(loadedTheme);
+
+        // Set up listener for system color scheme changes if the theme is 'system'
+        if (systemThemeListener) {
+          window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', systemThemeListener);
+        }
+        systemThemeListener = () => {
+          const currentTheme = get().global.theme;
+          if (currentTheme === 'system') {
+            applyTheme('system');
+          }
+        };
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', systemThemeListener);
       }
     } catch (e) {
       console.error('Failed to load settings', e);
@@ -82,6 +118,20 @@ export const useLauncherConfigStore = create<LauncherConfigState & { load: () =>
     } catch (e) {
       console.error('Failed to set autoUpdate', e);
       set((state) => ({ global: { ...state.global, autoUpdate: previous } }));
+    }
+  },
+
+  setTheme: async (theme) => {
+    const previous = get().global.theme;
+    set((state) => ({ global: { ...state.global, theme } }));
+    applyTheme(theme);
+    try {
+      const result = await window.launcher.settings.setGlobalOption('theme', theme);
+      if (!result.ok) throw new Error(result.error);
+    } catch (e) {
+      console.error('Failed to set theme', e);
+      set((state) => ({ global: { ...state.global, theme: previous } }));
+      applyTheme(previous);
     }
   },
 

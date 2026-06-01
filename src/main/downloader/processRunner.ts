@@ -30,9 +30,18 @@ export class ProcessRunner {
 
   run(): Promise<void> {
     return new Promise((resolve, reject) => {
+      const env = { ...process.env };
+      if (process.platform === 'darwin') {
+        const standardPaths = ['/opt/homebrew/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin'];
+        const currentPaths = env.PATH ? env.PATH.split(':') : [];
+        const mergedPaths = Array.from(new Set([...standardPaths, ...currentPaths]));
+        env.PATH = mergedPaths.join(':');
+      }
+
       this.child = spawn(this.options.binPath, this.options.args, {
         shell: false,
         windowsHide: true,
+        env,
       });
 
       let lastErrorLine = '';

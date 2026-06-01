@@ -88,10 +88,70 @@
   --launcher-panel-strong-border: color-mix(in srgb, var(--color-launcher-border) 82%, transparent);
 }
 
+:root.light {
+  color-scheme: light;
+  --color-launcher-bg: #dfe3e8;
+  --color-launcher-surface: #f6f7f9;
+  --color-launcher-surface-elevated: #ffffff;
+  --color-launcher-panel: #f7f8fa;
+  --color-launcher-panel-elevated: #ffffff;
+  --color-launcher-control: #e7ebf0;
+  --color-launcher-control-hover: #dfe5ec;
+  --color-launcher-icon-surface: #e1e7ef;
+  --color-launcher-divider: rgba(15, 23, 42, 0.12);
+  --color-launcher-overlay: rgba(15, 23, 42, 0.32);
+  --color-launcher-border: #d8dbe0;
+  --color-launcher-muted: #767d89;
+  --color-launcher-text: #1e2430;
+  --color-launcher-text-muted: #667184;
+  --color-launcher-primary: #181a20;
+  --color-launcher-primary-hover: #000000;
+  --color-launcher-cta: #f1c84a;
+  --color-launcher-cta-hover: #e5bb35;
+  --color-launcher-cta-text: #171717;
+  --series-bg-base: #dfe3e8;
+  --series-gascii-bg: #e1e5ea;
+  --series-mienjine-bg: #e2e6eb;
+
+  --background: 240 20% 98%;
+  --foreground: 240 10% 7%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 7%;
+  --primary: 240 10% 7%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 12% 94%;
+  --secondary-foreground: 240 10% 12%;
+  --muted: 240 12% 94%;
+  --muted-foreground: 240 5% 42%;
+  --accent: 220 70% 96%;
+  --accent-foreground: 222 70% 35%;
+  --destructive: 0 72% 46%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 225 12% 86%;
+  --input: 225 12% 86%;
+  --ring: 220 80% 50%;
+
+  /* Light Mode Overlays */
+  --hero-side-overlay: linear-gradient(90deg, rgba(223, 227, 232, 0.88), rgba(223, 227, 232, 0.22), transparent);
+  --hero-bottom-overlay: linear-gradient(0deg, rgba(223, 227, 232, 0.44), transparent 50%, transparent);
+  --series-banner-filter: saturate(0.78) contrast(0.9) brightness(0.96);
+  --series-banner-opacity: 0.58;
+
+  /* Light Mode 투명도 혼합 변수 */
+  --launcher-sidebar-bg: color-mix(in srgb, var(--color-launcher-surface) 88%, transparent);
+  --launcher-sidebar-border: color-mix(in srgb, var(--color-launcher-border) 70%, transparent);
+  --launcher-panel-bg: color-mix(in srgb, var(--color-launcher-surface) 72%, transparent);
+  --launcher-panel-border: color-mix(in srgb, var(--color-launcher-border) 72%, transparent);
+  --launcher-panel-strong-bg: color-mix(in srgb, var(--color-launcher-surface) 92%, transparent);
+  --launcher-panel-strong-border: color-mix(in srgb, var(--color-launcher-border) 82%, transparent);
+}
+
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not(.dark) {
     color-scheme: light;
-    --color-launcher-bg: #eceff3;
+    --color-launcher-bg: #dfe3e8;
     --color-launcher-surface: #f6f7f9;
     --color-launcher-surface-elevated: #ffffff;
     --color-launcher-panel: #f7f8fa;
@@ -110,9 +170,9 @@
     --color-launcher-cta: #f1c84a;
     --color-launcher-cta-hover: #e5bb35;
     --color-launcher-cta-text: #171717;
-    --series-bg-base: #eceff3;
-    --series-gascii-bg: #eef2f0;
-    --series-mienjine-bg: #f0f1f5;
+    --series-bg-base: #dfe3e8;
+    --series-gascii-bg: #e1e5ea;
+    --series-mienjine-bg: #e2e6eb;
 
     --background: 240 20% 98%;
     --foreground: 240 10% 7%;
@@ -135,10 +195,10 @@
     --ring: 220 80% 50%;
 
     /* Light Mode Overlays */
-    --hero-side-overlay: linear-gradient(90deg, rgba(236, 239, 243, 0.72), rgba(236, 239, 243, 0.32), transparent);
-    --hero-bottom-overlay: linear-gradient(0deg, rgba(236, 239, 243, 0.5), transparent 55%, transparent);
-    --series-banner-filter: saturate(0.68) contrast(0.86) brightness(0.96);
-    --series-banner-opacity: 0.82;
+    --hero-side-overlay: linear-gradient(90deg, rgba(223, 227, 232, 0.88), rgba(223, 227, 232, 0.22), transparent);
+    --hero-bottom-overlay: linear-gradient(0deg, rgba(223, 227, 232, 0.44), transparent 50%, transparent);
+    --series-banner-filter: saturate(0.78) contrast(0.9) brightness(0.96);
+    --series-banner-opacity: 0.58;
 
     /* Light Mode 투명도 혼합 변수 */
     --launcher-sidebar-bg: color-mix(in srgb, var(--color-launcher-surface) 88%, transparent);

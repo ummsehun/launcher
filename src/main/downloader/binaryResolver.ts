@@ -61,15 +61,32 @@ export class BinaryResolver {
     return this.ffmpegVersionPromise;
   }
 
+  private static getSecuredEnv(): NodeJS.ProcessEnv {
+    const env = { ...process.env };
+    if (process.platform === 'darwin') {
+      const standardPaths = ['/opt/homebrew/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin'];
+      const currentPaths = env.PATH ? env.PATH.split(':') : [];
+      const mergedPaths = Array.from(new Set([...standardPaths, ...currentPaths]));
+      env.PATH = mergedPaths.join(':');
+    }
+    return env;
+  }
+
   private static async readYtDlpVersion(): Promise<string> {
     await this.assertExecutable(this.ytDlpPath);
-    const { stdout } = await execFileAsync(this.ytDlpPath, ['--version'], { timeout: 10000 });
+    const { stdout } = await execFileAsync(this.ytDlpPath, ['--version'], { 
+      timeout: 10000,
+      env: this.getSecuredEnv(),
+    });
     return stdout.trim();
   }
 
   private static async readFfmpegVersion(): Promise<string> {
     await this.assertExecutable(this.ffmpegPath);
-    const { stdout } = await execFileAsync(this.ffmpegPath, ['-version'], { timeout: 10000 });
+    const { stdout } = await execFileAsync(this.ffmpegPath, ['-version'], { 
+      timeout: 10000,
+      env: this.getSecuredEnv(),
+    });
     return stdout.split('\n')[0].trim();
   }
 }

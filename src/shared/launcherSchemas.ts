@@ -39,6 +39,10 @@ export const setGlobalOptionRequestSchema = z.discriminatedUnion('key', [
     key: z.literal('autoUpdate'),
     value: z.boolean(),
   }),
+  z.object({
+    key: z.literal('theme'),
+    value: z.enum(['light', 'dark', 'system']),
+  }),
 ]);
 
 export const libraryDirRequestSchema = z.object({

@@ -11,6 +11,7 @@ const DEFAULT_CONFIG: LauncherConfig = {
   global: {
     language: 'ko',
     autoUpdate: true,
+    theme: 'system',
   },
   series: {
     gascii: {

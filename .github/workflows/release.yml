@@ -106,10 +106,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
-          test -f resources/bin/darwin-arm64/yt-dlp
-          test -f resources/bin/darwin-arm64/ffmpeg
-          chmod 755 resources/bin/darwin-arm64/yt-dlp resources/bin/darwin-arm64/ffmpeg
+          pnpm run download-binaries
 
       - name: Prepare macOS signing certificate
         if: matrix.platform == 'macos'

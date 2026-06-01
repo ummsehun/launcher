@@ -2,10 +2,16 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { BrowserWindow, nativeTheme } from 'electron';
 import { configureWindowSecurity, isAllowedDevRendererUrl, normalizeDevRendererUrl } from './window-security';
+import { launcherConfigRepo } from '../launcher/launcherConfigRepository';
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 
 export const createMainWindow = (): BrowserWindow => {
+  // Sync native OS theme settings with saved config on launch to color-match the native windowBar
+  void launcherConfigRepo.getConfig().then((config) => {
+    nativeTheme.themeSource = config.global.theme || 'system';
+  });
+
   const mainWindow = new BrowserWindow({
     width: 1120,
     height: 720,

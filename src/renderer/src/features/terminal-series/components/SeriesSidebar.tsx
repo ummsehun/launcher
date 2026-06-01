@@ -32,14 +32,14 @@ export const SeriesSidebar: React.FC = () => {
                   "w-12 h-12 rounded-[14px] flex items-center justify-center transition-all duration-300 relative group overflow-hidden cursor-pointer",
                   isSelected 
                     ? "bg-launcher-surface border-2 border-launcher-accent shadow-lg" 
-                    : "bg-launcher-surface/50 border border-white/5 hover:bg-launcher-surface hover:border-white/20"
+                    : "bg-launcher-surface/50 border border-launcher-divider hover:bg-launcher-surface hover:border-launcher-border"
                 )}
                 title={s.displayName}
               >
                 {/* Fallback Icon if no image */}
                 <span className={cn(
                   "font-black text-xl font-mono",
-                  isSelected ? "text-white" : "text-launcher-textMuted group-hover:text-white"
+                  isSelected ? "text-launcher-primary" : "text-launcher-textMuted group-hover:text-launcher-primary"
                 )}>
                   {s.displayName.charAt(0)}
                 </span>
@@ -52,7 +52,7 @@ export const SeriesSidebar: React.FC = () => {
 
       {/* Bottom Profile / Settings */}
       <div className="mt-auto flex flex-col gap-4 items-center pt-4">
-        <button id="sidebar-settings-btn" onClick={openSettings} className="w-10 h-10 flex items-center justify-center text-launcher-textMuted hover:text-white transition-colors pb-2 cursor-pointer">
+        <button id="sidebar-settings-btn" onClick={openSettings} className="w-10 h-10 flex items-center justify-center text-launcher-textMuted hover:text-launcher-primary transition-colors pb-2 cursor-pointer">
           <Settings size={20} />
         </button>
       </div>

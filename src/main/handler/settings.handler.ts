@@ -1,4 +1,4 @@
-import { BrowserWindow, dialog, ipcMain } from 'electron';
+import { BrowserWindow, dialog, ipcMain, nativeTheme } from 'electron';
 import { IPC_CHANNELS } from '@shared/ipc';
 import {
   type SelectInstallPathResponse,
@@ -126,6 +126,9 @@ export const registerSettingsHandlers = (): void => {
       const config = await launcherConfigRepo.getConfig();
       if (request.key === 'language') {
         config.global.language = request.value;
+      } else if (request.key === 'theme') {
+        config.global.theme = request.value;
+        nativeTheme.themeSource = request.value;
       } else {
         config.global.autoUpdate = request.value;
       }

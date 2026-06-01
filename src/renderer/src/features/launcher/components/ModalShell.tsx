@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { cn } from '../../../shared/lib/cn';
+import { useTourStore } from '../stores/tourStore';
 
 export type ModalShellProps = {
   onClose: () => void;
@@ -9,6 +11,7 @@ export type ModalShellProps = {
 
 export const ModalShell: React.FC<ModalShellProps> = ({ onClose, children }) => {
   const { t } = useTranslation();
+  const isTourOpen = useTourStore((state) => state.isOpen);
   
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -27,7 +30,10 @@ export const ModalShell: React.FC<ModalShellProps> = ({ onClose, children }) => 
   return (
     <div 
       onClick={handleOverlayClick}
-      className="bg-launcher-bg text-launcher-text fixed inset-0 z-[100] flex items-center justify-center bg-launcher-overlay p-8 sm:p-12 md:p-16 lg:p-24"
+      className={cn(
+        "bg-launcher-bg text-launcher-text fixed inset-0 flex items-center justify-center bg-launcher-overlay p-8 sm:p-12 md:p-16 lg:p-24",
+        isTourOpen ? "z-[2147483645]" : "z-[100]"
+      )}
       role="dialog"
       aria-modal="true"
     >
