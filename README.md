@@ -338,14 +338,14 @@ Windows는 경로 quoting 문제가 발생할 수 있고, macOS는 실행 권한
 ## Development
 
 ```bash
-bun install
-bun run dev
+pnpm install
+pnpm run dev
 ```
 
 ## Build
 
 ```bash
-bun run build
+pnpm run build
 ```
 
 ## Release Tag
@@ -358,7 +358,7 @@ git push origin v0.1.0
 ## macOS Release
 
 ```bash
-GH_TOKEN=... bun run release:mac
+GH_TOKEN=... pnpm run release:mac
 ```
 
 ---
