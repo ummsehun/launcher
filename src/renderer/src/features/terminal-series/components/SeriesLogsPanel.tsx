@@ -1,53 +1,21 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { useTerminalSeriesStore } from '../stores/terminalSeriesStore';
-import { cn } from '../../../shared/lib/cn';
-import { useTranslation } from 'react-i18next';
 
 export const SeriesLogsPanel: React.FC = () => {
-  const { t } = useTranslation();
   const { series, selectedSeriesId } = useTerminalSeriesStore();
   const currentSeries = series.find(s => s.id === selectedSeriesId);
-  const endRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [currentSeries?.logs]);
 
   if (!currentSeries) return null;
 
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case 'info': return 'text-launcher-accent';
-      case 'warning': return 'text-launcher-warning';
-      case 'error': return 'text-launcher-danger';
-      case 'success': return 'text-launcher-success';
-      default: return 'text-white/50';
-    }
-  };
+  const infoText = currentSeries.id === 'gascii'
+    ? 'gascii v0.9'
+    : 'Mienjine v0.1.5';
 
   return (
-    <div className="flex flex-col h-full text-white p-4 font-mono text-xs overflow-y-auto scrollbar-none">
-      {currentSeries.logs.length === 0 ? (
-        <div className="text-white/50">{t('launcher.no_logs')}</div>
-      ) : (
-        currentSeries.logs.map((log) => {
-          const date = new Date(log.timestamp);
-          const timeString = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
-          
-          return (
-            <div key={log.id} className="flex items-start gap-3 py-1 hover:bg-white/5 rounded px-2 transition-colors">
-              <span className="text-white/30 shrink-0 select-none">[{timeString}]</span>
-              <span className={cn("uppercase text-[9px] tracking-widest font-bold w-12 shrink-0 mt-0.5 select-none", getLevelColor(log.level))}>
-                {log.level}
-              </span>
-              <span className={cn("break-words", log.level === 'error' ? 'text-launcher-danger' : 'text-white/80')}>
-                {log.message}
-              </span>
-            </div>
-          );
-        })
-      )}
-      <div ref={endRef} />
+    <div className="flex flex-col h-full text-white/85 p-6 space-y-4">
+      <div className="text-sm border-l-2 border-white/20 pl-4 py-1 leading-relaxed text-white/70">
+        {infoText}
+      </div>
     </div>
   );
 };

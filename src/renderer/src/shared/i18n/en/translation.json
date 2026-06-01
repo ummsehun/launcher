@@ -41,7 +41,12 @@
       "save": "Save",
       "storage": "Storage",
       "game_settings": "Game Settings",
-      "advanced": "Advanced"
+      "advanced": "Advanced",
+      "check_update": "Check for Launcher Updates",
+      "check_update_desc": "Check if there is a newer version of the launcher available.",
+      "check_button": "Check for Updates",
+      "update_latest": "You are on the latest version.",
+      "update_failed": "Failed to check for updates."
     },
     "feature_modal": {
       "launcher": {

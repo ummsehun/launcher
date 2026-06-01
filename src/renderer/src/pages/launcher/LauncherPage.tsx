@@ -58,7 +58,7 @@ export const LauncherPage: React.FC = () => {
 
   const socialLinks = [
     { icon: Home, url: 'https://github.com/ummsehun/launcher' },
-    { icon: Globe, url: '#' },
+    { icon: Globe, url: 'https://aquatic-waiter-050.notion.site/TermPlay-372ee832e9da80c88193ec1d61b04615?source=copy_link' },
     {
       icon: Link,
       url: currentSeries?.id === 'gascii'

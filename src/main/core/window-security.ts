@@ -1,7 +1,12 @@
 import { app, type BrowserWindow, shell } from 'electron';
 
 const ALLOWED_DEV_RENDERER_HOSTS = new Set(['localhost', '127.0.0.1']);
-const ALLOWED_EXTERNAL_HOSTS = new Set(['github.com', 'www.github.com']);
+const ALLOWED_EXTERNAL_HOSTS = new Set([
+  'github.com',
+  'www.github.com',
+  'notion.site',
+  'aquatic-waiter-050.notion.site',
+]);
 
 export const isAllowedDevRendererUrl = (value: string): boolean => {
   if (app.isPackaged) {

@@ -41,7 +41,12 @@
       "save": "저장",
       "storage": "저장소",
       "game_settings": "게임 설정",
-      "advanced": "고급"
+      "advanced": "고급",
+      "check_update": "런처 업데이트 확인",
+      "check_update_desc": "새로운 버전의 런처가 있는지 확인합니다.",
+      "check_button": "업데이트 확인",
+      "update_latest": "최신 버전을 사용 중입니다.",
+      "update_failed": "업데이트 확인에 실패했습니다."
     },
     "feature_modal": {
       "launcher": {

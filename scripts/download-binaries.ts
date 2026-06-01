@@ -23,7 +23,7 @@ const DEST_DIR = path.join(BIN_ROOT, PLATFORM);
 const DOWNLOADS: Record<string, { ytDlpUrl: string; ffmpegUrl: string; ytDlpName: string; ffmpegName: string }> = {
   'darwin-arm64': {
     ytDlpUrl: 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_macos',
-    ffmpegUrl: 'https://evermeet.cx/ffmpeg/getrelease/ffmpeg/zip',
+    ffmpegUrl: 'https://ffmpeg.martin-riedl.de/redirect/latest/macos/arm64/release/ffmpeg.zip',
     ytDlpName: 'yt-dlp',
     ffmpegName: 'ffmpeg',
   },

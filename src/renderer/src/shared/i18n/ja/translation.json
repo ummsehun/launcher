@@ -41,7 +41,12 @@
       "save": "保存",
       "storage": "ストレージ",
       "game_settings": "ゲーム設定",
-      "advanced": "詳細"
+      "advanced": "詳細",
+      "check_update": "ランチャーアップデート確認",
+      "check_update_desc": "新しいバージョンのランチャーがあるか確認します。",
+      "check_button": "アップデートを確認",
+      "update_latest": "最新バージョンを使用しています。",
+      "update_failed": "アップデート確認に失敗しました。"
     },
     "feature_modal": {
       "launcher": {
