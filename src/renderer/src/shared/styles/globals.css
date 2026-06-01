@@ -385,9 +385,9 @@
 /* Base Button Overrides */
 .driver-popover-btn {
   font-family: var(--font-sans) !important;
-  font-size: 12.5px !important;
+  font-size: 13.5px !important;
   font-weight: 600 !important;
-  padding: 6px 14px !important;
+  padding: 8px 18px !important;
   border-radius: 8px !important;
   transition: all 0.2s ease !important;
   cursor: pointer !important;
@@ -402,6 +402,7 @@
   background-color: var(--color-launcher-accent) !important;
   border-color: var(--color-launcher-accent) !important;
   color: #ffffff !important;
+  padding: 8px 22px !important;
 }
 .driver-popover-next-btn:hover {
   background-color: var(--color-launcher-accent-hover) !important;
@@ -426,5 +427,13 @@
 }
 .driver-popover-close-btn:hover {
   color: var(--color-launcher-text) !important;
+}
+
+/* Spotlight Highlight Stage Overrides */
+.driver-stage {
+  border-radius: 8px !important;
+  outline: 2px solid var(--color-launcher-accent) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4) !important;
 }
 

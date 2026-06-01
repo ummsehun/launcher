@@ -151,6 +151,12 @@ export const useLauncherTour = () => {
           description: t('launcher.tour.s8_desc'),
           side: 'top',
           align: 'center',
+          onNextClick: () => {
+            useUIStore.getState().openModal('launcher');
+            setTimeout(() => {
+              driverObj?.moveNext();
+            }, 150);
+          }
         },
       },
       {
@@ -158,8 +164,14 @@ export const useLauncherTour = () => {
         popover: {
           title: t('launcher.tour.s9_title'),
           description: t('launcher.tour.s9_desc'),
-          side: 'left',
+          side: 'bottom',
           align: 'center',
+          onPrevClick: () => {
+            useUIStore.getState().closeModal();
+            setTimeout(() => {
+              driverObj?.movePrevious();
+            }, 150);
+          }
         },
       },
       {
@@ -169,6 +181,18 @@ export const useLauncherTour = () => {
           description: t('launcher.tour.s10_desc'),
           side: 'top',
           align: 'center',
+          onNextClick: () => {
+            useUIStore.getState().openModal('library');
+            setTimeout(() => {
+              driverObj?.moveNext();
+            }, 150);
+          },
+          onPrevClick: () => {
+            useUIStore.getState().closeModal();
+            setTimeout(() => {
+              driverObj?.movePrevious();
+            }, 150);
+          }
         },
       },
       {
@@ -176,8 +200,14 @@ export const useLauncherTour = () => {
         popover: {
           title: t('launcher.tour.s11_title'),
           description: t('launcher.tour.s11_desc'),
-          side: 'left',
+          side: 'bottom',
           align: 'center',
+          onPrevClick: () => {
+            useUIStore.getState().closeModal();
+            setTimeout(() => {
+              driverObj?.movePrevious();
+            }, 150);
+          }
         },
       },
       {
@@ -187,6 +217,18 @@ export const useLauncherTour = () => {
           description: t('launcher.tour.s12_desc'),
           side: 'top',
           align: 'center',
+          onNextClick: () => {
+            useUIStore.getState().openModal('assets');
+            setTimeout(() => {
+              driverObj?.moveNext();
+            }, 150);
+          },
+          onPrevClick: () => {
+            useUIStore.getState().closeModal();
+            setTimeout(() => {
+              driverObj?.movePrevious();
+            }, 150);
+          }
         },
       },
       {
@@ -194,8 +236,14 @@ export const useLauncherTour = () => {
         popover: {
           title: t('launcher.tour.s13_title'),
           description: t('launcher.tour.s13_desc'),
-          side: 'left',
+          side: 'bottom',
           align: 'center',
+          onPrevClick: () => {
+            useUIStore.getState().closeModal();
+            setTimeout(() => {
+              driverObj?.movePrevious();
+            }, 150);
+          }
         },
       },
       {
@@ -249,6 +297,7 @@ export const useLauncherTour = () => {
     driverObj = driver({
       showProgress: true,
       allowClose: true,
+      stagePadding: 2, // Extremely tight focus padding
       nextBtnText: t('launcher.tour.next'),
       prevBtnText: t('launcher.tour.prev'),
       doneBtnText: t('launcher.tour.done'),
@@ -269,7 +318,13 @@ export const useLauncherTour = () => {
         // Auto-advance steps when active action tabs are clicked
         if ([7, 9, 11].includes(index) && element) {
           const handler = () => {
-            driverObj?.moveNext();
+            if (index === 7) useUIStore.getState().openModal('launcher');
+            if (index === 9) useUIStore.getState().openModal('library');
+            if (index === 11) useUIStore.getState().openModal('assets');
+
+            setTimeout(() => {
+              driverObj?.moveNext();
+            }, 150);
           };
           element.addEventListener('click', handler);
           (element as any)._tourHandler = handler;
