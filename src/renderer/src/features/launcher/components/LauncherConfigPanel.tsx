@@ -49,14 +49,12 @@ export const LauncherConfigPanel: React.FC = () => {
   return (
     <SettingsLayout title={t('launcher.feature_modal.launcher.title')} navItems={navItems}>
       <section className="space-y-3">
-        <h3 className="text-[13px] font-bold text-launcher-textMuted">{t('launcher.feature_modal.launcher.install_path')}</h3>
-        <div className="p-6 rounded-2xl border border-launcher-divider bg-launcher-panelElevated backdrop-blur-md shadow-xl space-y-5 relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-r from-launcher-accent/0 via-launcher-accent/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 pointer-events-none" />
-          
+        <h3 className="text-[13px] font-semibold text-launcher-textMuted">{t('launcher.feature_modal.launcher.install_path')}</h3>
+        <div className="p-6 rounded-xl border border-launcher-divider bg-launcher-surface/10 space-y-4 relative overflow-hidden group">
           <p className="text-launcher-textMuted text-[13px] leading-relaxed max-w-xl">{t('launcher.feature_modal.launcher.install_path_desc')}</p>
           
           {error && (
-            <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-[13px] text-red-200 flex items-center gap-3">
+            <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-[13px] text-red-200 flex items-center gap-3">
               <span className="text-red-400 font-bold">!</span>
               {error}
             </div>
@@ -67,11 +65,11 @@ export const LauncherConfigPanel: React.FC = () => {
               type="text" 
               readOnly 
               value={installPath}
-              className="flex-1 bg-launcher-control border border-launcher-divider rounded-xl px-5 py-3 text-[13px] text-launcher-text font-mono outline-none shadow-inner transition-colors hover:border-launcher-border focus:border-launcher-accent focus:bg-launcher-controlHover"
+              className="flex-1 bg-launcher-control/50 border border-launcher-divider rounded-lg px-4 py-1.5 h-9 text-[13px] text-launcher-text font-mono outline-none transition-colors hover:border-launcher-border focus:border-launcher-accent"
             />
             <button 
               onClick={handleBrowse}
-              className="px-6 py-3 bg-launcher-control hover:bg-launcher-controlHover border border-launcher-divider hover:border-launcher-border text-launcher-text font-bold tracking-wide rounded-xl transition-all text-[13px] shadow-sm hover:shadow-md"
+              className="px-4 py-1.5 h-9 bg-launcher-surface hover:bg-launcher-controlHover border border-launcher-divider text-launcher-text font-semibold rounded-lg transition-colors text-[13px] cursor-pointer"
             >
               {t('launcher.feature_modal.launcher.browse')}
             </button>
@@ -81,13 +79,13 @@ export const LauncherConfigPanel: React.FC = () => {
 
       {config?.settings && config.settings.length > 0 && (
         <section className="space-y-3">
-          <h3 className="text-[13px] font-bold text-launcher-textMuted">{t('launcher.settings.advanced')}</h3>
-          <div className="space-y-2">
+          <h3 className="text-[13px] font-semibold text-launcher-textMuted">{t('launcher.settings.advanced')}</h3>
+          <div className="space-y-2.5">
             {config.settings.map(settingKey => {
               const labelKey = `launcher.feature_modal.launcher.${selectedSeriesId}.${settingKey === 'hwAccel' ? 'hw_accel' : settingKey === 'autoClean' ? 'auto_clean' : settingKey === 'highRes' ? 'high_res' : settingKey}`;
               const descKey = `${labelKey}_desc`;
               return (
-                <div key={settingKey} className="p-4 rounded-xl border border-launcher-divider bg-launcher-panel hover:bg-launcher-panelElevated transition-colors">
+                <div key={settingKey} className="p-4 rounded-lg border border-launcher-divider bg-launcher-surface/5 hover:bg-launcher-surface/10 transition-colors">
                   <ToggleRow 
                     label={t(labelKey)} 
                     description={t(descKey)} 

@@ -24,18 +24,18 @@ export const GlobalSettingsPanel: React.FC = () => {
   return (
     <SettingsLayout title={t('launcher.settings.title')} navItems={navItems}>
       <section className="space-y-3">
-        <h3 className="text-[13px] font-bold text-launcher-textMuted">{t('launcher.settings.language')}</h3>
-        <div className="p-6 rounded-xl border border-launcher-divider bg-launcher-panelElevated">
-          <div className="flex gap-4">
+        <h3 className="text-[13px] font-semibold text-launcher-textMuted">{t('launcher.settings.language')}</h3>
+        <div className="p-6 rounded-xl border border-launcher-divider bg-launcher-surface/10">
+          <div className="flex gap-3">
             {['ko', 'en', 'ja'].map(lang => (
               <button
                 key={lang}
                 onClick={() => handleLanguageChange(lang)}
                 className={cn(
-                  "px-6 py-3 rounded-lg border font-medium transition-all text-[14px]",
+                  "px-4 py-2 rounded-lg border font-medium transition-colors text-[13px] cursor-pointer",
                   i18n.language === lang 
-                    ? "bg-launcher-accent/20 border-launcher-accent text-launcher-accent" 
-                    : "bg-launcher-control border-launcher-divider text-launcher-textMuted hover:border-launcher-border hover:text-launcher-text"
+                    ? "bg-launcher-accent/10 border-launcher-accent text-launcher-accent font-semibold" 
+                    : "bg-launcher-surface/20 border-launcher-divider text-launcher-textMuted hover:border-launcher-border hover:bg-launcher-control/50 hover:text-launcher-text"
                 )}
               >
                 {lang === 'ko' ? '한국어' : lang === 'en' ? 'English' : '日本語'}
@@ -46,8 +46,8 @@ export const GlobalSettingsPanel: React.FC = () => {
       </section>
 
       <section className="space-y-3">
-        <h3 className="text-[13px] font-bold text-launcher-textMuted">{t('launcher.settings.advanced')}</h3>
-        <div className="space-y-3">
+        <h3 className="text-[13px] font-semibold text-launcher-textMuted">{t('launcher.settings.advanced')}</h3>
+        <div className="p-4 rounded-lg border border-launcher-divider bg-launcher-surface/5 hover:bg-launcher-surface/10 transition-colors">
           <ToggleRow 
             label={t('launcher.settings.auto_update')} 
             description={t('launcher.settings.auto_update_desc')} 

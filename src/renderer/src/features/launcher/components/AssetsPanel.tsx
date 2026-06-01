@@ -21,17 +21,22 @@ export const AssetsPanel: React.FC = () => {
   const typedSeriesId = selectedSeriesId as TerminalSeriesId;
 
   return (
-    <div className="flex flex-col h-full bg-launcher-bg text-launcher-text">
-      <div className="p-10 pb-6 border-b border-launcher-divider flex items-end justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-launcher-text">{t('launcher.feature_modal.assets.title')}</h2>
-          <p className="text-[14px] text-launcher-textMuted mt-2">
+    <div className="flex flex-col h-full bg-launcher-bg text-launcher-text overflow-hidden">
+      {/* Top bar header */}
+      <div className="h-[68px] border-b border-launcher-divider flex items-center justify-between pl-8 pr-20 bg-launcher-panel/40 backdrop-blur-md z-10 shrink-0">
+        <div className="flex items-center gap-3">
+          <h3 className="text-[16px] font-bold text-launcher-text">
+            {t('launcher.feature_modal.assets.title')}
+          </h3>
+          <div className="h-3 w-[1px] bg-launcher-divider"></div>
+          <span className="text-[12.5px] text-launcher-textMuted font-medium truncate max-w-xl">
             {t(`launcher.feature_modal.assets.desc_${selectedSeriesId}`)}
-          </p>
+          </span>
         </div>
       </div>
 
-      <div className="flex-1 p-10 overflow-y-auto scrollbar-none flex flex-col">
+      {/* Main Content Area */}
+      <div className="flex-1 p-8 overflow-y-auto scrollbar-none flex flex-col">
         {config.assetMode === 'youtube' ? (
           <MediaDownloadPanel seriesId={typedSeriesId} />
         ) : (

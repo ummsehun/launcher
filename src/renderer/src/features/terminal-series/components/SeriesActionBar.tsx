@@ -73,7 +73,7 @@ export const SeriesActionBar: React.FC = () => {
     <div className="relative flex items-center gap-4">
       
       {/* Download Status Info (Mock) */}
-      {(status === 'update-available' || status === 'installing' || status === 'updating') && (
+      {(status === 'installing' || status === 'updating') && (
         <div className="flex items-center gap-4 bg-black/60 backdrop-blur-xl border border-white/10 rounded-full px-6 py-2">
           <div className="relative w-10 h-10 flex items-center justify-center">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
@@ -97,10 +97,10 @@ export const SeriesActionBar: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-white font-bold text-sm">
-              {status === 'update-available' ? t('launcher.update_available') : '8.15 Mb/s'}
+              8.15 Mb/s
             </span>
             <span className="text-white/50 text-xs font-mono">
-              {status === 'installing' || status === 'updating' ? `${actionProgress}%` : '11.48 GB'}
+              {`${actionProgress}%`}
             </span>
           </div>
         </div>

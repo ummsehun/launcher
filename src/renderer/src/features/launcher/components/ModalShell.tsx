@@ -18,8 +18,15 @@ export const ModalShell: React.FC<ModalShellProps> = ({ onClose, children }) => 
     return () => window.removeEventListener('keydown', handleEsc);
   }, [onClose]);
 
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
     <div 
+      onClick={handleOverlayClick}
       className="theme-app fixed inset-0 z-[100] flex items-center justify-center bg-launcher-overlay p-8 sm:p-12 md:p-16 lg:p-24"
       role="dialog"
       aria-modal="true"
@@ -28,7 +35,7 @@ export const ModalShell: React.FC<ModalShellProps> = ({ onClose, children }) => 
         <button 
           onClick={onClose}
           aria-label={t('common.close', 'Close')}
-          className="absolute top-6 right-6 w-8 h-8 rounded-full bg-launcher-control hover:bg-launcher-controlHover flex items-center justify-center text-launcher-textMuted hover:text-launcher-text transition-colors z-50"
+          className="absolute top-6 right-6 w-8 h-8 rounded-full bg-launcher-control hover:bg-launcher-controlHover flex items-center justify-center text-launcher-textMuted hover:text-launcher-text transition-colors z-50 cursor-pointer"
         >
           <X size={16} strokeWidth={2.5} />
         </button>

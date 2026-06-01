@@ -42,44 +42,44 @@ export const AssetListPanel: React.FC<AssetListPanelProps> = ({ seriesId }) => {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2.5">
       {assets.map((asset) => {
         const download = downloads[asset.id];
         const isDownloading = download && download.status === 'downloading';
         const isCompleted = download && download.status === 'completed';
 
         return (
-          <div key={asset.id} className="flex flex-col gap-2 p-4 rounded-xl border border-launcher-divider bg-launcher-panelElevated hover:bg-launcher-controlHover transition-colors">
+          <div key={asset.id} className="flex flex-col gap-2 p-4 rounded-lg border border-launcher-divider bg-launcher-surface/5 hover:bg-launcher-surface/10 transition-colors">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-launcher-iconSurface flex items-center justify-center text-launcher-textMuted">
-                  <Box size={20} />
+              <div className="flex items-center gap-3.5">
+                <div className="flex items-center justify-center text-launcher-textMuted shrink-0">
+                  <Box size={18} className="text-slate-400" />
                 </div>
                 <div className="flex flex-col">
-                  <h4 className="text-[15px] text-launcher-text font-bold">{asset.name}</h4>
-                  <span className="text-[13px] text-launcher-textMuted mt-0.5">
+                  <h4 className="text-[14px] text-launcher-text font-semibold">{asset.name}</h4>
+                  <span className="text-[12.5px] text-launcher-textMuted mt-0.5">
                     {t('launcher.feature_modal.assets.type')}: {asset.type} • {t('launcher.feature_modal.assets.size')}: {formatSize(asset.sizeBytes)}
                   </span>
                 </div>
               </div>
 
               {isCompleted ? (
-                <div className="px-5 py-2.5 rounded-lg bg-green-600/20 text-green-400 font-bold text-[13px] flex items-center gap-2">
+                <div className="px-4 py-1.5 rounded-lg bg-green-600/10 text-green-400 font-semibold text-[13px] flex items-center gap-2">
                   {t('launcher.feature_modal.assets.completed', 'Completed')}
                 </div>
               ) : isDownloading ? (
                 <button
                   onClick={() => handleCancelDownload(download.downloadId)}
-                  className="px-5 py-2.5 rounded-lg bg-red-600/20 hover:bg-red-600/40 text-red-400 font-bold text-[13px] flex items-center gap-2 transition-colors"
+                  className="px-4 py-1.5 rounded-lg bg-red-600/10 hover:bg-red-600/20 text-red-400 font-semibold text-[13px] flex items-center gap-2 transition-colors cursor-pointer"
                 >
                   {t('launcher.feature_modal.assets.cancel', 'Cancel')}
                 </button>
               ) : (
                 <button
                   onClick={() => handleDownloadAsset(asset.id)}
-                  className="px-5 py-2.5 rounded-lg bg-launcher-accent hover:bg-launcher-accentHover text-white font-bold text-[13px] flex items-center gap-2 transition-colors"
+                  className="px-4 py-1.5 rounded-lg bg-launcher-accent hover:bg-launcher-accentHover text-white font-semibold text-[13px] flex items-center gap-2 transition-colors cursor-pointer"
                 >
-                  <Download size={16} />
+                  <Download size={14} />
                   <span>{t('launcher.feature_modal.assets.download')}</span>
                 </button>
               )}

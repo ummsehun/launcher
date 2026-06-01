@@ -1,7 +1,7 @@
 import { useTerminalSeriesStore } from '../stores/terminalSeriesStore';
 import { useUIStore } from '../../../shared/stores/uiStore';
 import { cn } from '../../../shared/lib/cn';
-import { Terminal, Settings, User } from 'lucide-react';
+import { Terminal, Settings } from 'lucide-react';
 
 export const SeriesSidebar: React.FC = () => {
   const { series, selectedSeriesId, selectSeries } = useTerminalSeriesStore();
@@ -43,10 +43,6 @@ export const SeriesSidebar: React.FC = () => {
                   {s.displayName.charAt(0)}
                 </span>
                 
-                {/* Notification Dot */}
-                {s.status === 'update-available' && (
-                  <div className="absolute top-0 right-0 w-3 h-3 bg-launcher-warning rounded-full border-2 border-[#121212]" />
-                )}
               </button>
             </div>
           );
@@ -55,9 +51,6 @@ export const SeriesSidebar: React.FC = () => {
 
       {/* Bottom Profile / Settings */}
       <div className="mt-auto flex flex-col gap-4 items-center pt-4">
-        <button className="w-10 h-10 rounded-full bg-launcher-surface/50 flex items-center justify-center text-launcher-textMuted hover:text-white hover:bg-launcher-surface transition-colors">
-          <User size={20} />
-        </button>
         <button onClick={openSettings} className="w-10 h-10 flex items-center justify-center text-launcher-textMuted hover:text-white transition-colors pb-2">
           <Settings size={20} />
         </button>
