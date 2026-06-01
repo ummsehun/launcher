@@ -31,9 +31,10 @@ export const SeriesActionBar: React.FC = () => {
     if (status === 'not-installed') {
       return (
         <button
+          id="action-bar-play-btn"
           onClick={installSelectedSeries}
           disabled={isPending}
-          className="w-64 h-[72px] bg-launcher-cta hover:bg-launcher-cta-hover text-launcher-cta-text font-black text-2xl tracking-widest rounded-l-xl transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(244,210,89,0.3)]"
+          className="w-64 h-[72px] bg-launcher-cta hover:bg-launcher-cta-hover text-launcher-cta-text font-black text-2xl tracking-widest rounded-l-xl transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(244,210,89,0.3)] cursor-pointer"
         >
           {isActionPending ? <Loader2 className="animate-spin" size={28} /> : null}
           {t('launcher.install')}
@@ -44,9 +45,10 @@ export const SeriesActionBar: React.FC = () => {
     if (status === 'installed' || status === 'update-available' || status === 'running') {
       return (
         <button
+          id="action-bar-play-btn"
           onClick={launchSelectedSeries}
           disabled={isPending}
-          className="w-64 h-[72px] bg-launcher-cta hover:bg-launcher-cta-hover text-launcher-cta-text font-black text-2xl tracking-widest rounded-l-xl transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(244,210,89,0.3)]"
+          className="w-64 h-[72px] bg-launcher-cta hover:bg-launcher-cta-hover text-launcher-cta-text font-black text-2xl tracking-widest rounded-l-xl transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(244,210,89,0.3)] cursor-pointer"
         >
           {status === 'running' ? <Loader2 className="animate-spin" size={28} /> : null}
           {status === 'running' ? t('launcher.running') : t('launcher.play')}
@@ -111,9 +113,10 @@ export const SeriesActionBar: React.FC = () => {
         {renderPrimaryAction()}
         
         <button
+          id="action-bar-menu-btn"
           onClick={() => setIsMenuOpen((value) => !value)}
           disabled={isPending}
-          className="h-[72px] w-14 bg-launcher-cta/90 hover:bg-launcher-cta disabled:opacity-50 text-launcher-cta-text flex items-center justify-center rounded-r-xl border-l border-black/20"
+          className="h-[72px] w-14 bg-launcher-cta/90 hover:bg-launcher-cta disabled:opacity-50 text-launcher-cta-text flex items-center justify-center rounded-r-xl border-l border-black/20 cursor-pointer"
           title={t('launcher.options')}
         >
           <Menu size={24} strokeWidth={3} />

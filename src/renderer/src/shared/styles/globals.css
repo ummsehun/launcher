@@ -311,3 +311,120 @@
     }
   }
 }
+
+/* ==========================================
+   Premium Driver.js Popover Custom Theme
+   ========================================== */
+.driver-popover {
+  background-color: var(--color-launcher-panel) !important;
+  border: 1px solid var(--color-launcher-divider) !important;
+  border-radius: var(--radius-panel) !important;
+  padding: 24px !important;
+  max-width: 420px !important;
+  width: 420px !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+  font-family: var(--font-sans) !important;
+}
+
+/* Arrow customization to match the panel color */
+.driver-popover-arrow {
+  border-color: var(--color-launcher-panel) !important;
+}
+.driver-popover-arrow-side-left {
+  border-left-color: var(--color-launcher-panel) !important;
+}
+.driver-popover-arrow-side-right {
+  border-right-color: var(--color-launcher-panel) !important;
+}
+.driver-popover-arrow-side-top {
+  border-top-color: var(--color-launcher-panel) !important;
+}
+.driver-popover-arrow-side-bottom {
+  border-bottom-color: var(--color-launcher-panel) !important;
+}
+
+/* Title Styling */
+.driver-popover-title {
+  font-family: var(--font-sans) !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: var(--color-launcher-text) !important;
+  margin-bottom: 8px !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.4 !important;
+}
+
+/* Description Styling (With white-space: pre-line for translations \n) */
+.driver-popover-description {
+  font-family: var(--font-sans) !important;
+  font-size: 13.5px !important;
+  font-weight: 400 !important;
+  color: var(--color-launcher-text-muted) !important;
+  line-height: 1.6 !important;
+  white-space: pre-line !important;
+}
+
+/* Footer & Progress Text */
+.driver-popover-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  margin-top: 20px !important;
+  border-top: 1px solid var(--color-launcher-divider) !important;
+  padding-top: 16px !important;
+}
+
+.driver-popover-progress-text {
+  flex: 1 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--color-launcher-text-muted) !important;
+}
+
+/* Base Button Overrides */
+.driver-popover-btn {
+  font-family: var(--font-sans) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  padding: 6px 14px !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  border: 1px solid var(--color-launcher-divider) !important;
+  background-image: none !important;
+}
+
+/* Next / Done Button (Accent / Primary Action) */
+.driver-popover-next-btn {
+  background-color: var(--color-launcher-accent) !important;
+  border-color: var(--color-launcher-accent) !important;
+  color: #ffffff !important;
+}
+.driver-popover-next-btn:hover {
+  background-color: var(--color-launcher-accent-hover) !important;
+  border-color: var(--color-launcher-accent-hover) !important;
+}
+
+/* Prev Button (Secondary Action) */
+.driver-popover-prev-btn {
+  background-color: var(--color-launcher-surface) !important;
+  border-color: var(--color-launcher-divider) !important;
+  color: var(--color-launcher-text) !important;
+}
+.driver-popover-prev-btn:hover {
+  background-color: var(--color-launcher-control-hover) !important;
+  border-color: var(--color-launcher-border) !important;
+}
+
+/* Close Button Override */
+.driver-popover-close-btn {
+  color: var(--color-launcher-text-muted) !important;
+  transition: color 0.15s ease !important;
+}
+.driver-popover-close-btn:hover {
+  color: var(--color-launcher-text) !important;
+}
+

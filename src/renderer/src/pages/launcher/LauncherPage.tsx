@@ -109,7 +109,7 @@ export const LauncherPage: React.FC = () => {
       </div>
 
       {/* Floating Right Social Toolbar */}
-      <div className="theme-panel absolute right-6 top-24 flex flex-col gap-3 z-40 backdrop-blur-md p-2 rounded-2xl border">
+      <div id="social-links-toolbar" className="theme-panel absolute right-6 top-24 flex flex-col gap-3 z-40 backdrop-blur-md p-2 rounded-2xl border">
         {socialLinks.map((item, idx) => (
           <button
             key={idx}

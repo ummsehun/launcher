@@ -74,7 +74,7 @@ export const MediaDownloadPanel: React.FC<MediaDownloadPanelProps> = ({ seriesId
   const isFailed = progress?.status === 'failed';
 
   return (
-    <div className="flex-1 flex flex-col justify-center max-w-xl mx-auto w-full space-y-5">
+    <div id="media-download-panel" className="flex-1 flex flex-col justify-center max-w-xl mx-auto w-full space-y-5">
       <div className="relative flex items-center bg-launcher-control/50 rounded-lg border border-launcher-divider overflow-hidden">
         <div className="pl-4 text-launcher-textMuted">
           <Search size={18} />

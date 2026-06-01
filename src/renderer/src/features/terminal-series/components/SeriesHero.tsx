@@ -8,11 +8,13 @@ import { SeriesLogsPanel } from './SeriesLogsPanel';
 import { Package, BookOpen, Rocket, Library } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUIStore, ModalType } from '../../../shared/stores/uiStore';
+import { useLauncherTour } from '../../launcher/hooks/useLauncherTour';
 
 export const SeriesHero: React.FC = () => {
   const { t } = useTranslation();
   const { openModal } = useUIStore();
   const { series, selectedSeriesId, selectedTab, setSelectedTab } = useTerminalSeriesStore();
+  const { startTour } = useLauncherTour();
   const currentSeries = series.find(s => s.id === selectedSeriesId);
 
   if (!currentSeries) return null;
@@ -69,7 +71,7 @@ export const SeriesHero: React.FC = () => {
       </div>
 
       {/* Quick Action Icons Panel */}
-      <div className="theme-panel w-full backdrop-blur-xl border rounded-2xl p-4 flex justify-between items-center pointer-events-auto shadow-2xl">
+      <div id="quick-actions-panel" className="theme-panel w-full backdrop-blur-xl border rounded-2xl p-4 flex justify-between items-center pointer-events-auto shadow-2xl">
         {[
           { id: 'launcher', icon: Rocket, label: t('launcher.launcher_action') },
           { id: 'library', icon: Library, label: t('launcher.library_action') },
@@ -78,8 +80,15 @@ export const SeriesHero: React.FC = () => {
         ].map((item, idx) => (
           <button
             key={idx}
-            onClick={() => openModal(item.id as ModalType)}
-            className="flex flex-col items-center gap-2 group"
+            id={`hero-tab-${item.id}`}
+            onClick={() => {
+              if (item.id === 'guide') {
+                startTour();
+              } else {
+                openModal(item.id as ModalType);
+              }
+            }}
+            className="flex flex-col items-center gap-2 group cursor-pointer"
           >
             <div className="w-12 h-12 rounded-xl bg-launcher-control border border-launcher-divider flex items-center justify-center text-launcher-textMuted group-hover:text-launcher-text group-hover:border-launcher-border group-hover:bg-launcher-controlHover transition-all">
               <item.icon size={22} />

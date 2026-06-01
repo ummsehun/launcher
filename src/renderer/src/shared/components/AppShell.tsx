@@ -10,7 +10,7 @@ export const AppShell: React.FC<AppShellProps> = ({ sidebar, children }) => {
   return (
     <div className="theme-app flex h-screen w-full overflow-hidden">
       {/* Thin Left Sidebar */}
-      <div className="theme-sidebar w-sidebar flex-shrink-0 border-r flex flex-col z-50">
+      <div id="launcher-sidebar-panel" className="theme-sidebar w-sidebar flex-shrink-0 border-r flex flex-col z-50">
         {sidebar}
       </div>
       

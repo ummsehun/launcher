@@ -50,7 +50,7 @@ export const LauncherConfigPanel: React.FC = () => {
     <SettingsLayout title={t('launcher.feature_modal.launcher.title')} navItems={navItems}>
       <section className="space-y-3">
         <h3 className="text-[13px] font-semibold text-launcher-textMuted">{t('launcher.feature_modal.launcher.install_path')}</h3>
-        <div className="p-6 rounded-xl border border-launcher-divider bg-launcher-surface/10 space-y-4 relative overflow-hidden group">
+        <div id="settings-install-path-card" className="p-6 rounded-xl border border-launcher-divider bg-launcher-surface/10 space-y-4 relative overflow-hidden group">
           <p className="text-launcher-textMuted text-[13px] leading-relaxed max-w-xl">{t('launcher.feature_modal.launcher.install_path_desc')}</p>
           
           {error && (
@@ -78,7 +78,7 @@ export const LauncherConfigPanel: React.FC = () => {
       </section>
 
       {config?.settings && config.settings.length > 0 && (
-        <section className="space-y-3">
+        <section id="settings-advanced-card" className="space-y-3">
           <h3 className="text-[13px] font-semibold text-launcher-textMuted">{t('launcher.settings.advanced')}</h3>
           <div className="space-y-2.5">
             {config.settings.map(settingKey => {

@@ -205,7 +205,7 @@ export const LibraryPanel: React.FC = () => {
               </div>
             </div>
           ) : files.length === 0 ? (
-            <div className="h-full flex items-center justify-center text-launcher-textMuted">
+            <div id="library-empty-state" className="h-full flex items-center justify-center text-launcher-textMuted">
               <div className="flex flex-col items-center text-center gap-6 max-w-[320px] p-10 rounded-2xl border border-dashed border-launcher-divider bg-launcher-surface/20">
                 <div className="w-16 h-16 rounded-xl bg-launcher-surface/50 flex items-center justify-center text-launcher-textMuted border border-launcher-divider">
                   <FolderOpen size={32} strokeWidth={1.5} />
@@ -219,7 +219,7 @@ export const LibraryPanel: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="bg-launcher-surface/10 rounded-xl border border-launcher-divider overflow-hidden">
+            <div id="library-table-container" className="bg-launcher-surface/10 rounded-xl border border-launcher-divider overflow-hidden">
               <table className="w-full text-left border-collapse table-fixed">
                 <thead>
                   <tr className="border-b border-launcher-divider bg-transparent">

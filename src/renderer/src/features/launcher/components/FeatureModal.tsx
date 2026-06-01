@@ -5,16 +5,14 @@ import { GlobalSettingsPanel } from './GlobalSettingsPanel';
 import { LauncherConfigPanel } from './LauncherConfigPanel';
 import { LibraryPanel } from './LibraryPanel';
 import { AssetsPanel } from './AssetsPanel';
-import { GuidePanel } from './GuidePanel';
 
-export type FeatureModalType = 'settings' | 'launcher' | 'library' | 'assets' | 'guide';
+export type FeatureModalType = 'settings' | 'launcher' | 'library' | 'assets';
 
 const MODAL_COMPONENTS: Record<FeatureModalType, React.ComponentType> = {
   settings: GlobalSettingsPanel,
   launcher: LauncherConfigPanel,
   library: LibraryPanel,
   assets: AssetsPanel,
-  guide: GuidePanel,
 };
 
 export const FeatureModal: React.FC = () => {

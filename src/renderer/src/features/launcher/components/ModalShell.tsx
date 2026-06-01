@@ -31,7 +31,7 @@ export const ModalShell: React.FC<ModalShellProps> = ({ onClose, children }) => 
       role="dialog"
       aria-modal="true"
     >
-      <div className="theme-panel-strong w-full h-full max-w-5xl max-h-[750px] border rounded-[20px] shadow-2xl flex flex-col relative overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div id="modal-shell-container" className="theme-panel-strong w-full h-full max-w-5xl max-h-[750px] border rounded-[20px] shadow-2xl flex flex-col relative overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         <button 
           onClick={onClose}
           aria-label={t('common.close', 'Close')}
