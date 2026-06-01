@@ -29,7 +29,7 @@ const DOWNLOADS: Record<string, { ytDlpUrl: string; ffmpegUrl: string; ytDlpName
   },
   'linux-x64': {
     ytDlpUrl: 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux',
-    ffmpegUrl: 'https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz',
+    ffmpegUrl: 'https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz',
     ytDlpName: 'yt-dlp',
     ffmpegName: 'ffmpeg',
   },

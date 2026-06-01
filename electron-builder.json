@@ -36,8 +36,13 @@
   ],
   "mac": {
     "forceCodeSigning": true,
+    "hardenedRuntime": true,
     "notarize": true,
+    "entitlements": "entitlements.mac.plist",
     "entitlementsInherit": "entitlements.mac.plist",
+    "signIgnore": [
+      "bin/darwin-arm64/"
+    ],
     "target": [
       {
         "target": "dmg",
