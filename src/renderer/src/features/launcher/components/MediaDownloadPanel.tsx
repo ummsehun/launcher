@@ -18,9 +18,16 @@ export const MediaDownloadPanel: React.FC<MediaDownloadPanelProps> = ({ seriesId
   const [error, setError] = useState<string | null>(null);
   const [logHistory, setLogHistory] = useState<string[]>([]);
   const [showLogs, setShowLogs] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const { series, setSelectedTab } = useTerminalSeriesStore();
   const { closeModal } = useUIStore();
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText('brew install yt-dlp');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const currentSeries = series.find(s => s.id === seriesId);
   const isInstalled = currentSeries?.status === 'installed' || currentSeries?.status === 'running' || currentSeries?.status === 'update-available';
@@ -263,6 +270,27 @@ export const MediaDownloadPanel: React.FC<MediaDownloadPanelProps> = ({ seriesId
             </p>
           )}
 
+          {isFailed && window.launcher.platform.current === 'darwin' && (
+            <div className="mt-4 w-full bg-black/30 border border-red-500/20 rounded-xl p-4 flex flex-col gap-2.5 text-left">
+              <div className="flex items-center gap-2 text-launcher-accent text-[13px] font-bold">
+                <Terminal size={14} className="text-launcher-accent" />
+                <span>{t('launcher.feature_modal.assets.macos_notice_title')}</span>
+              </div>
+              <p className="text-[12.5px] text-launcher-textMuted leading-relaxed">
+                {t('launcher.feature_modal.assets.macos_notice_desc')}
+              </p>
+              <div className="flex items-center justify-between bg-black/40 border border-launcher-divider/40 rounded-lg py-2 px-3.5 font-mono text-[12px] select-all group">
+                <span className="text-launcher-accent/90">brew install yt-dlp</span>
+                <button 
+                  onClick={handleCopy}
+                  className="text-[11px] bg-launcher-control hover:bg-launcher-controlHover text-launcher-textMuted hover:text-launcher-text px-2 py-0.5 rounded transition-all cursor-pointer font-sans font-bold"
+                >
+                  {copied ? t('launcher.feature_modal.assets.copied') : t('launcher.feature_modal.assets.copy')}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Technical Logs Toggle inside Completed/Failed State */}
           <div className="mt-3 pt-3 border-t border-launcher-divider/30 w-full flex flex-col items-center">
             <button
@@ -294,21 +322,44 @@ export const MediaDownloadPanel: React.FC<MediaDownloadPanelProps> = ({ seriesId
           </button>
         </div>
       ) : (
-        <div className="flex gap-3 w-full">
-          <button
-            onClick={() => handleDownload('mp4')}
-            disabled={!url}
-            className="flex-1 py-2 bg-launcher-surface hover:bg-launcher-controlHover border border-launcher-divider disabled:opacity-50 disabled:cursor-not-allowed text-launcher-text rounded-lg transition-colors flex items-center justify-center gap-2 text-[13px] font-semibold cursor-pointer h-10"
-          >
-            <Download size={16} /> {t('launcher.feature_modal.assets.download_mp4')}
-          </button>
-          <button
-            onClick={() => handleDownload('mp3')}
-            disabled={!url}
-            className="flex-1 py-2 bg-launcher-accent hover:bg-launcher-accentHover disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors flex items-center justify-center gap-2 text-[13px] font-semibold cursor-pointer h-10"
-          >
-            <Download size={16} /> {t('launcher.feature_modal.assets.download_mp3')}
-          </button>
+        <div className="flex flex-col gap-4 w-full">
+          <div className="flex gap-3 w-full">
+            <button
+              onClick={() => handleDownload('mp4')}
+              disabled={!url}
+              className="flex-1 py-2 bg-launcher-surface hover:bg-launcher-controlHover border border-launcher-divider disabled:opacity-50 disabled:cursor-not-allowed text-launcher-text rounded-lg transition-colors flex items-center justify-center gap-2 text-[13px] font-semibold cursor-pointer h-10"
+            >
+              <Download size={16} /> {t('launcher.feature_modal.assets.download_mp4')}
+            </button>
+            <button
+              onClick={() => handleDownload('mp3')}
+              disabled={!url}
+              className="flex-1 py-2 bg-launcher-accent hover:bg-launcher-accentHover disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors flex items-center justify-center gap-2 text-[13px] font-semibold cursor-pointer h-10"
+            >
+              <Download size={16} /> {t('launcher.feature_modal.assets.download_mp3')}
+            </button>
+          </div>
+
+          {window.launcher.platform.current === 'darwin' && (
+            <div className="bg-launcher-surface/20 border border-launcher-divider/60 rounded-xl p-4 flex flex-col gap-2.5 shadow-md text-left">
+              <div className="flex items-center gap-2 text-launcher-accent text-[13px] font-bold">
+                <Terminal size={14} className="text-launcher-accent" />
+                <span>{t('launcher.feature_modal.assets.macos_notice_title')}</span>
+              </div>
+              <p className="text-[12.5px] text-launcher-textMuted leading-relaxed">
+                {t('launcher.feature_modal.assets.macos_notice_desc')}
+              </p>
+              <div className="flex items-center justify-between bg-black/45 border border-launcher-divider/30 rounded-lg py-2 px-3.5 font-mono text-[12px] select-all group">
+                <span className="text-launcher-accent/90">brew install yt-dlp</span>
+                <button 
+                  onClick={handleCopy}
+                  className="text-[11px] bg-launcher-control hover:bg-launcher-controlHover text-launcher-textMuted hover:text-launcher-text px-2 py-0.5 rounded transition-all cursor-pointer font-sans font-bold"
+                >
+                  {copied ? t('launcher.feature_modal.assets.copied') : t('launcher.feature_modal.assets.copy')}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

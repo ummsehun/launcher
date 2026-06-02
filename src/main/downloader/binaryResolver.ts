@@ -55,6 +55,21 @@ export class BinaryResolver {
   }
 
   static async assertExecutable(filePath: string): Promise<void> {
+    if (process.platform === 'darwin') {
+      try {
+        // Ensure execution permissions (chmod +x)
+        await fs.chmod(filePath, 0o755);
+      } catch {
+        // Ignore read-only file system or permission issues on raw/locked paths
+      }
+      try {
+        // Programmatically strip the macOS quarantine flag to bypass unidentified developer block
+        await execFileAsync('xattr', ['-d', 'com.apple.quarantine', filePath]);
+      } catch {
+        // xattr throws if the file does not have the quarantine attribute, which is normal
+      }
+    }
+
     try {
       const accessMode = process.platform === 'win32' ? fs.constants.F_OK : fs.constants.X_OK;
       await fs.access(filePath, accessMode);

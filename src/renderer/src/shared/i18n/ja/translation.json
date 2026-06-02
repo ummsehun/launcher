@@ -114,7 +114,11 @@
         "status_postprocessing": "メディアの最終処理を実行中...",
         "status_completed": "ダウンロードと変換が完了しました",
         "status_cancelled": "ダウンロードがキャンセルされました",
-        "status_failed": "ダウンロードに失敗しました"
+        "status_failed": "ダウンロードに失敗しました",
+        "macos_notice_title": "macOS メディアダウンロード案内",
+        "macos_notice_desc": "macOSのセキュリティポリシーにより、内蔵ダウンローダーの実行エラー（Media download setup failed）が発生する場合があります。下記のターミナルコマンドでシステムに yt-dlp をインストールすると正常に動作します。",
+        "copy": "コピー",
+        "copied": "コピー済み"
       },
       "guide": {
         "title": "ガイドとドキュメント",

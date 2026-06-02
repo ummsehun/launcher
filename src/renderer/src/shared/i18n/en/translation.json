@@ -114,7 +114,11 @@
         "status_postprocessing": "Finalizing media post-processing...",
         "status_completed": "Download & conversion completed",
         "status_cancelled": "Download cancelled",
-        "status_failed": "Download failed"
+        "status_failed": "Download failed",
+        "macos_notice_title": "macOS Media Download Guide",
+        "macos_notice_desc": "Due to macOS security policies, you may experience a 'Media download setup failed' error. Installing yt-dlp via Homebrew will instantly resolve this issue.",
+        "copy": "Copy",
+        "copied": "Copied"
       },
       "guide": {
         "title": "Guide & Documentation",
