@@ -113,9 +113,12 @@ export const TourPopover: React.FC = () => {
 
   // Use pre-formatted HTML / clean inline codes formatting inside translation description
   const renderDescription = (desc: string) => {
-    // Basic formatting helper for <code> blocks inside i18n variables
-    const parts = desc.split(/(<code>.*?<\/code>)/g);
+    // Basic formatting helper for <code> blocks and dividers inside i18n variables
+    const parts = desc.split(/(<code>.*?<\/code>|---)/g);
     return parts.map((part, i) => {
+      if (part === '---') {
+        return <hr key={i} className="my-2.5 border-t border-launcher-divider/30" />;
+      }
       if (part.startsWith('<code>') && part.endsWith('</code>')) {
         const cleanContent = part.replace(/<\/?code>/g, '');
         return (

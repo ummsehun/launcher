@@ -25,6 +25,15 @@
     "select_project": "Select a project from the sidebar",
     "init_failed": "Initialization Failed",
     "new_updates": "New Updates Available",
+    "social": {
+      "toolbar_desc": "Official Community & Support Links Toolbar",
+      "home_desc": "TermPlay Official GitHub Repository",
+      "notion_desc": "TermPlay Introduction & Detailed Guide Notion Document",
+      "gascii_desc": "Gascii Open Source GitHub Repository",
+      "mienjine_desc": "MiEnjine Open Source GitHub Repository",
+      "support_desc": "Official Support Channel & Community (Coming Soon)",
+      "not_available": "No link available."
+    },
     "settings": {
       "title": "Settings",
       "general": "General",
@@ -73,8 +82,16 @@
         "desc": "Manage downloaded assets and project files.",
         "files": "files",
         "open_folder": "Open Folder",
-        "gascii_assets_required": "Gascii requires media files",
-        "gascii_assets_required_desc": "Put video files in VIDEO and audio files in AUDIO. Click each card to open the target folder."
+        "gascii_assets_required": "Assets Required",
+        "gascii_assets_required_desc": "Please add video/audio files to use Gascii features.",
+        "open_dir": "Open Folder",
+        "items": "items",
+        "refresh": "Refresh",
+        "empty_dir": "Folder is empty",
+        "empty_dir_desc": "Click the Open Folder button to add content to this directory.",
+        "name": "Name",
+        "date_modified": "Date Modified",
+        "size": "Size"
       },
       "assets": {
         "title": "Asset Manager",
@@ -85,7 +102,19 @@
         "download_mp3": "MP3 Audio",
         "download": "Download",
         "size": "Size",
-        "type": "Type"
+        "type": "Type",
+        "install_required_warning": "To download YouTube media, you must first install the Gascii program. Please go to the home screen and complete the installation.",
+        "go_to_install": "Go to Install Gascii",
+        "technical_logs": "Technical Console Logs",
+        "status_preparing": "Preparing download...",
+        "status_validating": "Validating request and binaries...",
+        "status_downloading": "Downloading media...",
+        "status_extracting_audio": "Extracting and converting audio (ffmpeg)...",
+        "status_merging": "Merging media files (ffmpeg)...",
+        "status_postprocessing": "Finalizing media post-processing...",
+        "status_completed": "Download & conversion completed",
+        "status_cancelled": "Download cancelled",
+        "status_failed": "Download failed"
       },
       "guide": {
         "title": "Guide & Documentation",
@@ -139,12 +168,20 @@
       "s14_desc": "Now, let's examine the Play button.",
       "s15_title": "Detail Options",
       "s15_desc": "This details menu allows you to run integrity checks,\nopen the local installation directory, or uninstall files.",
-      "s16_title": "Social Toolbar",
-      "s16_desc": "Finally, let's take a look at this floating toolbar.",
-      "s17_title": "GitHub & Support",
-      "s17_desc": "You can find our GitHub link here.\nGiving us a GitHub Star would be highly appreciated!",
-      "s18_title": "Guide Completed",
-      "s18_desc": "That concludes the interactive tour!\nHave a great time!"
+      "s16_title": "Social & Support Toolbar",
+      "s16_desc": "Finally, let's take a look at this floating toolbar.\n---",
+      "s17_title": "Social Link Info",
+      "s17_desc": "This area is the social Toolbar, where you can directly check this project's GitHub URL and update patch notes.\n---",
+      "s18_title": "Home Toggle",
+      "s18_desc": "First, the Home toggle connects directly to the GitHub repository of TermPlay.\n---",
+      "s19_title": "Website Toggle",
+      "s19_desc": "The Website toggle connects to the Notion document where you can check the update logs of TermPlay.\n---",
+      "s20_title": "Link Toggle",
+      "s20_desc": "Lastly, the Link toggle connects directly to the GitHub repository of Gascii or Mienjine.\n---",
+      "s21_title": "Community Toggle",
+      "s21_desc": "The chat bubble icon is the official support and query community. It is currently under preparation and is disabled.\n---",
+      "s22_title": "Guide Completed",
+      "s22_desc": "That concludes the interactive tour! Have a great time!"
     }
   }
 }

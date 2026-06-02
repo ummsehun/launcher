@@ -36,6 +36,7 @@ export class ProcessRunner {
         const currentPaths = env.PATH ? env.PATH.split(':') : [];
         const mergedPaths = Array.from(new Set([...standardPaths, ...currentPaths]));
         env.PATH = mergedPaths.join(':');
+        env.OBJC_DISABLE_INITIALIZE_FORK_SAFETY = 'YES';
       }
 
       this.child = spawn(this.options.binPath, this.options.args, {

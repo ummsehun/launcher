@@ -38,6 +38,10 @@
     "hardenedRuntime": true,
     "notarize": true,
     "entitlements": "entitlements.mac.plist",
+    "binaries": [
+      "Contents/Resources/bin/darwin-arm64/yt-dlp",
+      "Contents/Resources/bin/darwin-arm64/ffmpeg"
+    ],
     "target": [
       {
         "target": "dmg",

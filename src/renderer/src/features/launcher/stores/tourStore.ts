@@ -34,7 +34,7 @@ interface TourState {
 export const useTourStore = create<TourState>((set, get) => ({
   isOpen: false,
   currentStep: 0,
-  totalSteps: 18,
+  totalSteps: 22,
   targetRect: null,
   stepMetadata: null,
   driverInstance: null,

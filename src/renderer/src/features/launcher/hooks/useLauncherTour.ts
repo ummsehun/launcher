@@ -136,7 +136,19 @@ export const useLauncherTour = () => {
         element: '#social-links-toolbar', // s17
       },
       {
-        // s18: Complete
+        element: '#social-link-home', // s18
+      },
+      {
+        element: '#social-link-globe', // s19
+      },
+      {
+        element: '#social-link-link', // s20
+      },
+      {
+        element: '#social-link-message', // s21
+      },
+      {
+        // s22: Complete
       },
     ];
 
@@ -244,6 +256,30 @@ export const useLauncherTour = () => {
       {
         title: t('launcher.tour.s18_title'),
         description: t('launcher.tour.s18_desc'),
+        side: 'left',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s19_title'),
+        description: t('launcher.tour.s19_desc'),
+        side: 'left',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s20_title'),
+        description: t('launcher.tour.s20_desc'),
+        side: 'left',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s21_title'),
+        description: t('launcher.tour.s21_desc'),
+        side: 'left',
+        align: 'center',
+      },
+      {
+        title: t('launcher.tour.s22_title'),
+        description: t('launcher.tour.s22_desc'),
         side: 'over',
         align: 'center',
       },

@@ -25,6 +25,15 @@
     "select_project": "사이드바에서 프로젝트를 선택하세요",
     "init_failed": "초기화 실패",
     "new_updates": "새로운 업데이트가 있습니다",
+    "social": {
+      "toolbar_desc": "공식 커뮤니티 및 지원 링크 툴바",
+      "home_desc": "TermPlay 공식 GitHub 저장소",
+      "notion_desc": "TermPlay 소개 및 상세 가이드 Notion 문서",
+      "gascii_desc": "Gascii 오픈소스 GitHub 저장소",
+      "mienjine_desc": "MiEnjine 오픈소스 GitHub 저장소",
+      "support_desc": "공식 지원 채널 및 소통 창구 (준비 중)",
+      "not_available": "연결 가능한 링크가 없습니다."
+    },
     "settings": {
       "title": "설정",
       "general": "일반",
@@ -73,8 +82,16 @@
         "desc": "다운로드된 에셋과 프로젝트 파일을 관리합니다.",
         "files": "개 파일",
         "open_folder": "폴더 열기",
-        "gascii_assets_required": "Gascii 실행에 미디어 파일이 필요합니다",
-        "gascii_assets_required_desc": "VIDEO에는 비디오 파일을, AUDIO에는 오디오 파일을 넣어주세요. 각 카드를 클릭하면 해당 폴더가 바로 열립니다."
+        "gascii_assets_required": "추가 에셋 필요",
+        "gascii_assets_required_desc": "Gascii 기능들을 원활하게 즐기기 위해 비디오나 오디오 파일을 저장 폴더에 추가해 주세요.",
+        "open_dir": "폴더 열기",
+        "items": "개 항목",
+        "refresh": "새로고침",
+        "empty_dir": "폴더가 비어 있습니다",
+        "empty_dir_desc": "'폴더 열기' 버튼을 눌러 이 디렉토리에 비디오나 오디오 파일을 추가해 주세요.",
+        "name": "이름",
+        "date_modified": "수정한 날짜",
+        "size": "크기"
       },
       "assets": {
         "title": "에셋 매니저",
@@ -85,7 +102,19 @@
         "download_mp3": "MP3 오디오",
         "download": "다운로드",
         "size": "크기",
-        "type": "유형"
+        "type": "유형",
+        "install_required_warning": "유튜브 미디어를 다운로드하려면 먼저 Gascii 프로그램을 설치해야 합니다. 홈 화면으로 이동하여 설치를 완료해 주세요.",
+        "go_to_install": "Gascii 설치하러 가기",
+        "technical_logs": "기술적인 상세 로그",
+        "status_preparing": "다운로드 준비 중...",
+        "status_validating": "요청 및 바이너리 검증 중...",
+        "status_downloading": "미디어 다운로드 중...",
+        "status_extracting_audio": "오디오 추출 및 변환 중 (ffmpeg)...",
+        "status_merging": "미디어 파일 병합 중 (ffmpeg)...",
+        "status_postprocessing": "미디어 변환 완료 단계 진행 중...",
+        "status_completed": "다운로드 및 변환 완료",
+        "status_cancelled": "다운로드 취소됨",
+        "status_failed": "다운로드 실패"
       },
       "guide": {
         "title": "가이드 및 문서",
@@ -139,12 +168,20 @@
       "s14_desc": "이제 시작버튼을 확인해볼까요?",
       "s15_title": "Detail Menu",
       "s15_desc": "상세설정은 파일의 무결성 검사,\n설치폴더 확인 및 제거를 하는 공간입니다.",
-      "s16_title": "Social Toolbar",
-      "s16_desc": "마지막으로 이 영역을 살펴볼까요?",
-      "s17_title": "GitHub & Support",
-      "s17_desc": "이곳에서 현재 GitHub 주소를 알 수 있습니다.\nStar 한번씩 눌러주시면 감사하겠습니다.",
-      "s18_title": "Guide Completed",
-      "s18_desc": "이것으로 모든 가이드가 끝마쳤습니다.\n즐거운 시간 되세요!"
+      "s16_title": "소셜 및 지원 툴바",
+      "s16_desc": "마지막으로 이 영역을 살펴볼까요?\n---",
+      "s17_title": "소셜 링크 정보",
+      "s17_desc": "이 영역은 social ToolBar로 이 프로젝트의 github 주소 및 업데이트 내역을 바로 확인 할 수 있는 링크입니다\n---",
+      "s18_title": "홈 토글",
+      "s18_desc": "먼저 홈 토글은 이 TermPlay의 Github 레포지스토리로 이어집니다\n---",
+      "s19_title": "웹사이트 토글",
+      "s19_desc": "웹사이트 토글은 TermPlay의 업데이트 내역을 확인 할 수 있는 노션링크로 이어집니다\n---",
+      "s20_title": "링크 토글",
+      "s20_desc": "마지막으로 링크 토글은 Gascii나 Mienjine의 Github 레포지스토리로 이어집니다\n---",
+      "s21_title": "커뮤니티 토글",
+      "s21_desc": "말풍선 아이콘은 공식 지원 및 문의 커뮤니티입니다. 현재 준비 중인 기능으로 클릭이 비활성화되어 있습니다.\n---",
+      "s22_title": "대화형 가이드 완료",
+      "s22_desc": "이것으로 모든 가이드가 끝마쳤습니다 즐거운 시간 되세요!"
     }
   }
 }

@@ -9,6 +9,7 @@ const execFileAsync = promisify(execFile);
 export class BinaryResolver {
   private static ytDlpVersionPromise: Promise<string> | null = null;
   private static ffmpegVersionPromise: Promise<string> | null = null;
+  private static resolvedYtDlpPath: string | null = null;
 
   private static get resourcesPath() {
     return app.isPackaged
@@ -20,7 +21,14 @@ export class BinaryResolver {
     return `${process.platform}-${process.arch}`;
   }
 
-  static get ytDlpPath() {
+  static get ytDlpPath(): string {
+    if (this.resolvedYtDlpPath) {
+      return this.resolvedYtDlpPath;
+    }
+    return this.getDefaultYtDlpPath();
+  }
+
+  private static getDefaultYtDlpPath(): string {
     const ext = process.platform === 'win32' ? '.exe' : '';
     // On macOS, prefer a system/pip/homebrew-installed yt-dlp over the bundled
     // PyInstaller binary. PyInstaller's double-fork bootloader hangs when spawned
@@ -84,23 +92,59 @@ export class BinaryResolver {
       const currentPaths = env.PATH ? env.PATH.split(':') : [];
       const mergedPaths = Array.from(new Set([...standardPaths, ...currentPaths]));
       env.PATH = mergedPaths.join(':');
+      env.OBJC_DISABLE_INITIALIZE_FORK_SAFETY = 'YES';
     }
     return env;
   }
 
   private static async readYtDlpVersion(): Promise<string> {
-    await this.assertExecutable(this.ytDlpPath);
-    const { stdout } = await execFileAsync(this.ytDlpPath, ['--version'], {
-      timeout: 10000,
-      env: this.getSecuredEnv(),
-    });
-    return stdout.trim();
+    const ext = process.platform === 'win32' ? '.exe' : '';
+    const candidates: string[] = [];
+
+    if (process.platform === 'darwin') {
+      candidates.push(
+        `${process.env.HOME}/.local/bin/yt-dlp`,
+        '/opt/homebrew/bin/yt-dlp',
+        '/usr/local/bin/yt-dlp'
+      );
+    }
+    candidates.push(path.join(this.resourcesPath, 'bin', this.platformDir, `yt-dlp${ext}`));
+
+    const uniqueCandidates = Array.from(new Set(candidates));
+    let lastError: Error | null = null;
+
+    for (const candidate of uniqueCandidates) {
+      try {
+        await this.assertExecutable(candidate);
+        const { stdout } = await execFileAsync(candidate, ['--version'], {
+          timeout: 30000,
+          env: this.getSecuredEnv(),
+        });
+        const version = stdout.trim();
+        if (version) {
+          this.resolvedYtDlpPath = candidate;
+          return version;
+        }
+      } catch (error: any) {
+        console.error(`[BinaryResolver] Candidate failed: ${candidate}`, {
+          message: error.message,
+          code: error.code,
+          signal: error.signal,
+          status: error.status,
+          stderr: error.stderr?.toString(),
+          stdout: error.stdout?.toString(),
+        });
+        lastError = error as Error;
+      }
+    }
+
+    throw lastError || new Error('No working yt-dlp binary found');
   }
 
   private static async readFfmpegVersion(): Promise<string> {
     await this.assertExecutable(this.ffmpegPath);
     const { stdout } = await execFileAsync(this.ffmpegPath, ['-version'], {
-      timeout: 10000,
+      timeout: 30000,
       env: this.getSecuredEnv(),
     });
     return stdout.split('\n')[0].trim();

@@ -194,36 +194,6 @@ export const registerLibraryHandlers = (): void => {
       await fs.mkdir(fullPath, { recursive: true });
       await InputValidator.assertRealOutputDir(installPath, fullPath);
 
-      if (seriesId === 'gascii' && (dir === 'video' || dir === 'audio')) {
-        const win = BrowserWindow.fromWebContents(event.sender);
-        const filters = dir === 'video'
-          ? [{ name: 'Video Files', extensions: ['mp4', 'mov', 'mkv', 'webm', 'avi'] }]
-          : [{ name: 'Audio Files', extensions: ['mp3', 'wav', 'flac', 'm4a', 'aac', 'ogg'] }];
-        const result = win
-          ? await dialog.showOpenDialog(win, {
-              title: dir === 'video' ? 'Add Gascii video files' : 'Add Gascii audio files',
-              properties: ['openFile', 'multiSelections'],
-              filters,
-            })
-          : await dialog.showOpenDialog({
-              title: dir === 'video' ? 'Add Gascii video files' : 'Add Gascii audio files',
-              properties: ['openFile', 'multiSelections'],
-              filters,
-            });
-
-        if (result.canceled || result.filePaths.length === 0) {
-          return { ok: true, data: { path: fullPath, copiedCount: 0 } };
-        }
-
-        for (const filePath of result.filePaths) {
-          const targetFilePath = await resolveUniqueFilePath(fullPath, path.basename(filePath));
-          await InputValidator.assertRealOutputDir(fullPath, targetFilePath);
-          await fs.copyFile(filePath, targetFilePath, fsConstants.COPYFILE_EXCL);
-        }
-
-        return { ok: true, data: { path: fullPath, copiedCount: result.filePaths.length } };
-      }
-
       const error = await shell.openPath(fullPath);
       if (error) {
         return { ok: false, error };

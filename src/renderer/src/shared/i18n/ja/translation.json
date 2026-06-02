@@ -25,6 +25,15 @@
     "select_project": "サイドバーからプロジェクトを選択してください",
     "init_failed": "初期化に失敗しました",
     "new_updates": "新しいアップデートがあります",
+    "social": {
+      "toolbar_desc": "公式コミュニティ＆サポートリンクツールバー",
+      "home_desc": "TermPlay 公式 GitHub リポジトリ",
+      "notion_desc": "TermPlay 紹介および詳細ガイド Notion ドキュメント",
+      "gascii_desc": "Gascii オープンソース GitHub リポジトリ",
+      "mienjine_desc": "MiEnjine 오픈소스 GitHub 저장소",
+      "support_desc": "公式サポートチャンネルおよびコミュニティ (準備中)",
+      "not_available": "利用可能なリンクがありません。"
+    },
     "settings": {
       "title": "設定",
       "general": "一般",
@@ -73,8 +82,16 @@
         "desc": "ダウンロードされたアセットとプロジェクトファイルを管理します。",
         "files": "ファイル",
         "open_folder": "フォルダを開く",
-        "gascii_assets_required": "Gascii の実行にはメディアファイルが必要です",
-        "gascii_assets_required_desc": "VIDEO に動画ファイル、AUDIO に音声ファイルを入れてください。各カードをクリックすると対象フォルダが開きます。"
+        "gascii_assets_required": "追加アセット必要",
+        "gascii_assets_required_desc": "Gascii機能を十分に楽しむために、ビデオやオーディオファイルを保存フォルダーに追加してください。",
+        "open_dir": "フォルダを開く",
+        "items": "個の項目",
+        "refresh": "更新",
+        "empty_dir": "フォルダーは空です",
+        "empty_dir_desc": "「フォルダを開く」ボタンをクリックして、このディレクトリに動画やオーディオを追加してください。",
+        "name": "名前",
+        "date_modified": "変更日時",
+        "size": "サイズ"
       },
       "assets": {
         "title": "アセットマネージャー",
@@ -85,7 +102,19 @@
         "download_mp3": "MP3オーディオ",
         "download": "ダウンロード",
         "size": "サイズ",
-        "type": "タイプ"
+        "type": "タイプ",
+        "install_required_warning": "YouTubeメディアをダウンロードするには、まずGasciiプログラムをインストールする必要があります。ホーム画面に移動してインストールを完了してください。",
+        "go_to_install": "Gasciiをインストールしに行く",
+        "technical_logs": "技術的な詳細ログ",
+        "status_preparing": "ダウンロードの準備中...",
+        "status_validating": "要求とバイナリの検証中...",
+        "status_downloading": "メディアをダウンロード中...",
+        "status_extracting_audio": "オーディオの抽出と変換中 (ffmpeg)...",
+        "status_merging": "メディアファイルの結合中 (ffmpeg)...",
+        "status_postprocessing": "メディアの最終処理を実行中...",
+        "status_completed": "ダウンロードと変換が完了しました",
+        "status_cancelled": "ダウンロードがキャンセルされました",
+        "status_failed": "ダウンロードに失敗しました"
       },
       "guide": {
         "title": "ガイドとドキュメント",
@@ -139,12 +168,20 @@
       "s14_desc": "次に、開始ボタンを確認しましょう。",
       "s15_title": "Detail Options",
       "s15_desc": "この詳細メニューでは、整合性検査や\nインストールフォルダーの開閉、削除などが行えます。",
-      "s16_title": "Social Toolbar",
-      "s16_desc": "最後に、このフローティングツールバーを確認してみましょう。",
-      "s17_title": "GitHub & Support",
-      "s17_desc": "ここからGitHubのリポジトリへアクセスできます。\nよろしければGitHubスターをお願いします！",
-      "s18_title": "Guide Completed",
-      "s18_desc": "これでインタラクティブガイドは終了です。\nありがとうございました。"
+      "s16_title": "ソーシャル＆サポートツールバー",
+      "s16_desc": "最後に、このフローティングツールバーを確認してみましょう。\n---",
+      "s17_title": "ソーシャルリンク情報",
+      "s17_desc": "この領域は social ToolBar で、このプロジェクトの GitHub URL やアップデート履歴をすぐに確認できるリンクです。\n---",
+      "s18_title": "ホームトグル",
+      "s18_desc": "まず、ホームトグルは TermPlay の GitHub リポジトリに接続されます。\n---",
+      "s19_title": "ウェブサイトトグル",
+      "s19_desc": "ウェブサイトトグルは TermPlay のアップデート詳細を確認できる Notion のリンクに接続されます。\n---",
+      "s20_title": "リンクトグル",
+      "s20_desc": "最後に、リンクトグルは Gascii または Mienjine の GitHub リポジトリに接続されます。\n---",
+      "s21_title": "コミュニティトグル",
+      "s21_desc": "吹き出しアイコンは公式サポートおよび問い合わせコミュニティです。現在準備中のため、クリックが無効化されています。\n---",
+      "s22_title": "ガイドツアー完了",
+      "s22_desc": "これでインタラクティブガイドは終了です。ありがとうございました。"
     }
   }
 }
