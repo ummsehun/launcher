@@ -1,0 +1,107 @@
+{
+  "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
+  "appId": "com.termplay.launcher",
+  "productName": "TermPlay",
+  "icon": "resources/icons/icon.png",
+  "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+  "directories": {
+    "output": "dist",
+    "buildResources": "resources"
+  },
+  "files": [
+    "out/**/*",
+    "package.json",
+    "!node_modules/**/*"
+  ],
+  "extraResources": [
+    {
+      "from": "resources/bin",
+      "to": "bin",
+      "filter": [
+        "**/*",
+        "!**/.DS_Store"
+      ]
+    }
+  ],
+  "asar": true,
+  "compression": "maximum",
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "ummsehun",
+      "repo": "launcher",
+      "releaseType": "release"
+    }
+  ],
+  "mac": {
+    "forceCodeSigning": true,
+    "hardenedRuntime": true,
+    "notarize": true,
+    "entitlements": "entitlements.mac.plist",
+    "binaries": [
+      "Contents/Resources/bin/darwin-arm64/yt-dlp",
+      "Contents/Resources/bin/darwin-arm64/ffmpeg"
+    ],
+    "target": [
+      {
+        "target": "dmg",
+        "arch": [
+          "arm64"
+        ]
+      },
+      {
+        "target": "zip",
+        "arch": [
+          "arm64"
+        ]
+      }
+    ],
+    "category": "public.app-category.entertainment"
+  },
+  "dmg": {
+    "sign": false
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis-web",
+        "arch": [
+          "x64"
+        ]
+      },
+      {
+        "target": "zip",
+        "arch": [
+          "x64"
+        ]
+      }
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "perMachine": false
+  },
+  "nsisWeb": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "perMachine": false
+  },
+  "linux": {
+    "target": [
+      {
+        "target": "AppImage",
+        "arch": [
+          "x64"
+        ]
+      },
+      {
+        "target": "tar.gz",
+        "arch": [
+          "x64"
+        ]
+      }
+    ],
+    "category": "Game"
+  }
+}

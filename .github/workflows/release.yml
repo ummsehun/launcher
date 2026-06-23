@@ -1,0 +1,137 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release-desktop:
+    name: Release ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            runner: ubuntu-latest
+            script: release:linux
+          - platform: windows
+            runner: windows-latest
+            script: release:win
+          - platform: macos
+            runner: macos-latest
+            script: release:mac
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate release tag
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_NAME}" != v* ]]; then
+            echo "Release tags must start with v."
+            exit 1
+          fi
+
+          package_version="$(node -p 'require("./package.json").version')"
+          expected_tag="v${package_version}"
+
+          if [[ "${GITHUB_REF_NAME}" != "${expected_tag}" ]]; then
+            echo "Release tag must match package.json version. Expected ${expected_tag}, got ${GITHUB_REF_NAME}."
+            exit 1
+          fi
+
+      - name: Prepare Linux bundled binaries
+        if: matrix.platform == 'linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm run download-binaries
+
+      - name: Prepare Windows bundled binaries
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          New-Item -ItemType Directory -Force -Path resources/bin/win32-x64 | Out-Null
+
+          curl.exe -L --fail --retry 3 -o resources/bin/win32-x64/yt-dlp.exe `
+            https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe
+
+          curl.exe -L --fail --retry 3 -o "$env:TEMP/ffmpeg-windows.zip" `
+            https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip
+
+          Expand-Archive -Path "$env:TEMP/ffmpeg-windows.zip" -DestinationPath "$env:TEMP/ffmpeg-windows" -Force
+          $ffmpeg = Get-ChildItem "$env:TEMP/ffmpeg-windows" -Recurse -Filter ffmpeg.exe | Select-Object -First 1
+
+          if (-not $ffmpeg) {
+            throw "ffmpeg.exe was not found in downloaded archive"
+          }
+
+          Copy-Item $ffmpeg.FullName resources/bin/win32-x64/ffmpeg.exe
+
+      - name: Prepare macOS bundled binaries
+        if: matrix.platform == 'macos'
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm run download-binaries
+
+      - name: Prepare macOS signing certificate
+        if: matrix.platform == 'macos'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          certificate_path="${RUNNER_TEMP}/termplay-macos-certificate.p12"
+          printf '%s' "$MACOS_CERTIFICATE_BASE64" | base64 --decode > "$certificate_path"
+          chmod 600 "$certificate_path"
+
+          echo "CSC_LINK=$certificate_path" >> "$GITHUB_ENV"
+        env:
+          MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
+
+      - name: Validate bundled binaries
+        run: pnpm run validate:bundled-binaries
+        env:
+          TERMPLAY_VALIDATE_BINARY_PLATFORM: ${{ matrix.platform == 'macos' && 'darwin-arm64' || '' }}
+
+      - name: Build and publish
+        run: pnpm run ${{ matrix.script }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_KEY_PASSWORD: ${{ matrix.platform == 'macos' && secrets.MACOS_CERTIFICATE_PASSWORD || '' }}
+          APPLE_ID: ${{ matrix.platform == 'macos' && secrets.APPLE_ID || '' }}
+          APPLE_TEAM_ID: ${{ matrix.platform == 'macos' && secrets.APPLE_TEAM_ID || '' }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ matrix.platform == 'macos' && secrets.APPLE_APP_SPECIFIC_PASSWORD || '' }}
+
+  finalize-release:
+    name: Mark GitHub release as latest
+    runs-on: ubuntu-latest
+    needs: release-desktop
+    steps:
+      - name: Mark release as latest
+        shell: bash
+        run: gh release edit "$GITHUB_REF_NAME" --latest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

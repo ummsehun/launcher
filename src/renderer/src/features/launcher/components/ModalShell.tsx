@@ -1,0 +1,52 @@
+import React, { useEffect } from 'react';
+import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { cn } from '../../../shared/lib/cn';
+import { useTourStore } from '../stores/tourStore';
+
+export type ModalShellProps = {
+  onClose: () => void;
+  children: React.ReactNode;
+};
+
+export const ModalShell: React.FC<ModalShellProps> = ({ onClose, children }) => {
+  const { t } = useTranslation();
+  const isTourOpen = useTourStore((state) => state.isOpen);
+  
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
+
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  return (
+    <div 
+      onClick={handleOverlayClick}
+      className={cn(
+        "bg-launcher-bg text-launcher-text fixed inset-0 flex items-center justify-center bg-launcher-overlay p-8 sm:p-12 md:p-16 lg:p-24",
+        isTourOpen ? "z-[2147483645]" : "z-[100]"
+      )}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div id="modal-shell-container" className="bg-launcher-panelStrongBg border-launcher-panelStrongBorder text-launcher-text w-full h-full max-w-5xl max-h-[750px] border rounded-[20px] shadow-2xl flex flex-col relative overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <button 
+          onClick={onClose}
+          aria-label={t('common.close', 'Close')}
+          className="absolute top-6 right-6 w-8 h-8 rounded-full bg-launcher-control hover:bg-launcher-controlHover flex items-center justify-center text-launcher-textMuted hover:text-launcher-text transition-colors z-50 cursor-pointer"
+        >
+          <X size={16} strokeWidth={2.5} />
+        </button>
+        {children}
+      </div>
+    </div>
+  );
+};

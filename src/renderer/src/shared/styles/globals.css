@@ -1,0 +1,234 @@
+@import "tailwindcss";
+@config "../../../../../tailwind.config.ts";
+
+:root {
+  color-scheme: dark;
+  --series-bg-base: #09090b;
+  --series-gascii-bg: #050505;
+  --series-mienjine-bg: #0a0510;
+
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+
+  --radius: 0.5rem;
+
+  /* Launcher Custom Theme Colors (Dark Mode Default) */
+  --color-launcher-bg: #0f1115;
+  --color-launcher-surface: #171a20;
+  --color-launcher-surface-elevated: #20242c;
+  --color-launcher-panel: #151821;
+  --color-launcher-panel-elevated: #1c2028;
+  --color-launcher-control: #20242c;
+  --color-launcher-control-hover: #2a303a;
+  --color-launcher-icon-surface: #252b35;
+  --color-launcher-divider: rgba(255, 255, 255, 0.08);
+  --color-launcher-overlay: rgba(0, 0, 0, 0.6);
+  --color-launcher-border: #3f3f46;
+  --color-launcher-muted: #52525b;
+  --color-launcher-text: #fafafa;
+  --color-launcher-text-muted: #a1a1aa;
+  --color-launcher-primary: #e4e4e7;
+  --color-launcher-primary-hover: #ffffff;
+  --color-launcher-accent: #3b82f6;
+  --color-launcher-accent-hover: #2563eb;
+  --color-launcher-cta: #f4d259;
+  --color-launcher-cta-hover: #fcd962;
+  --color-launcher-cta-text: #1a1a1a;
+  --color-launcher-success: #22c55e;
+  --color-launcher-warning: #eab308;
+  --color-launcher-danger: #ef4444;
+  --color-launcher-terminal: #0ea5e9;
+
+  --font-sans: 'Pretendard', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --radius-launcher: 1.25rem;
+  --radius-panel: 1rem;
+  --radius-control: 0.75rem;
+
+  --shadow-launcher: 0 4px 24px -4px rgba(0, 0, 0, 0.5);
+  --shadow-panel: 0 2px 12px -2px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 20px 0px rgba(59, 130, 246, 0.3);
+
+  /* Immersive Visual Overlays */
+  --hero-side-overlay: linear-gradient(90deg, rgba(15, 17, 21, 0.46), rgba(15, 17, 21, 0.16), transparent);
+  --hero-bottom-overlay: linear-gradient(0deg, rgba(15, 17, 21, 0.3), transparent 55%, transparent);
+  --series-banner-filter: saturate(0.88) contrast(0.92) brightness(0.86);
+  --series-banner-opacity: 0.92;
+
+  /* Custom alpha blended colors (Moved from components layer to secure compiler integrity) */
+  --launcher-sidebar-bg: color-mix(in srgb, var(--color-launcher-surface) 88%, transparent);
+  --launcher-sidebar-border: color-mix(in srgb, var(--color-launcher-border) 70%, transparent);
+  --launcher-panel-bg: color-mix(in srgb, var(--color-launcher-surface) 72%, transparent);
+  --launcher-panel-border: color-mix(in srgb, var(--color-launcher-border) 72%, transparent);
+  --launcher-panel-strong-bg: color-mix(in srgb, var(--color-launcher-surface) 92%, transparent);
+  --launcher-panel-strong-border: color-mix(in srgb, var(--color-launcher-border) 82%, transparent);
+}
+
+:root.light {
+  color-scheme: light;
+  --color-launcher-bg: #dfe3e8;
+  --color-launcher-surface: #f6f7f9;
+  --color-launcher-surface-elevated: #ffffff;
+  --color-launcher-panel: #f7f8fa;
+  --color-launcher-panel-elevated: #ffffff;
+  --color-launcher-control: #e7ebf0;
+  --color-launcher-control-hover: #dfe5ec;
+  --color-launcher-icon-surface: #e1e7ef;
+  --color-launcher-divider: rgba(15, 23, 42, 0.12);
+  --color-launcher-overlay: rgba(15, 23, 42, 0.32);
+  --color-launcher-border: #d8dbe0;
+  --color-launcher-muted: #767d89;
+  --color-launcher-text: #1e2430;
+  --color-launcher-text-muted: #667184;
+  --color-launcher-primary: #181a20;
+  --color-launcher-primary-hover: #000000;
+  --color-launcher-cta: #f1c84a;
+  --color-launcher-cta-hover: #e5bb35;
+  --color-launcher-cta-text: #171717;
+  --series-bg-base: #dfe3e8;
+  --series-gascii-bg: #e1e5ea;
+  --series-mienjine-bg: #e2e6eb;
+
+  --background: 240 20% 98%;
+  --foreground: 240 10% 7%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 7%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 7%;
+  --primary: 240 10% 7%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 12% 94%;
+  --secondary-foreground: 240 10% 12%;
+  --muted: 240 12% 94%;
+  --muted-foreground: 240 5% 42%;
+  --accent: 220 70% 96%;
+  --accent-foreground: 222 70% 35%;
+  --destructive: 0 72% 46%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 225 12% 86%;
+  --input: 225 12% 86%;
+  --ring: 220 80% 50%;
+
+  /* Light Mode Overlays */
+  --hero-side-overlay: linear-gradient(90deg, rgba(223, 227, 232, 0.88), rgba(223, 227, 232, 0.22), transparent);
+  --hero-bottom-overlay: linear-gradient(0deg, rgba(223, 227, 232, 0.44), transparent 50%, transparent);
+  --series-banner-filter: saturate(0.78) contrast(0.9) brightness(0.96);
+  --series-banner-opacity: 0.58;
+
+  /* Light Mode 투명도 혼합 변수 */
+  --launcher-sidebar-bg: color-mix(in srgb, var(--color-launcher-surface) 88%, transparent);
+  --launcher-sidebar-border: color-mix(in srgb, var(--color-launcher-border) 70%, transparent);
+  --launcher-panel-bg: color-mix(in srgb, var(--color-launcher-surface) 72%, transparent);
+  --launcher-panel-border: color-mix(in srgb, var(--color-launcher-border) 72%, transparent);
+  --launcher-panel-strong-bg: color-mix(in srgb, var(--color-launcher-surface) 92%, transparent);
+  --launcher-panel-strong-border: color-mix(in srgb, var(--color-launcher-border) 82%, transparent);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) {
+    color-scheme: light;
+    --color-launcher-bg: #dfe3e8;
+    --color-launcher-surface: #f6f7f9;
+    --color-launcher-surface-elevated: #ffffff;
+    --color-launcher-panel: #f7f8fa;
+    --color-launcher-panel-elevated: #ffffff;
+    --color-launcher-control: #e7ebf0;
+    --color-launcher-control-hover: #dfe5ec;
+    --color-launcher-icon-surface: #e1e7ef;
+    --color-launcher-divider: rgba(15, 23, 42, 0.12);
+    --color-launcher-overlay: rgba(15, 23, 42, 0.32);
+    --color-launcher-border: #d8dbe0;
+    --color-launcher-muted: #767d89;
+    --color-launcher-text: #1e2430;
+    --color-launcher-text-muted: #667184;
+    --color-launcher-primary: #181a20;
+    --color-launcher-primary-hover: #000000;
+    --color-launcher-cta: #f1c84a;
+    --color-launcher-cta-hover: #e5bb35;
+    --color-launcher-cta-text: #171717;
+    --series-bg-base: #dfe3e8;
+    --series-gascii-bg: #e1e5ea;
+    --series-mienjine-bg: #e2e6eb;
+
+    --background: 240 20% 98%;
+    --foreground: 240 10% 7%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 7%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 7%;
+    --primary: 240 10% 7%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 12% 94%;
+    --secondary-foreground: 240 10% 12%;
+    --muted: 240 12% 94%;
+    --muted-foreground: 240 5% 42%;
+    --accent: 220 70% 96%;
+    --accent-foreground: 222 70% 35%;
+    --destructive: 0 72% 46%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 225 12% 86%;
+    --input: 225 12% 86%;
+    --ring: 220 80% 50%;
+
+    /* Light Mode Overlays */
+    --hero-side-overlay: linear-gradient(90deg, rgba(223, 227, 232, 0.88), rgba(223, 227, 232, 0.22), transparent);
+    --hero-bottom-overlay: linear-gradient(0deg, rgba(223, 227, 232, 0.44), transparent 50%, transparent);
+    --series-banner-filter: saturate(0.78) contrast(0.9) brightness(0.96);
+    --series-banner-opacity: 0.58;
+
+    /* Light Mode 투명도 혼합 변수 */
+    --launcher-sidebar-bg: color-mix(in srgb, var(--color-launcher-surface) 88%, transparent);
+    --launcher-sidebar-border: color-mix(in srgb, var(--color-launcher-border) 70%, transparent);
+    --launcher-panel-bg: color-mix(in srgb, var(--color-launcher-surface) 72%, transparent);
+    --launcher-panel-border: color-mix(in srgb, var(--color-launcher-border) 72%, transparent);
+    --launcher-panel-strong-bg: color-mix(in srgb, var(--color-launcher-surface) 92%, transparent);
+    --launcher-panel-strong-border: color-mix(in srgb, var(--color-launcher-border) 82%, transparent);
+  }
+}
+
+/* ====================================================================
+   Pure Specificity 서드파티 driver.js 오버라이드 (important 100% 완전 제거)
+   ==================================================================== */
+
+html body .driver-stage {
+  border-radius: 8px;
+  outline: 2px solid var(--color-launcher-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+
+html body .driver-popover {
+  display: none !important;
+}
+
+/* Ensure our custom TourPopover is fully interactive and bypasses driver.js's broad pointer-events block */
+html body .custom-tour-popover,
+html body .custom-tour-popover * {
+  pointer-events: auto !important;
+}
+
+
