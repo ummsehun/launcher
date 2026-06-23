@@ -162,32 +162,50 @@ export const useTerminalSeriesStore = create<TerminalSeriesState>((set, get) => 
   },
 
   updateSelectedSeries: async () => {
-    const { selectedSeriesId, updateSeriesInStore, addLog, series } = get();
+    const { selectedSeriesId, updateSeriesInStore, addLog } = get();
     if (!selectedSeriesId) return;
-
-    const currentSeries = series.find(s => s.id === selectedSeriesId);
-    if (!currentSeries) return;
 
     try {
       set({ isActionPending: true, error: null });
       updateSeriesInStore(selectedSeriesId, { status: 'updating' });
       addLog(selectedSeriesId, { level: 'info', message: 'Downloading updates...' });
 
-      await terminalSeriesApi.updateSeries(selectedSeriesId);
+      let lastProgressLog = 0;
+      const unsubscribe = window.launcher.series.onInstallProgress((event) => {
+        if (event.seriesId !== selectedSeriesId) return;
+        set((state) => ({
+          actionProgressBySeries: {
+            ...state.actionProgressBySeries,
+            [selectedSeriesId]: event.progress,
+          },
+        }));
+        if (event.stage === 'downloading' && event.progress - lastProgressLog >= 15) {
+          lastProgressLog = event.progress;
+          addLog(selectedSeriesId, { level: 'info', message: `${event.message} (${event.progress}%)` });
+        }
+      });
+
+      const result = await window.launcher.series.install(selectedSeriesId as TerminalSeriesId).finally(unsubscribe);
+
+      if (!result.ok) {
+        throw new Error(result.error);
+      }
 
       updateSeriesInStore(selectedSeriesId, { 
         status: 'installed',
-        installedVersion: currentSeries.latestVersion,
-        assets: withAssetStatus(currentSeries, 'installed')
+        installPath: result.data.installPath,
+        installedVersion: result.data.installedVersion,
+        latestVersion: result.data.installedVersion,
+        assets: withAssetStatus(get().series.find(s => s.id === selectedSeriesId), 'installed')
       });
-      addLog(selectedSeriesId, { level: 'success', message: `Updated to ${currentSeries.latestVersion}.` });
+      addLog(selectedSeriesId, { level: 'success', message: `Updated to ${result.data.installedVersion}.` });
     } catch (err) {
       const message = getErrorMessage(err, 'Update failed');
       updateSeriesInStore(selectedSeriesId, { status: 'error' });
       addLog(selectedSeriesId, { level: 'error', message: `Update failed: ${message}` });
       set({ error: message });
     } finally {
-      set({ isActionPending: false });
+      set((state) => ({ isActionPending: false, actionProgressBySeries: { ...state.actionProgressBySeries, [selectedSeriesId]: 0 } }));
     }
   },
 

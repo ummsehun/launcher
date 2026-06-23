@@ -42,7 +42,20 @@ export const SeriesActionBar: React.FC = () => {
       );
     }
     
-    if (status === 'installed' || status === 'update-available' || status === 'running') {
+    if (status === 'update-available') {
+      return (
+        <button
+          id="action-bar-play-btn"
+          onClick={updateSelectedSeries}
+          disabled={isPending}
+          className="w-64 h-[72px] bg-launcher-cta hover:bg-launcher-cta-hover text-launcher-ctaText font-black text-2xl tracking-widest rounded-l-xl transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(244,210,89,0.3)] cursor-pointer"
+        >
+          {t('launcher.update_available')}
+        </button>
+      );
+    }
+
+    if (status === 'installed' || status === 'running') {
       return (
         <button
           id="action-bar-play-btn"
@@ -74,7 +87,7 @@ export const SeriesActionBar: React.FC = () => {
   return (
     <div className="relative flex items-center gap-4">
       
-      {/* Download Status Info (Mock) */}
+      {/* Download Status Info */}
       {(status === 'installing' || status === 'updating') && (
         <div className="flex items-center gap-4 bg-black/60 backdrop-blur-xl border border-white/10 rounded-full px-6 py-2">
           <div className="relative w-10 h-10 flex items-center justify-center">
