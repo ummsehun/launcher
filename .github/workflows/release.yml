@@ -132,6 +132,6 @@ jobs:
     steps:
       - name: Mark release as latest
         shell: bash
-        run: gh release edit "$GITHUB_REF_NAME" --latest
+        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --latest
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
